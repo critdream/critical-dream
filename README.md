@@ -1,2 +1,3 @@
-# critical-dream
-Visualize critical role episodes
+# Critical Dream
+
+Visualizing critical role episodes
