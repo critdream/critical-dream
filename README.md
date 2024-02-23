@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="static/logo.png" alt="Critical Dream Logo" width="400">
+    <img src="static/critdream-logo.png" alt="Critical Dream Logo" width="400">
 </p>
 <p align="center">
     A trippy, visual companion to critical role episodes
