@@ -1,6 +1,11 @@
-# Critical Dream
+<p align="center">
+    <img src="static/logo.png" alt="Critical Dream Logo" width="300">
+</p>
+<p align="center">
+    A trippy, visual companion to critical role episodes
+</p>
 
-*Visualizing critical role episodes*
+---
 
 **Objective**: To create a visual companion to critical role episodes that
 renders scenes, characters, and environments to accompany the episode audio.
