@@ -31,3 +31,204 @@ pip install -r requirements.txt
 
 Use the [`youtube_transcript_api`](https://pypi.org/project/youtube-transcript-api/)
 package to extract transcripts based on a list of video ids.
+
+## Get image data
+
+To download example images of each character, do:
+
+```
+python critical_dream/image_data data
+```
+
+## Dreambooth fine-tuning
+
+Export secrets:
+
+```bash
+export HF_HUB_TOKEN="..."
+export WANDB_API_KEY="..."
+```
+
+You can fine-tune various models and fine-tuning options:
+
+<details>
+<summary>Stable Diffusion 1.4 full fine-tuning</summary>
+
+```bash
+export MODEL_NAME="CompVis/stable-diffusion-v1-4"
+export INSTANCE_DIR="data/fjord"
+export CLASS_DIR="data/half_orc"
+export OUTPUT_DIR="models/model_sd1_fjord"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-v1-4-dreambooth-critdream-fjord"
+
+accelerate launch critical_dream/train_dreambooth.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --instance_data_dir=$INSTANCE_DIR \
+  --class_data_dir=$CLASS_DIR \
+  --output_dir=$OUTPUT_DIR \
+  --instance_prompt="a picture of [critrole-fjord], a half-orc warlock" \
+  --class_prompt="a picture of a half-orc warlock" \
+  --resolution=512 \
+  --train_batch_size=1 \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=5e-4 \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=200 \
+  --max_train_steps=1000 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_steps=250 \
+  --checkpointing_steps=1000 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --push_to_hub \
+  --report_to="wandb"
+```
+</details>
+
+
+<details>
+<summary>Stable Diffusion 1.4 LoRA fine-tuning</summary>
+
+```bash
+export MODEL_NAME="CompVis/stable-diffusion-v1-4"
+export INSTANCE_DIR="data/fjord"
+export CLASS_DIR="data/half_orc"
+export OUTPUT_DIR="models/model_sd1_lora_fjord"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-v1-4-lora-dreambooth-critdream-fjord"
+
+accelerate launch critical_dream/train_dreambooth_lora.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --instance_data_dir=$INSTANCE_DIR \
+  --class_data_dir=$CLASS_DIR \
+  --output_dir=$OUTPUT_DIR \
+  --instance_prompt="a picture of [critrole-fjord], a half-orc" \
+  --class_prompt="a picture of a half-orc" \
+  --resolution=512 \
+  --train_batch_size=1 \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=5e-6 \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=200 \
+  --max_train_steps=1500 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_epochs=25 \
+  --checkpointing_steps=1000 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --push_to_hub \
+  --report_to="wandb"
+```
+</details>
+
+
+<details>
+<summary>Stable Diffusion XL Base 1.0 LoRA fine-tuning</summary>
+
+```bash
+export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
+export VAE_PATH="stabilityai/sdxl-vae"
+export INSTANCE_DIR="data/fjord"
+export CLASS_DIR="data/half_orc"
+export OUTPUT_DIR="models/model_sd1xl_lora_fjord"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-fjord"
+
+accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --instance_data_dir=$INSTANCE_DIR \
+  --pretrained_vae_model_name_or_path=$VAE_PATH \
+  --class_data_dir=$CLASS_DIR \
+  --output_dir=$OUTPUT_DIR \
+  --instance_prompt="a picture of [critrole-fjord], a half-orc" \
+  --class_prompt="a picture of a half-orc" \
+  --resolution=1024 \
+  --train_batch_size=1 \
+  --report_to="wandb" \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=1e-4 \
+  --report_to="wandb" \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=200 \
+  --max_train_steps=500 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_epochs=25 \
+  --checkpointing_steps=500 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --seed="0" \
+  --push_to_hub
+```
+</details>
+
+
+<details>
+<summary>Stable Diffusion 2 full fine-tuning</summary>
+
+```bash
+export MODEL_NAME="stabilityai/stable-diffusion-2"
+export INSTANCE_DIR="data/fjord"
+export CLASS_DIR="data/half_orc"
+export OUTPUT_DIR="models/model_sd2_lora_fjord"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-2-dreambooth-critdream-fjord"
+
+accelerate launch critical_dream/train_dreambooth.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --instance_data_dir=$INSTANCE_DIR \
+  --class_data_dir=$CLASS_DIR \
+  --output_dir=$OUTPUT_DIR \
+  --instance_prompt="a picture of [critrole-fjord], a half-orc" \
+  --class_prompt="a picture of a half-orc" \
+  --resolution=1024 \
+  --train_batch_size=1 \
+  --report_to="wandb" \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=1e-4 \
+  --report_to="wandb" \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=200 \
+  --max_train_steps=100 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_steps=100 \
+  --checkpointing_steps=100 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --seed="0" \
+  --push_to_hub \
+  --report_to="wandb"
+```
+</details>
+
+
+
+<details>
+<summary>Stable Diffusion 2 LoRA fine-tuning</summary>
+
+```bash
+export MODEL_NAME="stabilityai/stable-diffusion-2"
+export INSTANCE_DIR="data/fjord"
+export CLASS_DIR="data/half_orc"
+export OUTPUT_DIR="models/model_sd2_lora_fjord"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-2-lora-dreambooth-critdream-fjord"
+
+accelerate launch critical_dream/train_dreambooth_lora.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --instance_data_dir=$INSTANCE_DIR \
+  --class_data_dir=$CLASS_DIR \
+  --output_dir=$OUTPUT_DIR \
+  --instance_prompt="a picture of [critrole-fjord], a half-orc" \
+  --class_prompt="a picture of a half-orc" \
+  --resolution=512 \
+  --train_batch_size=1 \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=5e-6 \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=200 \
+  --max_train_steps=2000 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_epochs=25 \
+  --checkpointing_steps=250 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --push_to_hub \
+  --report_to="wandb"
+```
+</details>
