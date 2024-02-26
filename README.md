@@ -37,7 +37,7 @@ package to extract transcripts based on a list of video ids.
 To download example images of each character, do:
 
 ```
-python critical_dream/image_data data
+python critical_dream/image_data.py data
 ```
 
 ## Dreambooth fine-tuning

@@ -24,7 +24,7 @@ import transformers
 from accelerate import Accelerator
 from accelerate.logging import get_logger
 from accelerate.utils import ProjectConfiguration, set_seed
-from huggingface_hub import create_repo, model_info, upload_folder
+from huggingface_hub import create_repo, model_info, upload_folder, login
 from huggingface_hub.utils import insecure_hashlib
 from packaging import version
 from PIL import Image
@@ -802,6 +802,7 @@ def main(args):
         )
 
     logging_dir = Path(args.output_dir, args.logging_dir)
+    login(token=os.environ.get("HF_HUB_TOKEN"))
 
     accelerator_project_config = ProjectConfiguration(project_dir=args.output_dir, logging_dir=logging_dir)
 
