@@ -595,6 +595,7 @@ class InstanceConfig:
     instance_name: str
     instance_data_root: str
     instance_prompt: str
+    instance_urls: list[str]
     class_data_root: str | None = None
     class_prompt: str | None = None
 
@@ -970,6 +971,9 @@ def main(args):
             repeats=args.repeats,
             center_crop=args.center_crop,
         )
+        logging.info("Using multi-instance dataset.")
+        for instance_name, _dataset in train_dataset.dreambooth_datasets.items():
+            logging.info(f"Instance: {instance_name}, num instances: {len(_dataset)}")
     else:
         train_dataset = DreamBoothDataset(
             instance_data_root=args.instance_data_dir,
