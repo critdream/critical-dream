@@ -81,28 +81,30 @@ def save_model_card(
     base_model: str = None,
     train_text_encoder=False,
     instance_prompt=None,
-    validation_prompt=None,
+    validation_prompts=None,
     repo_folder=None,
     vae_path=None,
 ):
     widget_dict = []
     if images is not None:
-        for i, image in enumerate(images):
+        for validation_prompt, image in zip(validation_prompts, images):
             image.save(os.path.join(repo_folder, f"image_{i}.png"))
             widget_dict.append(
                 {"text": validation_prompt if validation_prompt else " ", "output": {"url": f"image_{i}.png"}}
             )
 
     model_description = f"""
-# SDXL LoRA DreamBooth - {repo_id}
+# Critical Dream - {repo_id}
 
 <Gallery />
 
 ## Model description
 
-These are {repo_id} LoRA adaption weights for {base_model}.
+These are {repo_id} LoRA adaption weights for {base_model}, for the purposes of
+generating images for the [Critical Dream](https://github.com/cosmicBboy/critical-dream)
+project.
 
-The weights were trained  using [DreamBooth](https://dreambooth.github.io/).
+The weights were trained using [DreamBooth](https://dreambooth.github.io/).
 
 LoRA for the text encoder was enabled: {train_text_encoder}.
 
@@ -1794,7 +1796,7 @@ def main(args):
 
                     with torch.cuda.amp.autocast():
                         images = [
-                            pipeline(**pipeline_args, num_inference_steps=25, generator=generator).images[0]
+                            pipeline(**pipeline_args, generator=generator).images[0]
                             for _ in range(args.num_validation_images)
                         ]
 
@@ -1876,7 +1878,7 @@ def main(args):
         pipeline.load_lora_weights(args.output_dir)
 
         # run inference
-        images = []
+        model_card_images = []
         if validation_prompts and args.num_validation_images > 0:
             pipeline = pipeline.to(accelerator.device)
             generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
@@ -1885,6 +1887,7 @@ def main(args):
                     pipeline(validation_prompt, num_inference_steps=25, generator=generator).images[0]
                     for _ in range(args.num_validation_images)
                 ]
+                model_card_images.extend(images)
 
                 for tracker in accelerator.trackers:
                     if tracker.name == "tensorboard":
@@ -1903,11 +1906,11 @@ def main(args):
         if args.push_to_hub:
             save_model_card(
                 repo_id,
-                images=images,
+                images=model_card_images,
                 base_model=args.pretrained_model_name_or_path,
                 train_text_encoder=args.train_text_encoder,
-                instance_prompt=args.instance_prompt,
-                validation_prompt=args.validation_prompt,
+                instance_prompt=train_dataset.multi_instance_data_config[0].instance_prompt,
+                validation_prompts=validation_prompts,
                 repo_folder=args.output_dir,
                 vae_path=args.pretrained_vae_model_name_or_path,
             )
