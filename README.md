@@ -51,6 +51,41 @@ export WANDB_API_KEY="..."
 
 You can fine-tune various models and fine-tuning options:
 
+
+<details>
+<summary>Stable Diffusion XL Base 1.0 LoRA fine-tuning</summary>
+
+```bash
+export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
+export VAE_PATH="stabilityai/sdxl-vae"
+export OUTPUT_DIR="models/model_sd1xl_lora_critdream"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream"
+
+accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --multi_instance_data_config=config/mighty_nein_instances.yaml \
+  --pretrained_vae_model_name_or_path=$VAE_PATH \
+  --output_dir=$OUTPUT_DIR \
+  --resolution=1024 \
+  --train_batch_size=1 \
+  --report_to="wandb" \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=1e-4 \
+  --report_to="wandb" \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=200 \
+  --max_train_steps=500 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_epochs=25 \
+  --checkpointing_steps=500 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --seed="0" \
+  --push_to_hub
+```
+</details>
+
+
 <details>
 <summary>Stable Diffusion 1.4 full fine-tuning</summary>
 
@@ -122,45 +157,6 @@ accelerate launch critical_dream/train_dreambooth_lora.py \
 
 
 <details>
-<summary>Stable Diffusion XL Base 1.0 LoRA fine-tuning</summary>
-
-```bash
-export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
-export VAE_PATH="stabilityai/sdxl-vae"
-export INSTANCE_DIR="data/fjord"
-export CLASS_DIR="data/half_orc"
-export OUTPUT_DIR="models/model_sd1xl_lora_fjord"
-export HUB_MODEL_ID="cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-fjord"
-
-accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
-  --pretrained_model_name_or_path=$MODEL_NAME  \
-  --instance_data_dir=$INSTANCE_DIR \
-  --pretrained_vae_model_name_or_path=$VAE_PATH \
-  --class_data_dir=$CLASS_DIR \
-  --output_dir=$OUTPUT_DIR \
-  --instance_prompt="a picture of [critrole-fjord], a half-orc" \
-  --class_prompt="a picture of a half-orc" \
-  --resolution=1024 \
-  --train_batch_size=1 \
-  --report_to="wandb" \
-  --gradient_accumulation_steps=1 \
-  --learning_rate=1e-4 \
-  --report_to="wandb" \
-  --lr_scheduler="constant" \
-  --lr_warmup_steps=0 \
-  --num_class_images=200 \
-  --max_train_steps=500 \
-  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
-  --validation_epochs=25 \
-  --checkpointing_steps=500 \
-  --hub_model_id=$HUB_MODEL_ID \
-  --seed="0" \
-  --push_to_hub
-```
-</details>
-
-
-<details>
 <summary>Stable Diffusion 2 full fine-tuning</summary>
 
 ```bash
@@ -181,7 +177,7 @@ accelerate launch critical_dream/train_dreambooth.py \
   --train_batch_size=1 \
   --report_to="wandb" \
   --gradient_accumulation_steps=1 \
-  --learning_rate=1e-4 \
+  --learning_rate=5e-6 \
   --report_to="wandb" \
   --lr_scheduler="constant" \
   --lr_warmup_steps=0 \

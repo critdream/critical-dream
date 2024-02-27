@@ -22,6 +22,8 @@ import os
 import random
 import shutil
 import warnings
+import yaml
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -204,6 +206,14 @@ def parse_args(input_args=None):
         default=None,
         help="The config of the Dataset, leave as None if there's only one config.",
     )
+
+    parser.add_argument(
+        "--multi_instance_data_config",
+        type=str,
+        default=None,
+        help=("A yaml file containing the configuration for multiple instances. "),
+    )
+
     parser.add_argument(
         "--instance_data_dir",
         type=str,
@@ -246,7 +256,7 @@ def parse_args(input_args=None):
         "--instance_prompt",
         type=str,
         default=None,
-        required=True,
+        required=False,
         help="The prompt with identifier specifying the instance, e.g. 'photo of a TOK dog', 'in the style of TOK'",
     )
     parser.add_argument(
@@ -555,11 +565,11 @@ def parse_args(input_args=None):
     else:
         args = parser.parse_args()
 
-    if args.dataset_name is None and args.instance_data_dir is None:
-        raise ValueError("Specify either `--dataset_name` or `--instance_data_dir`")
+    if args.dataset_name is None and args.instance_data_dir is None and args.multi_instance_data_config is None:
+        raise ValueError("Specify either `--dataset_name`, `--instance_data_dir`, or `--multi_instance_data_config`")
 
-    if args.dataset_name is not None and args.instance_data_dir is not None:
-        raise ValueError("Specify only one of `--dataset_name` or `--instance_data_dir`")
+    if args.dataset_name is not None and args.instance_data_dir is not None and args.multi_instance_data_config is not None:
+        raise ValueError("Specify only one of `--dataset_name`, `--instance_data_dir`, or `--multi_instance_data_config`")
 
     env_local_rank = int(os.environ.get("LOCAL_RANK", -1))
     if env_local_rank != -1 and env_local_rank != args.local_rank:
@@ -580,6 +590,71 @@ def parse_args(input_args=None):
     return args
 
 
+@dataclass
+class InstanceConfig:
+    instance_name: str
+    instance_data_root: str
+    instance_prompt: str
+    class_data_root: str | None = None
+    class_prompt: str | None = None
+
+
+class DreamBoothMultiInstanceDataset(Dataset):
+    """
+    A dataset that composes multiple DreamBoothDataset objects so that you
+    can train multiple instances in one go.
+    """
+
+    def __init__(
+        self,
+        multi_instance_data_config: list[InstanceConfig],
+        class_num=None,
+        size=1024,
+        repeats=1,
+        center_crop=False,
+    ):
+        self.custom_instance_prompts = True
+
+        with open(multi_instance_data_config) as f:
+            self.multi_instance_data_config = [
+                InstanceConfig(**x) for x in yaml.safe_load(f)
+            ]
+
+        self.dreambooth_datasets = {
+            config.instance_name: DreamBoothDataset(
+                config.instance_data_root,
+                config.instance_prompt,
+                config.class_prompt,
+                config.class_data_root,
+                class_num=class_num,
+                size=size,
+                repeats=repeats,
+                center_crop=center_crop,
+                custom_instance_prompts=self.custom_instance_prompts,
+            )
+            for config in self.multi_instance_data_config
+        }
+
+        global_index = 0
+        self.multi_dataset_index = {}
+        self.local_dataset_index = {}
+        for instance_name, dataset in self.dreambooth_datasets.items():
+            for local_index in range(len(dataset)):
+                self.multi_dataset_index[global_index] = instance_name
+                self.local_dataset_index[global_index] = local_index
+                global_index += 1
+
+        self._length = len(self.multi_dataset_index)
+
+    def __len__(self):
+        return self._length
+
+    def __getitem__(self, index):
+        dataset = self.dreambooth_datasets[self.multi_dataset_index[index]]
+        example = dataset[self.local_dataset_index[index]]
+        return example
+
+
 class DreamBoothDataset(Dataset):
     """
     A dataset to prepare the instance and class images with the prompts for fine-tuning the model.
@@ -596,12 +671,13 @@ class DreamBoothDataset(Dataset):
         size=1024,
         repeats=1,
         center_crop=False,
+        custom_instance_prompts=False,
     ):
         self.size = size
         self.center_crop = center_crop
 
         self.instance_prompt = instance_prompt
-        self.custom_instance_prompts = None
+        self.custom_instance_prompts = custom_instance_prompts
         self.class_prompt = class_prompt
 
         # if --dataset_name is provided or a metadata jsonl file is provided in the local --instance_data directory,
@@ -661,7 +737,6 @@ class DreamBoothDataset(Dataset):
                 raise ValueError("Instance images root doesn't exists.")
 
             instance_images = [Image.open(path) for path in list(Path(instance_data_root).iterdir())]
-            self.custom_instance_prompts = None
 
         self.instance_images = []
         for img in instance_images:
@@ -738,7 +813,10 @@ class DreamBoothDataset(Dataset):
         example["crop_top_left"] = crop_top_left
 
         if self.custom_instance_prompts:
-            caption = self.custom_instance_prompts[index % self.num_instance_images]
+            try:
+                caption = self.custom_instance_prompts[index % self.num_instance_images]
+            except TypeError:
+                caption = None
             if caption:
                 example["instance_prompt"] = caption
             else:
@@ -883,47 +961,96 @@ def main(args):
     if args.seed is not None:
         set_seed(args.seed)
 
+    # Dataset and DataLoaders creation:
+    if args.multi_instance_data_config is not None:
+        train_dataset = DreamBoothMultiInstanceDataset(
+            multi_instance_data_config=args.multi_instance_data_config,
+            class_num=args.num_class_images,
+            size=args.resolution,
+            repeats=args.repeats,
+            center_crop=args.center_crop,
+        )
+    else:
+        train_dataset = DreamBoothDataset(
+            instance_data_root=args.instance_data_dir,
+            instance_prompt=args.instance_prompt,
+            class_prompt=args.class_prompt,
+            class_data_root=args.class_data_dir if args.with_prior_preservation else None,
+            class_num=args.num_class_images,
+            size=args.resolution,
+            repeats=args.repeats,
+            center_crop=args.center_crop,
+        )
+
+    train_dataloader = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=True,
+        collate_fn=lambda examples: collate_fn(examples, args.with_prior_preservation),
+        num_workers=args.dataloader_num_workers,
+    )
+
     # Generate class images if prior preservation is enabled.
+    class_images_dirs = None
+    if args.class_data_dir and isinstance(train_dataset, DreamBoothDataset):
+        class_images_dirs = [args.class_data_dir]
+        class_prompts = [args.class_prompt]
+    else:
+        class_images_dirs = [
+            instance_config.class_data_root
+            for instance_config in train_dataset.multi_instance_data_config
+        ]
+        class_prompts = [
+            instance_config.class_prompt
+            for instance_config in train_dataset.multi_instance_data_config
+        ]
+
     if args.with_prior_preservation:
-        class_images_dir = Path(args.class_data_dir)
-        if not class_images_dir.exists():
-            class_images_dir.mkdir(parents=True)
-        cur_class_images = len(list(class_images_dir.iterdir()))
+        # NOTE: This doesn't work with multi instance classes.
+        for class_prompt, class_images_dir in zip(class_prompts, class_images_dirs):
+            if class_images_dir is None:
+                continue
+            class_images_dir = Path(class_images_dir)
+            logger.info(f"Generating class images with class prompt: {class_prompt}.")  
 
-        if cur_class_images < args.num_class_images:
-            torch_dtype = torch.float16 if accelerator.device.type == "cuda" else torch.float32
-            if args.prior_generation_precision == "fp32":
-                torch_dtype = torch.float32
-            elif args.prior_generation_precision == "fp16":
-                torch_dtype = torch.float16
-            elif args.prior_generation_precision == "bf16":
-                torch_dtype = torch.bfloat16
-            pipeline = StableDiffusionXLPipeline.from_pretrained(
-                args.pretrained_model_name_or_path,
-                torch_dtype=torch_dtype,
-                revision=args.revision,
-                variant=args.variant,
-            )
-            pipeline.set_progress_bar_config(disable=True)
+            if not class_images_dir.exists():
+                class_images_dir.mkdir(parents=True)
+            cur_class_images = len(list(class_images_dir.iterdir()))
 
-            num_new_images = args.num_class_images - cur_class_images
-            logger.info(f"Number of class images to sample: {num_new_images}.")
+            if cur_class_images < args.num_class_images:
+                torch_dtype = torch.float16 if accelerator.device.type == "cuda" else torch.float32
+                if args.prior_generation_precision == "fp32":
+                    torch_dtype = torch.float32
+                elif args.prior_generation_precision == "fp16":
+                    torch_dtype = torch.float16
+                elif args.prior_generation_precision == "bf16":
+                    torch_dtype = torch.bfloat16
+                pipeline = StableDiffusionXLPipeline.from_pretrained(
+                    args.pretrained_model_name_or_path,
+                    torch_dtype=torch_dtype,
+                    revision=args.revision,
+                    variant=args.variant,
+                )
+                pipeline.set_progress_bar_config(disable=True)
 
-            sample_dataset = PromptDataset(args.class_prompt, num_new_images)
-            sample_dataloader = torch.utils.data.DataLoader(sample_dataset, batch_size=args.sample_batch_size)
+                num_new_images = args.num_class_images - cur_class_images
+                logger.info(f"Number of class images to sample: {num_new_images}.")
 
-            sample_dataloader = accelerator.prepare(sample_dataloader)
-            pipeline.to(accelerator.device)
+                sample_dataset = PromptDataset(class_prompt, num_new_images)
+                sample_dataloader = torch.utils.data.DataLoader(sample_dataset, batch_size=args.sample_batch_size)
 
-            for example in tqdm(
-                sample_dataloader, desc="Generating class images", disable=not accelerator.is_local_main_process
-            ):
-                images = pipeline(example["prompt"]).images
+                sample_dataloader = accelerator.prepare(sample_dataloader)
+                pipeline.to(accelerator.device)
 
-                for i, image in enumerate(images):
-                    hash_image = insecure_hashlib.sha1(image.tobytes()).hexdigest()
-                    image_filename = class_images_dir / f"{example['index'][i] + cur_class_images}-{hash_image}.jpg"
-                    image.save(image_filename)
+                for example in tqdm(
+                    sample_dataloader, desc="Generating class images", disable=not accelerator.is_local_main_process
+                ):
+                    images = pipeline(example["prompt"]).images
+
+                    for i, image in enumerate(images):
+                        hash_image = insecure_hashlib.sha1(image.tobytes()).hexdigest()
+                        image_filename = class_images_dir / f"{example['index'][i] + cur_class_images}-{hash_image}.jpg"
+                        image.save(image_filename)
 
             del pipeline
             if torch.cuda.is_available():
@@ -1253,26 +1380,6 @@ def main(args):
             use_bias_correction=args.prodigy_use_bias_correction,
             safeguard_warmup=args.prodigy_safeguard_warmup,
         )
-
-    # Dataset and DataLoaders creation:
-    train_dataset = DreamBoothDataset(
-        instance_data_root=args.instance_data_dir,
-        instance_prompt=args.instance_prompt,
-        class_prompt=args.class_prompt,
-        class_data_root=args.class_data_dir if args.with_prior_preservation else None,
-        class_num=args.num_class_images,
-        size=args.resolution,
-        repeats=args.repeats,
-        center_crop=args.center_crop,
-    )
-
-    train_dataloader = torch.utils.data.DataLoader(
-        train_dataset,
-        batch_size=args.train_batch_size,
-        shuffle=True,
-        collate_fn=lambda examples: collate_fn(examples, args.with_prior_preservation),
-        num_workers=args.dataloader_num_workers,
-    )
 
     # Computes additional embeddings/ids required by the SDXL UNet.
     # regular text embeddings (when `train_text_encoder` is not True)

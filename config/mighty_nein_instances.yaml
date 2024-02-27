@@ -1,0 +1,6 @@
+- instance_name: fjord
+  instance_data_root: data/fjord
+  instance_prompt: "a picture of [critrole-fjord], a half-orc warlock"
+- instance_name: beau
+  instance_data_root: data/beau
+  instance_prompt: "a picture of [critrole-beau], a human monk"

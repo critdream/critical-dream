@@ -2,8 +2,10 @@ git+https://github.com/huggingface/diffusers
 accelerate>=0.16.0
 ftfy
 peft
+pyyaml
 requests
 torchvision
 transformers>=4.25.1
+xformers
 youtube-transcript-api
 wandb
