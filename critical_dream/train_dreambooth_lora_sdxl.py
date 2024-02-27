@@ -598,6 +598,7 @@ class InstanceConfig:
     instance_urls: list[str]
     class_data_root: str | None = None
     class_prompt: str | None = None
+    validation_prompt: str | None = None
 
 
 class DreamBoothMultiInstanceDataset(Dataset):
@@ -1726,11 +1727,17 @@ def main(args):
                 break
 
         if accelerator.is_main_process:
-            if args.validation_prompt is not None and epoch % args.validation_epochs == 0:
-                logger.info(
-                    f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
-                    f" {args.validation_prompt}."
-                )
+
+            validation_prompts = None
+            if isinstance(train_dataset, DreamBoothMultiInstanceDataset):
+                validation_prompts = [
+                    config.validation_prompt for config in
+                    train_dataset.multi_instance_data_config
+                ]
+            elif args.validation_prompt is not None:
+                validation_prompts = [args.validation_prompt]
+
+            if validation_prompts is not None and epoch % args.validation_epochs == 0:
                 # create pipeline
                 if not args.train_text_encoder:
                     text_encoder_one = text_encoder_cls_one.from_pretrained(
@@ -1776,27 +1783,34 @@ def main(args):
 
                 # run inference
                 generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
-                pipeline_args = {"prompt": args.validation_prompt}
 
-                with torch.cuda.amp.autocast():
-                    images = [
-                        pipeline(**pipeline_args, generator=generator).images[0]
-                        for _ in range(args.num_validation_images)
-                    ]
+                for validation_prompt in validation_prompts:
+                    logger.info(
+                        f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
+                        f" {validation_prompt}."
+                    )
 
-                for tracker in accelerator.trackers:
-                    if tracker.name == "tensorboard":
-                        np_images = np.stack([np.asarray(img) for img in images])
-                        tracker.writer.add_images("validation", np_images, epoch, dataformats="NHWC")
-                    if tracker.name == "wandb":
-                        tracker.log(
-                            {
-                                "validation": [
-                                    wandb.Image(image, caption=f"{i}: {args.validation_prompt}")
-                                    for i, image in enumerate(images)
-                                ]
-                            }
-                        )
+                    pipeline_args = {"prompt": validation_prompt}
+
+                    with torch.cuda.amp.autocast():
+                        images = [
+                            pipeline(**pipeline_args, generator=generator).images[0]
+                            for _ in range(args.num_validation_images)
+                        ]
+
+                    for tracker in accelerator.trackers:
+                        if tracker.name == "tensorboard":
+                            np_images = np.stack([np.asarray(img) for img in images])
+                            tracker.writer.add_images("validation", np_images, epoch, dataformats="NHWC")
+                        if tracker.name == "wandb":
+                            tracker.log(
+                                {
+                                    "validation": [
+                                        wandb.Image(image, caption=f"{i}: {validation_prompt}")
+                                        for i, image in enumerate(images)
+                                    ]
+                                }
+                            )
 
                 del pipeline
                 torch.cuda.empty_cache()
