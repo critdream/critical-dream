@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument("output_path", type=str)
-    parser.add_argument("--multi_instance_config", type=str)
+    parser.add_argument("--multi_instance_data_config", type=str)
     args = parser.parse_args()
 
-    main(Path(args.multi_instance_config), Path(args.output_path))
+    main(Path(args.multi_instance_data_config), Path(args.output_path))
