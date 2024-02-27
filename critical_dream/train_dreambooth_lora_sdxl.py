@@ -1726,16 +1726,16 @@ def main(args):
             if global_step >= args.max_train_steps:
                 break
 
-        if accelerator.is_main_process:
+        validation_prompts = None
+        if isinstance(train_dataset, DreamBoothMultiInstanceDataset):
+            validation_prompts = [
+                config.validation_prompt for config in
+                train_dataset.multi_instance_data_config
+            ]
+        elif args.validation_prompt is not None:
+            validation_prompts = [args.validation_prompt]
 
-            validation_prompts = None
-            if isinstance(train_dataset, DreamBoothMultiInstanceDataset):
-                validation_prompts = [
-                    config.validation_prompt for config in
-                    train_dataset.multi_instance_data_config
-                ]
-            elif args.validation_prompt is not None:
-                validation_prompts = [args.validation_prompt]
+        if accelerator.is_main_process:
 
             if validation_prompts is not None and epoch % args.validation_epochs == 0:
                 # create pipeline
@@ -1877,27 +1877,28 @@ def main(args):
 
         # run inference
         images = []
-        if args.validation_prompt and args.num_validation_images > 0:
+        if validation_prompts and args.num_validation_images > 0:
             pipeline = pipeline.to(accelerator.device)
             generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
-            images = [
-                pipeline(args.validation_prompt, num_inference_steps=25, generator=generator).images[0]
-                for _ in range(args.num_validation_images)
-            ]
+            for validation_prompt in validation_prompts:
+                images = [
+                    pipeline(validation_prompt, num_inference_steps=25, generator=generator).images[0]
+                    for _ in range(args.num_validation_images)
+                ]
 
-            for tracker in accelerator.trackers:
-                if tracker.name == "tensorboard":
-                    np_images = np.stack([np.asarray(img) for img in images])
-                    tracker.writer.add_images("test", np_images, epoch, dataformats="NHWC")
-                if tracker.name == "wandb":
-                    tracker.log(
-                        {
-                            "test": [
-                                wandb.Image(image, caption=f"{i}: {args.validation_prompt}")
-                                for i, image in enumerate(images)
-                            ]
-                        }
-                    )
+                for tracker in accelerator.trackers:
+                    if tracker.name == "tensorboard":
+                        np_images = np.stack([np.asarray(img) for img in images])
+                        tracker.writer.add_images("test", np_images, epoch, dataformats="NHWC")
+                    if tracker.name == "wandb":
+                        tracker.log(
+                            {
+                                "test": [
+                                    wandb.Image(image, caption=f"{i}: {validation_prompt}")
+                                    for i, image in enumerate(images)
+                                ]
+                            }
+                        )
 
         if args.push_to_hub:
             save_model_card(
