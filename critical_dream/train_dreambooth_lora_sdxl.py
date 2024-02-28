@@ -87,7 +87,7 @@ def save_model_card(
 ):
     widget_dict = []
     if images is not None:
-        for validation_prompt, image in zip(validation_prompts, images):
+        for i, (validation_prompt, image) in enumerate(zip(validation_prompts, images)):
             image.save(os.path.join(repo_folder, f"image_{i}.png"))
             widget_dict.append(
                 {"text": validation_prompt if validation_prompt else " ", "output": {"url": f"image_{i}.png"}}
