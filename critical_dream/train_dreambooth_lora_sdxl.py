@@ -1879,6 +1879,7 @@ def main(args):
 
         # run inference
         model_card_images = []
+        model_card_prompts = []
         if validation_prompts and args.num_validation_images > 0:
             pipeline = pipeline.to(accelerator.device)
             generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
@@ -1888,6 +1889,7 @@ def main(args):
                     for _ in range(args.num_validation_images)
                 ]
                 model_card_images.extend(images)
+                model_card_prompts.extend([validation_prompt] * args.num_validation_images)
 
                 for tracker in accelerator.trackers:
                     if tracker.name == "tensorboard":
@@ -1910,7 +1912,7 @@ def main(args):
                 base_model=args.pretrained_model_name_or_path,
                 train_text_encoder=args.train_text_encoder,
                 instance_prompt=train_dataset.multi_instance_data_config[0].instance_prompt,
-                validation_prompts=validation_prompts,
+                validation_prompts=model_card_prompts,
                 repo_folder=args.output_dir,
                 vae_path=args.pretrained_vae_model_name_or_path,
             )
