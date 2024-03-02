@@ -1907,7 +1907,7 @@ def main(args):
         model_card_images = []
         model_card_prompts = []
         if validation_prompts and args.num_validation_images > 0:
-            pipeline = pipeline.to(accelerator.device)
+            pipeline = pipeline.to(accelerator.device, dtype=weight_dtype)
             generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
             for validation_prompt in validation_prompts:
                 images = [
