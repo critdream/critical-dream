@@ -64,6 +64,7 @@ export HUB_MODEL_ID="cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-cri
 accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
   --pretrained_model_name_or_path=$MODEL_NAME  \
   --multi_instance_data_config=config/mighty_nein_instances.yaml \
+  --multi_instance_subset=fjord \
   --pretrained_vae_model_name_or_path=$VAE_PATH \
   --with_prior_preservation \
   --output_dir=$OUTPUT_DIR \

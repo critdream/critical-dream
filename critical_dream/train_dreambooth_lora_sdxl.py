@@ -1786,7 +1786,7 @@ def main(args):
                     vae=vae,
                     text_encoder=accelerator.unwrap_model(text_encoder_one),
                     text_encoder_2=accelerator.unwrap_model(text_encoder_two),
-                    unet=accelerator.unwrap_model(unet),
+                    unet=accelerator.unwrap_model(unet).to(torch.float32),
                     revision=args.revision,
                     variant=args.variant,
                     torch_dtype=weight_dtype,
