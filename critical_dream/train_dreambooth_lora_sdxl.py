@@ -1767,26 +1767,43 @@ def main(args):
         if accelerator.is_main_process:
 
             if validation_prompts is not None and epoch % args.validation_epochs == 0:
-                # create pipeline
-                if not args.train_text_encoder:
-                    text_encoder_one = text_encoder_cls_one.from_pretrained(
-                        args.pretrained_model_name_or_path,
-                        subfolder="text_encoder",
-                        revision=args.revision,
-                        variant=args.variant,
+
+                unet = unwrap_model(unet)
+                unet = unet.to(torch.float32)
+                unet_lora_layers = convert_state_dict_to_diffusers(get_peft_model_state_dict(unet))
+
+                if args.train_text_encoder:
+                    text_encoder_one = unwrap_model(text_encoder_one)
+                    text_encoder_lora_layers = convert_state_dict_to_diffusers(
+                        get_peft_model_state_dict(text_encoder_one.to(torch.float32))
                     )
-                    text_encoder_two = text_encoder_cls_two.from_pretrained(
-                        args.pretrained_model_name_or_path,
-                        subfolder="text_encoder_2",
-                        revision=args.revision,
-                        variant=args.variant,
+                    text_encoder_two = unwrap_model(text_encoder_two)
+                    text_encoder_2_lora_layers = convert_state_dict_to_diffusers(
+                        get_peft_model_state_dict(text_encoder_two.to(torch.float32))
                     )
+                else:
+                    text_encoder_lora_layers = None
+                    text_encoder_2_lora_layers = None
+
+                StableDiffusionXLPipeline.save_lora_weights(
+                    save_directory=args.output_dir,
+                    unet_lora_layers=unet_lora_layers,
+                    text_encoder_lora_layers=text_encoder_lora_layers,
+                    text_encoder_2_lora_layers=text_encoder_2_lora_layers,
+                )
+
+                # Final inference
+                # Load previous pipeline
+                vae = AutoencoderKL.from_pretrained(
+                    vae_path,
+                    subfolder="vae" if args.pretrained_vae_model_name_or_path is None else None,
+                    revision=args.revision,
+                    variant=args.variant,
+                    torch_dtype=weight_dtype,
+                )
                 pipeline = StableDiffusionXLPipeline.from_pretrained(
                     args.pretrained_model_name_or_path,
-                    vae=vae.to(weight_dtype),
-                    text_encoder=accelerator.unwrap_model(text_encoder_one),
-                    text_encoder_2=accelerator.unwrap_model(text_encoder_two),
-                    unet=accelerator.unwrap_model(unet),
+                    vae=vae,
                     revision=args.revision,
                     variant=args.variant,
                     torch_dtype=weight_dtype,
@@ -1806,6 +1823,9 @@ def main(args):
                 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(
                     pipeline.scheduler.config, **scheduler_args
                 )
+
+                # load attention processors
+                pipeline.load_lora_weights(args.output_dir)
 
                 pipeline = pipeline.to(accelerator.device)
                 pipeline.set_progress_bar_config(disable=True)
