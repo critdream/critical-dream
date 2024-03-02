@@ -1783,10 +1783,10 @@ def main(args):
                     )
                 pipeline = StableDiffusionXLPipeline.from_pretrained(
                     args.pretrained_model_name_or_path,
-                    vae=vae,
+                    vae=vae.to(weight_dtype),
                     text_encoder=accelerator.unwrap_model(text_encoder_one),
                     text_encoder_2=accelerator.unwrap_model(text_encoder_two),
-                    unet=accelerator.unwrap_model(unet).to(torch.float32),
+                    unet=accelerator.unwrap_model(unet),
                     revision=args.revision,
                     variant=args.variant,
                     torch_dtype=weight_dtype,
