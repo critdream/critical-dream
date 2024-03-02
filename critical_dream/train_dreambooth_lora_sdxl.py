@@ -217,6 +217,13 @@ def parse_args(input_args=None):
     )
 
     parser.add_argument(
+        "--multi_instance_subset",
+        type=str,
+        default=None,
+        help=("A comma-separated list of instance names to train on. "),
+    )
+
+    parser.add_argument(
         "--instance_data_dir",
         type=str,
         default=None,
@@ -577,18 +584,6 @@ def parse_args(input_args=None):
     if env_local_rank != -1 and env_local_rank != args.local_rank:
         args.local_rank = env_local_rank
 
-    if args.with_prior_preservation:
-        if args.class_data_dir is None:
-            raise ValueError("You must specify a data directory for class images.")
-        if args.class_prompt is None:
-            raise ValueError("You must specify prompt for class images.")
-    else:
-        # logger is not available yet
-        if args.class_data_dir is not None:
-            warnings.warn("You need not use --class_data_dir without --with_prior_preservation.")
-        if args.class_prompt is not None:
-            warnings.warn("You need not use --class_prompt without --with_prior_preservation.")
-
     return args
 
 
@@ -612,6 +607,7 @@ class DreamBoothMultiInstanceDataset(Dataset):
     def __init__(
         self,
         multi_instance_data_config: list[InstanceConfig],
+        multi_instance_subset: list[str] | None = None,
         class_num=None,
         size=1024,
         repeats=1,
@@ -619,9 +615,16 @@ class DreamBoothMultiInstanceDataset(Dataset):
     ):
         self.custom_instance_prompts = True
 
+        _multi_instance_subset = multi_instance_subset or []
+
         with open(multi_instance_data_config) as f:
             self.multi_instance_data_config = [
                 InstanceConfig(**x) for x in yaml.safe_load(f)
+                if (
+                    True
+                    if not _multi_instance_subset
+                    else x["instance_name"] in _multi_instance_subset
+                )
             ]
 
         self.dreambooth_datasets = {
@@ -675,7 +678,7 @@ class DreamBoothDataset(Dataset):
         size=1024,
         repeats=1,
         center_crop=False,
-        custom_instance_prompts=False,
+        custom_instance_prompts: bool | list = False,
     ):
         self.size = size
         self.center_crop = center_crop
@@ -969,6 +972,7 @@ def main(args):
     if args.multi_instance_data_config is not None:
         train_dataset = DreamBoothMultiInstanceDataset(
             multi_instance_data_config=args.multi_instance_data_config,
+            multi_instance_subset=args.multi_instance_subset,
             class_num=args.num_class_images,
             size=args.resolution,
             repeats=args.repeats,
@@ -999,6 +1003,7 @@ def main(args):
 
     # Generate class images if prior preservation is enabled.
     class_images_dirs = None
+    class_prompts = None
     if args.class_data_dir and isinstance(train_dataset, DreamBoothDataset):
         class_images_dirs = [args.class_data_dir]
         class_prompts = [args.class_prompt]
@@ -1013,7 +1018,19 @@ def main(args):
         ]
 
     if args.with_prior_preservation:
-        # NOTE: This doesn't work with multi instance classes.
+        if class_images_dirs is None:
+            raise ValueError("You must specify a data directory for class images.")
+        if class_prompts is None:
+            raise ValueError("You must specify prompt for class images.")
+    else:
+        # logger is not available yet
+        if class_images_dirs is not None:
+            warnings.warn("You need not use --class_data_dir without --with_prior_preservation.")
+        if class_prompts is not None:
+            warnings.warn("You need not use --class_prompt without --with_prior_preservation.")
+
+    if args.with_prior_preservation:
+        pipeline = None
         for class_prompt, class_images_dir in zip(class_prompts, class_images_dirs):
             if class_images_dir is None:
                 continue
@@ -1059,7 +1076,8 @@ def main(args):
                         image_filename = class_images_dir / f"{example['index'][i] + cur_class_images}-{hash_image}.jpg"
                         image.save(image_filename)
 
-            del pipeline
+            if pipeline:
+                del pipeline
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
 
@@ -1421,7 +1439,7 @@ def main(args):
         )
 
     # Handle class prompt for prior-preservation.
-    if args.with_prior_preservation:
+    if args.with_prior_preservation and not train_dataset.custom_instance_prompts:
         if not args.train_text_encoder:
             class_prompt_hidden_states, class_pooled_prompt_embeds = compute_text_embeddings(
                 args.class_prompt, text_encoders, tokenizers
@@ -1604,7 +1622,7 @@ def main(args):
                 # Predict the noise residual
                 if not args.train_text_encoder:
                     unet_added_conditions = {
-                        "time_ids": add_time_ids,
+                        "time_ids": add_time_ids.repeat(bsz, 1),
                         "text_embeds": unet_add_text_embeds.repeat(elems_to_repeat_text_embeds, 1),
                     }
                     prompt_embeds_input = prompt_embeds.repeat(elems_to_repeat_text_embeds, 1, 1)

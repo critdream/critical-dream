@@ -74,7 +74,7 @@ accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
   --report_to="wandb" \
   --lr_scheduler="constant" \
   --lr_warmup_steps=0 \
-  --num_class_images=200 \
+  --num_class_images=10 \
   --max_train_steps=10 \
   --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
   --validation_epochs=25 \
