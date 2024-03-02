@@ -1768,9 +1768,10 @@ def main(args):
 
             if validation_prompts is not None and epoch % args.validation_epochs == 0:
 
-                unet = unwrap_model(unet)
-                unet = unet.to(torch.float32)
-                unet_lora_layers = convert_state_dict_to_diffusers(get_peft_model_state_dict(unet))
+                val_unet = unwrap_model(unet).to(torch.float32)
+                unet_lora_layers = convert_state_dict_to_diffusers(
+                    get_peft_model_state_dict(val_unet)
+                )
 
                 if args.train_text_encoder:
                     text_encoder_one = unwrap_model(text_encoder_one)
@@ -1841,11 +1842,10 @@ def main(args):
 
                     pipeline_args = {"prompt": validation_prompt}
 
-                    with torch.cuda.amp.autocast():
-                        images = [
-                            pipeline(**pipeline_args, generator=generator).images[0]
-                            for _ in range(args.num_validation_images)
-                        ]
+                    images = [
+                        pipeline(**pipeline_args, num_inference_steps=25, generator=generator).images[0]
+                        for _ in range(args.num_validation_images)
+                    ]
 
                     for tracker in accelerator.trackers:
                         if tracker.name == "tensorboard":
@@ -1861,6 +1861,7 @@ def main(args):
                                 }
                             )
 
+                del val_unet
                 del pipeline
                 torch.cuda.empty_cache()
 
