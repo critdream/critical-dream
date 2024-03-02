@@ -968,53 +968,29 @@ def main(args):
     if args.seed is not None:
         set_seed(args.seed)
 
-    # Dataset and DataLoaders creation:
-    if args.multi_instance_data_config is not None:
-        train_dataset = DreamBoothMultiInstanceDataset(
-            multi_instance_data_config=args.multi_instance_data_config,
-            multi_instance_subset=args.multi_instance_subset,
-            class_num=args.num_class_images,
-            size=args.resolution,
-            repeats=args.repeats,
-            center_crop=args.center_crop,
-        )
-        logging.info("Using multi-instance dataset.")
-        for instance_name, _dataset in train_dataset.dreambooth_datasets.items():
-            logging.info(f"Instance: {instance_name}, num instances: {len(_dataset)}")
-    else:
-        train_dataset = DreamBoothDataset(
-            instance_data_root=args.instance_data_dir,
-            instance_prompt=args.instance_prompt,
-            class_prompt=args.class_prompt,
-            class_data_root=args.class_data_dir if args.with_prior_preservation else None,
-            class_num=args.num_class_images,
-            size=args.resolution,
-            repeats=args.repeats,
-            center_crop=args.center_crop,
-        )
-
-    train_dataloader = torch.utils.data.DataLoader(
-        train_dataset,
-        batch_size=args.train_batch_size,
-        shuffle=True,
-        collate_fn=lambda examples: collate_fn(examples, args.with_prior_preservation),
-        num_workers=args.dataloader_num_workers,
-    )
-
     # Generate class images if prior preservation is enabled.
     class_images_dirs = None
     class_prompts = None
-    if args.class_data_dir and isinstance(train_dataset, DreamBoothDataset):
+    if args.class_data_dir and args.multi_instance_data_config is None:
         class_images_dirs = [args.class_data_dir]
         class_prompts = [args.class_prompt]
     else:
+        with open(args.multi_instance_data_config) as f:
+            _multi_instance_data_config = [
+                InstanceConfig(**x) for x in yaml.safe_load(f)
+                if (
+                    True
+                    if args.multi_instance_subset is None
+                    else x["instance_name"] in args.multi_instance_subset.split(",")
+                )
+            ]
         class_images_dirs = [
             instance_config.class_data_root
-            for instance_config in train_dataset.multi_instance_data_config
+            for instance_config in _multi_instance_data_config
         ]
         class_prompts = [
             instance_config.class_prompt
-            for instance_config in train_dataset.multi_instance_data_config
+            for instance_config in _multi_instance_data_config
         ]
 
     if args.with_prior_preservation:
@@ -1080,6 +1056,39 @@ def main(args):
                 del pipeline
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
+
+    # Dataset and DataLoaders creation:
+    if args.multi_instance_data_config is not None:
+        train_dataset = DreamBoothMultiInstanceDataset(
+            multi_instance_data_config=args.multi_instance_data_config,
+            multi_instance_subset=args.multi_instance_subset,
+            class_num=args.num_class_images,
+            size=args.resolution,
+            repeats=args.repeats,
+            center_crop=args.center_crop,
+        )
+        logging.info("Using multi-instance dataset.")
+        for instance_name, _dataset in train_dataset.dreambooth_datasets.items():
+            logging.info(f"Instance: {instance_name}, num instances: {len(_dataset)}")
+    else:
+        train_dataset = DreamBoothDataset(
+            instance_data_root=args.instance_data_dir,
+            instance_prompt=args.instance_prompt,
+            class_prompt=args.class_prompt,
+            class_data_root=args.class_data_dir if args.with_prior_preservation else None,
+            class_num=args.num_class_images,
+            size=args.resolution,
+            repeats=args.repeats,
+            center_crop=args.center_crop,
+        )
+
+    train_dataloader = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=True,
+        collate_fn=lambda examples: collate_fn(examples, args.with_prior_preservation),
+        num_workers=args.dataloader_num_workers,
+    )
 
     # Handle the repository creation
     if accelerator.is_main_process:

@@ -65,6 +65,7 @@ accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
   --pretrained_model_name_or_path=$MODEL_NAME  \
   --multi_instance_data_config=config/mighty_nein_instances.yaml \
   --pretrained_vae_model_name_or_path=$VAE_PATH \
+  --with_prior_preservation \
   --output_dir=$OUTPUT_DIR \
   --resolution=1024 \
   --train_batch_size=1 \
