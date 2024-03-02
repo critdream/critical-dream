@@ -1631,7 +1631,7 @@ def main(args):
                 # Predict the noise residual
                 if not args.train_text_encoder:
                     unet_added_conditions = {
-                        "time_ids": add_time_ids.repeat(bsz, 1),
+                        "time_ids": add_time_ids.repeat(bsz // len(batch["original_sizes"]), 1),
                         "text_embeds": unet_add_text_embeds.repeat(elems_to_repeat_text_embeds, 1),
                     }
                     prompt_embeds_input = prompt_embeds.repeat(elems_to_repeat_text_embeds, 1, 1)
