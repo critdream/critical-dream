@@ -50,6 +50,7 @@ from transformers import AutoTokenizer, PretrainedConfig
 import diffusers
 from diffusers import (
     AutoencoderKL,
+    DDIMScheduler,
     DDPMScheduler,
     DPMSolverMultistepScheduler,
     StableDiffusionXLPipeline,
@@ -1123,7 +1124,7 @@ def main(args):
     )
 
     # Load scheduler and models
-    noise_scheduler = DDPMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
+    noise_scheduler = DDIMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
     text_encoder_one = text_encoder_cls_one.from_pretrained(
         args.pretrained_model_name_or_path, subfolder="text_encoder", revision=args.revision, variant=args.variant
     )
@@ -1643,7 +1644,9 @@ def main(args):
                         return_dict=False,
                     )[0]
                 else:
-                    unet_added_conditions = {"time_ids": add_time_ids}
+                    unet_added_conditions = {
+                        "time_ids": add_time_ids.repeat(bsz // len(batch["original_sizes"]), 1),
+                    }
                     prompt_embeds, pooled_prompt_embeds = encode_prompt(
                         text_encoders=[text_encoder_one, text_encoder_two],
                         tokenizers=None,

@@ -70,7 +70,6 @@ accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
   --output_dir=$OUTPUT_DIR \
   --resolution=1024 \
   --train_batch_size=1 \
-  --report_to="wandb" \
   --gradient_accumulation_steps=1 \
   --learning_rate=1e-4 \
   --lr_scheduler="constant" \
