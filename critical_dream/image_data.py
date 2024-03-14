@@ -12,7 +12,7 @@ def download_images(character, urls, output_path):
         filepath.parent.mkdir(exist_ok=True)
         with filepath.open("wb") as f:
             f.write(response.content)
-
+            
 
 def main(multi_instance_config: Path, output_path: Path):
     output_path.mkdir(parents=True, exist_ok=True)

@@ -1,11 +1,11 @@
 - instance_name: fjord
   instance_data_root: data/fjord
   instance_prompt: "a picture of [critrole-fjord], a male half-orc warlock"
+  validation_prompt: "a picture of [critrole-fjord], a male half-orc warlock. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/male_half_orc_warlock
+  class_prompt: "a picture of a male half-orc warlock"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/8/80/Fjord_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/3/36/Fjord_Level_17_portrait_-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/50/Fjord_Winter_Headshot.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/90/Fjordportrait2019.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/2/24/Fjord.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg"
@@ -15,16 +15,23 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0b/Fjord_and_Melora.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/a/ab/Fjord_star_razor_battletailors.jpeg"
-  validation_prompt: "a picture of [critrole-fjord], a male half-orc warlock. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/male_half_orc_warlock
-  class_prompt: "a picture of a male half-orc warlock"
+  - "https://i.redd.it/yageniubd5r71.jpg"
+  - "https://64.media.tumblr.com/bb040d6a77c8949de517840b4654a37e/tumblr_p3ftf9qoNM1shdbpyo1_1280.jpg"
+  - "https://64.media.tumblr.com/672624052ced0817710fcba18532940d/tumblr_p622yyBuov1ucbbfho2_r1_500.png"
+  - "https://pbs.twimg.com/media/DZ5ImOMX4AA-zFI.png"
+  - "https://i.pinimg.com/736x/31/f6/90/31f690a2c0e7b78833899203dccd2683.jpg"
+  - "https://pbs.twimg.com/media/E0K19vPXIAEKVo1.jpg"
+  - "https://i.pinimg.com/736x/cc/32/9e/cc329e9017249ca8fe3e2e9f4edfd121.jpg"
+  - "https://cdnb.artstation.com/p/assets/images/images/029/627/255/large/aaron-simon-109518466-137866528006679-5670728502885644294-o.jpg"
+  - "https://64.media.tumblr.com/39f7e6a67ae9a19a082c457e640e7ae1/fa197467cb617df0-d4/s1280x1920/67b91d985702840d19aea96e39b20f30381c0a6e.jpg"
 - instance_name: beau
   instance_data_root: data/beau
   instance_prompt: "a picture of [critrole-beau], a female human monk"
+  validation_prompt: "a picture of [critrole-beau], a female human monk. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/female_human_monk
+  class_prompt: "a picture of a female human monk"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a8/Beau_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/e/e3/Beau_Level_17_portrait_-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/b/bd/Beauregard_Winter_Headshot.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/c/c8/Beauportrait2019.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Beauregard.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/fe/Beauregard_by_Ariana_Orner.jpg"
@@ -34,16 +41,24 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Beau_-_Scout_Villegas.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/d/db/Beau_-_Jenny_Tan.jpg"
-  validation_prompt: "a picture of [critrole-beau], a female human monk. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/female_human_monk
-  class_prompt: "a picture of a female human monk"
+  - "https://cdnb.artstation.com/p/assets/images/images/028/914/751/large/laura-ambrosiano-criticalrole-beauportrait.jpg?1595904000"
+  - "https://pbs.twimg.com/media/EHqy091X4AMQjXJ.jpg"
+  - "https://critrole.com/wp-content/uploads/2019/07/@AlgizArt-1.jpg"
+  - "https://i.redd.it/j62orybeyn491.jpg"
+  - "https://pbs.twimg.com/media/E0gVWVAUUAE6Scj.jpg"
+  - "https://magecraftminiatures.com/cdn/shop/products/Beau_bust_color_1024x1024.jpg"
+  - "https://64.media.tumblr.com/b19ccaf1041d478287924dac86ce00ae/a2c2c122c3bdd6cf-b9/s1280x1920/cf9a28aa3fe79459710971497edb4b7ed8bde257.png"
+  - "https://critrole.com/wp-content/uploads/2021/03/@Katchdraws-A.jpg"
+  - "https://i.pinimg.com/736x/4b/82/ba/4b82ba2f5b136d12839e7470219618cb.jpg"
+  - "https://cdnb.artstation.com/p/assets/covers/images/023/397/043/large/jace-daily-beau-final-details-2.jpg"
 - instance_name: caduceus
   instance_data_root: data/caduceus
   instance_prompt: "a picture of [critrole-caduceus], a male firbolg cleric"
+  validation_prompt: "a picture of [critrole-caduceus], a male firbolg cleric. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/male_firbolg_cleric
+  class_prompt: "a picture of a male firbolg cleric"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/5/51/Caduceus_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/6/6d/Caduceus_Winter_Headshot.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/b/b1/Cadportrait2019.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/7/78/Caduceus_portrait.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/0/03/Caduceus_Clay2.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/6/64/Caduceus_by_Ariana_Orner.jpg"
@@ -53,62 +68,67 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a0/Cad_offbeatworlds.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/9/98/IMG_20180728_114227.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a8/Caduceus_-_Elimnebe.jpg"
-  validation_prompt: "a picture of [critrole-caduceus], a male firbolg cleric. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/male_firbolg_cleric
-  class_prompt: "a picture of a male firbolg cleric"
+  - "https://64.media.tumblr.com/9a7013420cebbadd347d0faab5ccf764/982c560d42b64da0-6a/s1280x1920/21af3843c3f0f10ae0c4463342824eb5c966670a.jpg"
+  - https://cdnb.artstation.com/p/assets/images/images/019/285/135/large/vi-viro-cadface.jpg
+  - https://www.sideshow.com/cdn-cgi/image/height=850,quality=90,f=auto/https://www.sideshow.com/storage/product-images/200623/caduceus-clay-mighty-nein_critical-role_gallery_64f762746c952.jpg
 - instance_name: caleb
   instance_data_root: data/caleb
   instance_prompt: "a picture of [critrole-caleb], a male human wizard"
+  validation_prompt: "a picture of [critrole-caleb], a male human wizard. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/male_human_wizard
+  class_prompt: "a picture of a male human wizard"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/d/d3/Caleb_Level_20_portrait_-_Hannah_Friederichs.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0a/Caleb_Level_17_portrait_-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/e/ef/Caleb_Winter_Headshot.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/1/15/Calebportrait2019.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/9/92/Caleb_Widogast.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/2/2f/Caleb_by_Ariana_Orner.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/4/49/WinterM92Caleb-ArianaOrner.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/1/14/Caleb_-_Ari.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/c/cd/Widogast%27s_Web_of_Fire_battletailors.jpeg"
   - "https://static.wikia.nocookie.net/criticalrole/images/a/ac/Caleb_and_Frumpkin_-_Minttu_Hynninen.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/5/52/Caleb_heartofpack.jpg"
-  validation_prompt: "a picture of [critrole-caleb], a male human wizard. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/male_human_wizard
-  class_prompt: "a picture of a male human wizard"
+  - https://i.redd.it/1cy1vjfru1n71.jpg
+  - https://secretcompassonline.com/cdn/shop/files/caleb-widogast-mighty-nein_critical-role_gallery_64e6a03b0d0fe_1200x800.jpg
 - instance_name: jester
   instance_data_root: data/jester
   instance_prompt: "a picture of [critrole-jester], a female tiefling cleric"
+  validation_prompt: "a picture of [critrole-jester], a female tiefling cleric. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/female_tiefling_cleric
+  class_prompt: "a picture of a female tiefling cleric"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/0/09/Jester_level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/c/cd/Jester_Level_17_portrait_-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/5d/Jester_Winter_Headshot.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/0/05/Jesterportrait2019.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/1/1b/Jester.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0f/M9jesterfinal2.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/7/79/Jester_Winter.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/0/08/Jester_as_High_Priestess_-_Porzio_Art.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg"
-  validation_prompt: "a picture of [critrole-jester], a female tiefling cleric. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/female_tiefling_cleric
-  class_prompt: "a picture of a female tiefling cleric"
+  - https://cdnb.artstation.com/p/assets/images/images/031/815/823/large/sina-rupp-jester.jpg
+  - https://64.media.tumblr.com/ae93da1f8667d5eb1808687f146a7870/tumblr_p2k58l1znT1sk51m7o1_r1_500.png
+  - https://pbs.twimg.com/media/EJ6tEgoXUAAKldh.jpg
 - instance_name: nott
   instance_data_root: data/nott
   instance_prompt: "a picture of [critrole-nott], a female goblin rogue"
+  validation_prompt: "a picture of [critrole-nott], a female goblin rogue. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/female_goblin_rogue
+  class_prompt: "a picture of a female goblin rogue"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/b/b2/M9nottfinal2Headshot.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/d/dc/Nott.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/b/b8/Nott_the_Brave_by_Ariana_Orner.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/5/5e/Nott_by_Mintscribbleart.jpg"
-  validation_prompt: "a picture of [critrole-nott], a female goblin rogue. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/female_goblin_rogue
-  class_prompt: "a picture of a female goblin rogue"
+  - https://64.media.tumblr.com/7792ac4fcc04163260213fbc03b0f737/d86149e5803de27a-8c/s1280x1920/59369b896dada88c8551484a0ad637cf1f7bccd9.png
+  - https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/0c6a8739-2ef1-469e-ba0d-1f854acc0a9d/width=450/00066-1120030128.jpeg
+  - https://i.etsystatic.com/8939817/r/il/8d473b/1911187820/il_fullxfull.1911187820_n63k.jpg
+  - https://i.pinimg.com/originals/73/1f/64/731f64d6425e4f75ccb238ff73a1a364.jpg
+  - https://www.sideshow.com/cdn-cgi/image/quality=90,f=auto/https://www.sideshow.com/storage/product-images/200631/nott-the-brave-mighty-nein-statue_critical-role_gallery_6578c245888a5.jpg
 - instance_name: veth
   instance_data_root: data/veth
   instance_prompt: "a picture of [critrole-veth], a female halfling rogue/wizard"
+  validation_prompt: "a picture of [critrole-veth], a female halfling rogue/wizard. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/female_halfling_rogue_wizard
+  class_prompt: "a picture of a female halfling rogue/wizard"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/e/e1/Veth_Level_17_portrait-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/d/dc/Veth_Winter_Headshot.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/f1/Veth_head_portrait_official_2020.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/fc/Veth_full_body_portrait.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg"
@@ -117,16 +137,17 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0e/Veth_in_843_PD_by_Zhellers.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Veth_-_Retrobot3d.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0d/Veth_-_Ameera.jpg"
-  validation_prompt: "a picture of [critrole-veth], a female halfling rogue/wizard. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/female_halfling_rogue_wizard
-  class_prompt: "a picture of a female halfling rogue/wizard"
+  - https://i.redd.it/ymjksfbc4fh51.png
+  - https://64.media.tumblr.com/9d2fd31db45cc8f77fe7de366fab9bb7/9e1b1f2f40e62b1a-a6/s1280x1920/81bcea0c4b5bfb46cca6bb475ac8176bf9c69ed6.jpg
+  - https://critrole.com/wp-content/uploads/2021/10/@hailiiz-hailiiz.instagram.jpg
 - instance_name: yasha
   instance_data_root: data/yasha
   instance_prompt: "a picture of [critrole-yasha], a female aasimar barbarian"
+  validation_prompt: "a picture of [critrole-yasha], a female aasimar barbarian. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/female_aasimar_barbarian
+  class_prompt: "a picture of a female aasimar barbarian"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/d/dd/Yasha_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/3/36/Yasha_Level_17_portrait_-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/6/66/Yashaportrait2019.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/9/92/Yasha.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Yasha_by_Ariana_Orner.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/c/c4/Yasha_Level_20_-_Hannah_Friederichs.jpg"
@@ -137,20 +158,31 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/4/45/Yasha_-_Ari.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/8/8f/Yasha_-_Disarmonia.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/2/2c/Critical_role_yasha_by_atutcha-dc0iuov-1.jpg"
-  validation_prompt: "a picture of [critrole-yasha], a female aasimar barbarian. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/female_aasimar_barbarian
-  class_prompt: "a picture of a female aasimar barbarian"
+  - https://pbs.twimg.com/media/D72_-eiV4AANCoc.jpg
+  - https://cdnb.artstation.com/p/assets/images/images/022/709/171/large/leti-m-vila-yasha-close-1.jpg
+  - https://i.pinimg.com/474x/40/db/6f/40db6fc92cfc086435452b52a3004839.jpg
+  - https://64.media.tumblr.com/d8bfad2ddebaf118d480f32f955b5d86/542d17e0ab43808e-fc/s1280x1920/da22a464b0a2a0594eda06b6093d8cc5b4369542.png
+  - https://66.media.tumblr.com/0c65640d18c9881ef7f65f4f5472c26c/tumblr_pl6xhcqvJ91r4vop9o1_1280.jpg
+  - https://pbs.twimg.com/media/FqahqTkWYAYFl-I.jpg
+  - https://64.media.tumblr.com/3f8c56b947ab9e012a0f7c7b75c63969/tumblr_p8j58uHlgP1r03qmqo1_1280.png
 - instance_name: mollymauk
   instance_data_root: data/mollymauk
   instance_prompt: "a picture of [critrole-mollymauk], a male tiefling blood hunter"
+  validation_prompt: "a picture of [critrole-mollymauk], a male tiefling blood hunter. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  class_data_root: data/male_tiefling_blood_hunter
+  class_prompt: "a picture of a male tiefling blood hunter"
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/c/ce/Mollymauk.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/5/51/Mollymauk_Official_byArianaOrner.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/3/35/Lucien_by_Yettinim.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/2/21/Kingsley_Level_17_Portrait_-_Ari.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/54/Kingsley_-_Ari.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/6/6d/Kingsley_by_ElesirArt.png"
   - "https://static.wikia.nocookie.net/criticalrole/images/5/58/Kingsley_Tealeaf_by_%40rosygloomart.jpg"
-  validation_prompt: "a picture of [critrole-mollymauk], a male tiefling blood hunter. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
-  class_data_root: data/male_tiefling_blood_hunter
-  class_prompt: "a picture of a male tiefling blood hunter"
+  - https://i.redd.it/n7xm2avvq5x41.jpg
+  - https://pbs.twimg.com/media/FOyqFeXVUAIsYh0.jpg
+  - https://cdnb.artstation.com/p/assets/images/images/018/778/975/large/hannah-goldfinch-molly01.jpg
+  - https://64.media.tumblr.com/ff3127ca8ce486eb7b0697f5750c6bd0/27a8bb2573d623df-c4/s1280x1920/19ad4e4db3f1ed8031ab2c73e46b35929e864602.jpg
+  - https://pm1.aminoapps.com/6769/4f602bc49c9b2cd39910720d0a295af5559ae40cv2_hq.jpg
+  - https://theilluminerdi.com/wp-content/uploads/2022/06/the-nine-eyes-of-lucien-critical-role-.png
+  - https://i.pinimg.com/736x/3f/0a/43/3f0a43083cca76e9060eea7133e7dca1.jpg
+  - https://static1.srcdn.com/wordpress/wp-content/uploads/2022/02/Critical-Role-Mighty-Nein-Origins-Tealeaf-Art.jpg
