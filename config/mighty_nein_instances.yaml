@@ -43,12 +43,10 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/d/db/Beau_-_Jenny_Tan.jpg"
   - "https://cdnb.artstation.com/p/assets/images/images/028/914/751/large/laura-ambrosiano-criticalrole-beauportrait.jpg?1595904000"
   - "https://pbs.twimg.com/media/EHqy091X4AMQjXJ.jpg"
-  - "https://critrole.com/wp-content/uploads/2019/07/@AlgizArt-1.jpg"
   - "https://i.redd.it/j62orybeyn491.jpg"
   - "https://pbs.twimg.com/media/E0gVWVAUUAE6Scj.jpg"
   - "https://magecraftminiatures.com/cdn/shop/products/Beau_bust_color_1024x1024.jpg"
   - "https://64.media.tumblr.com/b19ccaf1041d478287924dac86ce00ae/a2c2c122c3bdd6cf-b9/s1280x1920/cf9a28aa3fe79459710971497edb4b7ed8bde257.png"
-  - "https://critrole.com/wp-content/uploads/2021/03/@Katchdraws-A.jpg"
   - "https://i.pinimg.com/736x/4b/82/ba/4b82ba2f5b136d12839e7470219618cb.jpg"
   - "https://cdnb.artstation.com/p/assets/covers/images/023/397/043/large/jace-daily-beau-final-details-2.jpg"
 - instance_name: caduceus
@@ -139,7 +137,6 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0d/Veth_-_Ameera.jpg"
   - https://i.redd.it/ymjksfbc4fh51.png
   - https://64.media.tumblr.com/9d2fd31db45cc8f77fe7de366fab9bb7/9e1b1f2f40e62b1a-a6/s1280x1920/81bcea0c4b5bfb46cca6bb475ac8176bf9c69ed6.jpg
-  - https://critrole.com/wp-content/uploads/2021/10/@hailiiz-hailiiz.instagram.jpg
 - instance_name: yasha
   instance_data_root: data/yasha
   instance_prompt: "a picture of [critrole-yasha], a female aasimar barbarian"
