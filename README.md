@@ -37,7 +37,7 @@ package to extract transcripts based on a list of video ids.
 To download example images of each character, do:
 
 ```
-python critical_dream/image_data.py data --multi_instance_config config/mighty_nein_instances.yaml
+python critical_dream/image_data.py data --multi_instance_data_config config/mighty_nein_instances.yaml
 ```
 
 ## Dreambooth fine-tuning
