@@ -27,17 +27,33 @@ conda create -n critical-dream python=3.11 -y
 pip install -r requirements.txt
 ```
 
+Export secrets:
+
+```bash
+export $(grep -v '^#' secrets.txt | xargs)
+```
+
 ## Caption data ingestion
 
 Use the [`youtube_transcript_api`](https://pypi.org/project/youtube-transcript-api/)
 package to extract transcripts based on a list of video ids.
 
+```bash
+python critical_dream/captions.py data/captions
+```
+
+## Compose scenes from transcripts
+
+```bash
+python critical_dream/compose_scenes.py data/captions data/scenes
+```
+
 ## Get image data
 
 To download example images of each character, do:
 
-```
-python critical_dream/image_data.py data --multi_instance_data_config config/mighty_nein_instances.yaml
+```bash
+python critical_dream/image_data.py data/images --multi_instance_data_config config/mighty_nein_instances.yaml
 ```
 
 ## Dreambooth fine-tuning

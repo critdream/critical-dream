@@ -2,9 +2,14 @@ git+https://github.com/huggingface/diffusers
 accelerate>=0.16.0
 bitsandbytes
 ftfy
+openai
+outlines
 peft
+pydantic
+pytube
 pyyaml
 requests
+tiktoken
 torchvision
 transformers>=4.25.1
 youtube-transcript-api

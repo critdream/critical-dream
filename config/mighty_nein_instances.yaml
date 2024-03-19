@@ -1,3 +1,5 @@
+# individuals
+
 - instance_name: fjord
   instance_data_root: data/fjord
   instance_prompt: "a picture of [critrole-fjord], a male half-orc warlock"
