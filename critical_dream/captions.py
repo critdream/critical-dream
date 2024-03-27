@@ -26,8 +26,10 @@ def main(output_path: Path, playlist_link: str):
 
     for i, video_id in enumerate(get_video_ids(playlist_link), start=1):
         print(f"Downloading transcript for video {i}: {video_id}")
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+        transcript = transcript_list.find_manually_created_transcript(["en-US", "en"]).fetch()
         transcript_fp = output_path / f"c2e{i:03}_{video_id}.json"
+        print(f"Writing to {transcript_fp}")
         with transcript_fp.open("w") as f:
             json.dump(transcript, f, indent=2)
 
