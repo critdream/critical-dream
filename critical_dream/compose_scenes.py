@@ -107,7 +107,7 @@ def compose_scene(turns: list[Turn]) -> str:
     the speaker, text and timestamp metadata of the captions, output a list of
     highly descriptive scenes.
 
-    Each scene should only have one feature character. If the scene is describing
+    Each scene should only have one featured character. If the scene is describing
     the environment, the "character" should be "environment"
 
     A scene should include the following:
@@ -152,14 +152,14 @@ def compose_scene(turns: list[Turn]) -> str:
       play:
       - LAURA: jester
       - TRAVIS: fjord
-      - SAM: nott and veth
+      - SAM: nott or veth, depending on the context
       - MARISHA: beau
-      - TALIESIN: mollymauk and caduceus
+      - TALIESIN: mollymauk or caduceus, depending on the context
       - LIAM: caleb
       - ASHLEY: yasha
       - MATT: plays all of the NPCs in the campaign. Try to avoid using MATT as
-        the character name for scene and instead use the name of the NPC that he
-        is voicing.
+        the character name for the scene and instead use the name of the NPC that
+        he is voicing.
 
     Caption Dialogue
     ----------------
