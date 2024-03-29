@@ -162,13 +162,18 @@ def load_scene_dataset(dataset_id: str):
     return dataset.map(process_scene, batched=False)
 
 
+def get_scene_dir(output_dir: Path, scene: dict, scene_num: int) -> Path:
+    return output_dir / scene["episode_name"] / f"scene_{scene_num:04}"
+
+
 def generate_scene_images(
     pipe,
     dataset,
+    output_dir: Path,
     num_images_per_prompt: int = 8,
     num_inference_steps: int = 30,
     manual_seed: int = 0,
-) -> Iterator[dict]:
+) -> Iterator[tuple[dict, Path]]:
     device = (
         "cuda" if torch.cuda.is_available() else
         "mps" if torch.backends.mps.is_available() else
@@ -183,7 +188,12 @@ def generate_scene_images(
         requires_pooled=[False, True]
     )
 
-    for scene in dataset:
+    for scene_num, scene in enumerate(dataset):
+        scene_dir = get_scene_dir(output_dir, scene, scene_num)
+        if scene_dir.exists():
+            print(f"Scene images {scene_dir} exists. Skipping.")
+            continue
+
         conditioning, pooled = compel(scene["prompt"])
         images = pipe(
             prompt_embeds=conditioning,
@@ -193,7 +203,7 @@ def generate_scene_images(
             num_images_per_prompt=num_images_per_prompt,
         ).images
         scene["images"] = images
-        yield scene
+        yield scene, scene_dir
 
 
 def main(
@@ -205,12 +215,9 @@ def main(
 ):
     pipe = load_pipeline(lora_model_id)
     dataset = load_scene_dataset(dataset_id)
-    for scene_num, scene in enumerate(
-        generate_scene_images(
-            pipe, dataset, num_images_per_prompt, num_inference_steps
-        )
+    for scene, scene_dir in generate_scene_images(
+        pipe, dataset, output_dir, num_images_per_prompt, num_inference_steps,
     ):
-        scene_dir = output_dir / scene["episode_name"] / f"scene_{scene_num:04}"
         scene_dir.mkdir(exist_ok=True, parents=True)
         images = scene.pop("images")
 
