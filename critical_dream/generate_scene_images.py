@@ -92,14 +92,14 @@ PLAYER_CHARACTERS = frozenset(
 )
 
 SPECIAL_CHARACTERS = {
-    "fjord": "[critrole-fjord], a male half-orc warlock,",
-    "beau": "[critrole-beau], a female human monk,",
-    "jester": "[critrole-jester], a female tiefling cleric,",
-    "caleb": "[critrole-caleb], a male human wizard,",
-    "caduceus": "[critrole-caduceus], a male firbolg cleric,",
+    "fjord": "[critrole-fjord], a male half-orc warlock",
+    "beau": "[critrole-beau], a female human monk",
+    "jester": "[critrole-jester], a female tiefling cleric",
+    "caleb": "[critrole-caleb], a male human wizard",
+    "caduceus": "[critrole-caduceus], a male firbolg cleric",
     "nott": "[critrole-nott], a female goblin rogue",
-    "veth": "[critrole-veth], a female halfling rogue/wizard,",
-    "yasha": "[critrole-yasha], a female aasimar barbarian,",
+    "veth": "[critrole-veth], a female halfling rogue/wizard",
+    "yasha": "[critrole-yasha], a female aasimar barbarian",
     "mollymauk": "[critrole-mollymauk], a male tiefling blood hunter",
 }
 
@@ -137,7 +137,13 @@ def fix_character_name(
         if char != correct_char
         else re.compile(re.escape(correct_char), re.IGNORECASE)
     )
-    description = re.sub(patt, special_character, description)
+
+    if correct_char in PLAYER_CHARACTERS:
+        if re.search(patt, description) is None:
+            description = f"{special_character}. {description}"
+        else:
+            description = re.sub(patt, f"{special_character},", description)
+
     return correct_char, special_character, description
 
 
@@ -174,12 +180,7 @@ def generate_scene_images(
     num_inference_steps: int = 30,
     manual_seed: int = 0,
 ) -> Iterator[tuple[dict, Path]]:
-    device = (
-        "cuda" if torch.cuda.is_available() else
-        "mps" if torch.backends.mps.is_available() else
-        None
-    )
-    generator = torch.Generator(device).manual_seed(manual_seed)
+    generator = torch.Generator(get_device()).manual_seed(manual_seed)
 
     compel = Compel(
         tokenizer=[pipe.tokenizer, pipe.tokenizer_2],
@@ -213,8 +214,8 @@ def main(
     num_images_per_prompt: int,
     num_inference_steps: int,
 ):
-    pipe = load_pipeline(lora_model_id)
     dataset = load_scene_dataset(dataset_id)
+    pipe = load_pipeline(lora_model_id)
     for scene, scene_dir in generate_scene_images(
         pipe, dataset, output_dir, num_images_per_prompt, num_inference_steps,
     ):
