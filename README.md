@@ -48,6 +48,18 @@ python critical_dream/captions.py data/captions
 python critical_dream/compose_scenes.py data/captions data/scenes
 ```
 
+## Create Huggingface Dataset
+
+```bash
+python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-dream-scenes-mighty-nein
+```
+
+## Generate Scene Images
+
+```bash
+python critical_dream/generate_scene_images.py --output_dir data/images
+```
+
 ## Get image data
 
 To download example images of each character, do:

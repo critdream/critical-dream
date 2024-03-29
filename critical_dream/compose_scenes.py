@@ -102,24 +102,23 @@ def parse_captions(
 def compose_scene(turns: list[Turn]) -> str:
     """Write highly descriptive scenes using the captions from raw dialogue.
 
-    Take an excerpt of a Dungeons and Dragons session, which is a transcript of
-    the dialogue that occurred in a given time frame of the session. Based on
-    the speaker, text and timestamp metadata of the captions, output a list of
-    highly descriptive scenes.
+    Take an excerpt of a Dungeons and Dragons session transcript and write
+    scenes of what's happening in a given window of time. Based on the speaker,
+    text and timestamp metadata of the captions, output a list of highly
+    descriptive scenes.
 
-    Each scene should only have one featured character. If the scene is describing
-    the environment, the "character" should be "environment"
+    Each scene should only have one featured character. If the scene is
+    describing the environment, the "character" should be "environment".
 
-    A scene should include the following:
+    A scene consists of the following:
     - character: the main subject of the scene 
     - start_time: the timestamp of when the scene starts
     - end_time: the timestamp of when the scene ends
     - scene_description: a highly descriptive paragraph of the scene, optimized
-      so that AI image generation models like Stable Diffusion can create high
-      quality images from the description. Keep the description as short as
-      possible, but long enough to be highly descriptive.
+      so that AI image generation models can create high quality images from
+      the description.
 
-    The selection of content for the scene description should focus on the
+    The selection of dialogue for the scene description should focus on the
     environment that the characters are in, the actions being taken by the
     player characters (PCs), and actions being taken by the
     non-player characters (NPCs) in the scene.
@@ -147,19 +146,24 @@ def compose_scene(turns: list[Turn]) -> str:
     - Don't create scenes for dialogue that appear to be advertisements or meta
       conversations outside of the actual game world.
     - Extract as many scenes as possible.
-    - For the character of each scene, use the name of the PC and not the voice
-      actor. The following are the names of the voice actors and the PCs they
-      play:
-      - LAURA: jester
-      - TRAVIS: fjord
-      - SAM: nott or veth, depending on the context
-      - MARISHA: beau
-      - TALIESIN: mollymauk or caduceus, depending on the context
-      - LIAM: caleb
-      - ASHLEY: yasha
-      - MATT: plays all of the NPCs in the campaign. Try to avoid using MATT as
-        the character name for the scene and instead use the name of the NPC that
-        he is voicing.
+    - Keep the scene descriptions as short as possible but still highly descriptive.
+    - For the character of each scene, use the name of the player character and
+      not the voice actor. The following are the names of the voice actors and
+      the player characters they play. Below are the names of the voice actors
+      and the characters they play.
+
+    VOICE ACTOR: player character
+    -----------------------------
+    LAURA: jester
+    TRAVIS: fjord
+    SAM: nott or veth, depending on the context
+    MARISHA: beau
+    TALIESIN: mollymauk or caduceus, depending on the context
+    LIAM: caleb
+    ASHLEY: yasha
+    MATT: plays all of the NPCs in the campaign. Avoid using MATT as
+        the character for the scene and instead use the name of the NPC
+        that he is voicing.
 
     Caption Dialogue
     ----------------
@@ -213,6 +217,9 @@ def process_raw_scene(scene: dict) -> Scene:
         scene["end_time"] = val
     if "end_image" in scene:
         val = scene.pop("end_image")
+        scene["end_time"] = val
+    if "end_name" in scene:
+        val = scene.pop("end_name")
         scene["end_time"] = val
     if "environment" in scene:
         scene.pop("environment")
@@ -302,7 +309,7 @@ def main():
     parser.add_argument(
         '--max-text-length',
         type=int,
-        default=10000,
+        default=5000,
         help='Maximum length of text for each scene',
     )
     args = parser.parse_args()
