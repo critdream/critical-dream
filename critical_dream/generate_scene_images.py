@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import Iterator
 
+from compel import Compel, ReturnedEmbeddingsType
 from datasets import load_dataset
 from diffusers import DiffusionPipeline, StableDiffusionXLImg2ImgPipeline
 from huggingface_hub.repocard import RepoCard
@@ -20,6 +21,14 @@ REFINER_MODEL = "stabilityai/stable-diffusion-xl-refiner-1.0"
 
 VETH_EPISODE = 97
 MOLLYMAUK_EPISODE = 26
+
+
+def get_device():
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return None
 
 
 def get_dtype():
@@ -167,9 +176,18 @@ def generate_scene_images(
     )
     generator = torch.Generator(device).manual_seed(manual_seed)
 
+    compel = Compel(
+        tokenizer=[pipe.tokenizer, pipe.tokenizer_2],
+        text_encoder=[pipe.text_encoder, pipe.text_encoder_2],
+        returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
+        requires_pooled=[False, True]
+    )
+
     for scene in dataset:
+        conditioning, pooled = compel(scene["prompt"])
         images = pipe(
-            scene["prompt"],
+            prompt_embeds=conditioning,
+            pooled_prompt_embeds=pooled,
             generator=generator,
             num_inference_steps=num_inference_steps,
             num_images_per_prompt=num_images_per_prompt,
