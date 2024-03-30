@@ -32,6 +32,7 @@ class Turn(BaseModel):
 
 class Scene(BaseModel):
     character: str
+    background: str
     start_time: float
     end_time: float
     scene_description: str
@@ -336,18 +337,18 @@ def compose_scenes(
                 if i > 0:
                     print(f"Retry {i}")
                 json_output = json.loads(output)
+                print(f"Output: {len(json_output['scenes'])} scenes")
+                if len(json_output["scenes"]) == 0:
+                    print("No scenes generated for this batch.")
+                    continue
+                print(json_output["scenes"][0])
+                for scene in json_output["scenes"]:
+                    scenes.append(process_raw_scene(scene))
                 break
             except:
                 output = fix_scene_description(output)
                 time.sleep(REQUEST_INTERVAL)
 
-        print(f"Output: {len(json_output['scenes'])} scenes")
-        if len(json_output["scenes"]) == 0:
-            print("No scenes generated for this batch.")
-            continue
-        print(json_output["scenes"][0])
-        for scene in json_output["scenes"]:
-            scenes.append(process_raw_scene(scene))
     return Episode(name=episode_name, scenes=scenes)
 
 
