@@ -42,7 +42,8 @@ class Episode(BaseModel):
     scenes: list[Scene]
 
 
-MODEL = "gpt-4-turbo-preview"
+SCENE_COMPOSITION_MODEL = "gpt-4-turbo-preview"
+JSON_FIX_MODEL = "gpt-3.5-turbo-0125"
 MODEL_SEED = 41
 
 client = OpenAI()
@@ -112,6 +113,7 @@ def compose_scene(turns: list[Turn]) -> str:
 
     A scene consists of the following:
     - character: the main subject of the scene 
+    - background: a few word description of the scene background
     - start_time: the timestamp of when the scene starts
     - end_time: the timestamp of when the scene ends
     - scene_description: a highly descriptive paragraph of the scene, optimized
@@ -129,12 +131,14 @@ def compose_scene(turns: list[Turn]) -> str:
         "scenes": [
             {
                 "character": "environment",
+                "background": "a short description of the environment.",
                 "start_time": 0,
                 "end_time": 10,
                 "scene_description": "this is a description of the environment."
             },
             {
                 "character": "fjord",
+                "background": "a short description of the scene background",
                 "start_time": 10,
                 "end_time": 40,
                 "scene_description": "this is a description of what fjord is doing."
@@ -178,7 +182,41 @@ def compose_scene(turns: list[Turn]) -> str:
 
     Json Output
     -----------
+    """
 
+
+@outlines.prompt
+def fix_json(json_str: str) -> str:
+    """Fix the json output from the scene composition prompt.
+
+    The format of this json output is not valid. Fix the json output so that it
+    follows the json format:
+
+    {
+        "scenes": [
+            {
+                "character": "environment",
+                "background": "a short description of the environment.",
+                "start_time": 0,
+                "end_time": 10,
+                "scene_description": "this is a description of the environment."
+            },
+            {
+                "character": "fjord",
+                "background": "a short description of the scene background",
+                "start_time": 10,
+                "end_time": 40,
+                "scene_description": "this is a description of what fjord is doing."
+            },
+        ]
+    }
+
+    Invalid Json
+    ------------
+    {{ json_str }}
+
+    Json Output
+    -----------
     """
 
 
@@ -212,15 +250,11 @@ def postprocess(output: str) -> str:
 
 
 def process_raw_scene(scene: dict) -> Scene:
-    if "end_title" in scene:
-        val = scene.pop("end_title")
-        scene["end_time"] = val
-    if "end_image" in scene:
-        val = scene.pop("end_image")
-        scene["end_time"] = val
-    if "end_name" in scene:
-        val = scene.pop("end_name")
-        scene["end_time"] = val
+    for key in scene:
+        if key.startswith("end_") and key != "end_time":
+            val = scene.pop(key)
+            scene["end_time"] = val
+
     if "environment" in scene:
         scene.pop("environment")
         scene["character"] = "environment"
@@ -251,7 +285,7 @@ def iter_turn_batches(
 def generate_scene_descriptions(turns: list[Turn]) -> str:
     prompt = compose_scene(turns)
     response = client.chat.completions.create(
-        model=MODEL,
+        model=SCENE_COMPOSITION_MODEL,
         response_format={"type": "json_object"},
         messages=[
             {
@@ -267,6 +301,22 @@ def generate_scene_descriptions(turns: list[Turn]) -> str:
     )
     return response.choices[0].message.content
 
+
+def fix_scene_description(json_str: str) -> str:
+    prompt = fix_json(json_str)
+    response = client.chat.completions.create(
+        model=JSON_FIX_MODEL,
+        response_format={"type": "json_object"},
+        messages=[
+            {
+                "role": "system",
+                "content": "You are an expert at fixing invalid json.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        seed=MODEL_SEED,
+    )
+    return response.choices[0].message.content
 
 def compose_scenes(
     episode_name: str,
@@ -288,6 +338,7 @@ def compose_scenes(
                 json_output = json.loads(output)
                 break
             except:
+                output = fix_scene_description(output)
                 time.sleep(REQUEST_INTERVAL)
 
         print(f"Output: {len(json_output['scenes'])} scenes")
