@@ -1828,7 +1828,7 @@ def main(args):
                     revision=args.revision,
                     variant=args.variant,
                     torch_dtype=weight_dtype,
-                )
+                ).to(accelerator.device, dtype=torch.float32)  # there's an issue in colab with type casting using fp16
 
                 # We train on the simplified learning objective. If we were previously predicting a variance, we need the scheduler to ignore it
                 scheduler_args = {}
