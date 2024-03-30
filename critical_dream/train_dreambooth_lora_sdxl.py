@@ -1795,11 +1795,12 @@ def main(args):
         validation_prompts = None
         if isinstance(train_dataset, DreamBoothMultiInstanceDataset):
             validation_prompts = [
-                config.validation_prompt for config in
+                [config.validation_prompt, config.class_prompt] for config in
                 train_dataset.multi_instance_data_config
             ]
+            validation_prompts = list(itertools.chain(*validation_prompts))
         elif args.validation_prompt is not None:
-            validation_prompts = [args.validation_prompt]
+            validation_prompts = [args.validation_prompt, args.class_prompt]
 
         if accelerator.is_main_process:
 
@@ -1820,7 +1821,7 @@ def main(args):
                     )
                 pipeline = StableDiffusionXLPipeline.from_pretrained(
                     args.pretrained_model_name_or_path,
-                    vae=vae,
+                    vae=vae.to(weight_dtype),
                     text_encoder=accelerator.unwrap_model(text_encoder_one),
                     text_encoder_2=accelerator.unwrap_model(text_encoder_two),
                     unet=accelerator.unwrap_model(unet),
