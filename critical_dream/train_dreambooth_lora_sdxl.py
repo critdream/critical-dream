@@ -225,6 +225,13 @@ def parse_args(input_args=None):
     )
 
     parser.add_argument(
+        "--data_dir_root",
+        type=str,
+        default=None,
+        help="Root directory for all",
+    )
+
+    parser.add_argument(
         "--instance_data_dir",
         type=str,
         default=None,
@@ -609,6 +616,7 @@ class DreamBoothMultiInstanceDataset(Dataset):
         self,
         multi_instance_data_config: list[InstanceConfig],
         multi_instance_subset: list[str] | None = None,
+        data_dir_root: Path | None = None,
         class_num=None,
         size=1024,
         repeats=1,
@@ -630,10 +638,18 @@ class DreamBoothMultiInstanceDataset(Dataset):
 
         self.dreambooth_datasets = {
             config.instance_name: DreamBoothDataset(
-                config.instance_data_root,
-                config.instance_prompt,
-                config.class_prompt,
-                config.class_data_root,
+                instance_data_root=(
+                    config.instance_data_root
+                    if data_dir_root is None
+                    else data_dir_root / config.instance_data_root
+                ),
+                instance_prompt=config.instance_prompt,
+                class_prompt=config.class_prompt,
+                class_data_root=(
+                    config.class_data_root
+                    if data_dir_root is None
+                    else data_dir_root / config.class_data_root
+                ),
                 class_num=class_num,
                 size=size,
                 repeats=repeats,
@@ -973,7 +989,11 @@ def main(args):
     class_images_dirs = None
     class_prompts = None
     if args.class_data_dir and args.multi_instance_data_config is None:
-        class_images_dirs = [args.class_data_dir]
+        class_images_dirs = [
+            args.class_data_dir
+            if args.data_dir_root is None
+            else Path(args.data_dir_root) / args.class_data_dir
+        ]
         class_prompts = [args.class_prompt]
     else:
         with open(args.multi_instance_data_config) as f:
@@ -1063,6 +1083,7 @@ def main(args):
         train_dataset = DreamBoothMultiInstanceDataset(
             multi_instance_data_config=args.multi_instance_data_config,
             multi_instance_subset=args.multi_instance_subset,
+            data_dir_root=Path(args.data_dir_root),
             class_num=args.num_class_images,
             size=args.resolution,
             repeats=args.repeats,
@@ -1072,11 +1093,20 @@ def main(args):
         for instance_name, _dataset in train_dataset.dreambooth_datasets.items():
             logging.info(f"Instance: {instance_name}, num instances: {len(_dataset)}")
     else:
+        class_data_dir = (
+            args.class_data_dir if
+            args.data_dir_root is None
+            else Path(args.data_dir_root) / args.class_data_dir
+        )
         train_dataset = DreamBoothDataset(
-            instance_data_root=args.instance_data_dir,
+            instance_data_root=(
+                args.instance_data_dir
+                if args.data_dir_root is None
+                else Path(args.data_dir_root)
+            ),
             instance_prompt=args.instance_prompt,
             class_prompt=args.class_prompt,
-            class_data_root=args.class_data_dir if args.with_prior_preservation else None,
+            class_data_root=class_data_dir if args.with_prior_preservation else None,
             class_num=args.num_class_images,
             size=args.resolution,
             repeats=args.repeats,
