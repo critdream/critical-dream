@@ -1006,7 +1006,11 @@ def main(args):
                 )
             ]
         class_images_dirs = [
-            instance_config.class_data_root
+            (
+                instance_config.class_data_root
+                if args.data_dir_root is None
+                else Path(args.data_dir_root) / instance_config.class_data_root
+            )
             for instance_config in _multi_instance_data_config
         ]
         class_prompts = [
