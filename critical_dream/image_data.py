@@ -11,6 +11,7 @@ def download_images(character, urls, output_path):
         filepath = output_path / character / url.split("/")[-1]
         filepath.parent.mkdir(exist_ok=True)
         with filepath.open("wb") as f:
+            print(f"saving image to {filepath}")
             f.write(response.content)
             
 
