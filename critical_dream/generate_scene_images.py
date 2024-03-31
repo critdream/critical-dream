@@ -22,6 +22,16 @@ REFINER_MODEL = "stabilityai/stable-diffusion-xl-refiner-1.0"
 VETH_EPISODE = 97
 MOLLYMAUK_EPISODE = 26
 
+DEFAULT_NEGATIVE_PROMPT = (
+    "letters, words, copy, watermark, ugly, distorted, deformed, "
+    "duplicate characters, repeated patterns , uncanny valley, "
+    "distorted facial features, distorted hands, extra limbs, "
+    "(concept art)1.5, "
+    "worst quality, low quality, normal quality, low resolution, "
+    "worst resolution, normal resolution, collage, bad anatomy of fingers, "
+    "error hands, error fingers"
+)
+
 
 def get_device():
     if torch.cuda.is_available():
@@ -139,27 +149,26 @@ def fix_character_name(
     )
 
     if correct_char in PLAYER_CHARACTERS:
+        prompt = f"{special_character}. {PROMPT_PREFIX}. {description}"
         if re.search(patt, description) is None:
             description = f"{special_character}. {description}"
         else:
             description = re.sub(patt, f"{special_character},", description)
+    else:
+        prompt = description
 
-    return correct_char, special_character, description
-
-
-def create_prompt(description: str) -> str:
-    return f"{PROMPT_PREFIX}. {description}"
+    return correct_char, special_character, prompt
 
 
 def process_scene(scene: dict):
-    fixed_character, special_character, description = fix_character_name(
+    fixed_character, special_character, prompt = fix_character_name(
         scene["character"],
         scene["scene_description"],
         scene["episode_name"],
     )
     scene["fixed_character"] = fixed_character
     scene["special_character"] = special_character
-    scene["prompt"] = create_prompt(description)
+    scene["prompt"] = prompt
     return scene
 
 
@@ -178,6 +187,7 @@ def generate_scene_images(
     output_dir: Path,
     num_images_per_prompt: int = 8,
     num_inference_steps: int = 30,
+    negative_prompt: str = DEFAULT_NEGATIVE_PROMPT,
     manual_seed: int = 0,
 ) -> Iterator[tuple[dict, Path]]:
     generator = torch.Generator(get_device()).manual_seed(manual_seed)
@@ -196,9 +206,17 @@ def generate_scene_images(
             continue
 
         conditioning, pooled = compel(scene["prompt"])
+        negative_conditioning, negative_pooled = compel(negative_prompt)
+
+        conditioning, negative_conditioning = compel.pad_conditioning_tensors_to_same_length(
+            [conditioning, negative_conditioning]
+        )
+        conditioning, pooled = compel(scene["prompt"])
         images = pipe(
             prompt_embeds=conditioning,
             pooled_prompt_embeds=pooled,
+            negative_prompt_embeds=negative_conditioning,
+            negative_pooled_prompt_embeds=negative_pooled,
             generator=generator,
             num_inference_steps=num_inference_steps,
             num_images_per_prompt=num_images_per_prompt,
@@ -213,11 +231,17 @@ def main(
     output_dir: Path,
     num_images_per_prompt: int,
     num_inference_steps: int,
+    negative_prompt: str,
 ):
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
     for scene, scene_dir in generate_scene_images(
-        pipe, dataset, output_dir, num_images_per_prompt, num_inference_steps,
+        pipe,
+        dataset,
+        output_dir,
+        num_images_per_prompt,
+        num_inference_steps,
+        negative_prompt,
     ):
         scene_dir.mkdir(exist_ok=True, parents=True)
         images = scene.pop("images")
@@ -246,6 +270,7 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", type=Path, help="Path to save images.")
     parser.add_argument("--num_images_per_prompt", type=int, default=8)
     parser.add_argument("--num_inference_steps", type=int, default=30)
+    parser.add_argument("--negative_prompt", type=str, default=DEFAULT_NEGATIVE_PROMPT)
     args = parser.parse_args()
     main(
         args.lora_model_id,
@@ -253,4 +278,5 @@ if __name__ == "__main__":
         Path(args.output_dir),
         args.num_images_per_prompt,
         args.num_inference_steps,
+        args.negative_prompt,
     )

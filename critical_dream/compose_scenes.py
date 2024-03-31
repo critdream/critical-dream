@@ -252,7 +252,7 @@ def postprocess(output: str) -> str:
 
 def process_raw_scene(scene: dict) -> Scene:
     for key in scene:
-        if key.startswith("end_") and key != "end_time":
+        if key.startswith("end") and key != "end_time":
             val = scene.pop(key)
             scene["end_time"] = val
 
