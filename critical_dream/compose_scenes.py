@@ -259,11 +259,7 @@ def process_raw_scene(scene: dict) -> Scene:
     if "environment" in scene:
         scene.pop("environment")
         scene["character"] = "environment"
-    try:
-        return Scene(**scene)
-    except:
-        import ipdb; ipdb.set_trace()
-        ...
+    return Scene(**scene)
 
 
 def iter_turn_batches(
@@ -343,7 +339,10 @@ def compose_scenes(
                     continue
                 print(json_output["scenes"][0])
                 for scene in json_output["scenes"]:
-                    scenes.append(process_raw_scene(scene))
+                    try:
+                        scenes.append(process_raw_scene(scene))
+                    except Exception:
+                        print(f"Error processing scene: {scene}")
                 break
             except:
                 output = fix_scene_description(output)
