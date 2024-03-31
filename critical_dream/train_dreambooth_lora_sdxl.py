@@ -25,6 +25,7 @@ import warnings
 import yaml
 from dataclasses import dataclass
 from pathlib import Path
+import wandb
 
 import numpy as np
 import torch
@@ -85,6 +86,7 @@ def save_model_card(
     validation_prompts=None,
     repo_folder=None,
     vae_path=None,
+    run_url=None,
 ):
     widget_dict = []
     if images is not None:
@@ -120,6 +122,10 @@ You should use {instance_prompt} to trigger the image generation.
 Weights for this model are available in Safetensors format.
 
 [Download]({repo_id}/tree/main) them in the Files & versions tab.
+
+## Tracker run link
+
+{run_url}
 
 """
     model_card = load_or_create_model_card(
@@ -1955,7 +1961,7 @@ def main(args):
                 model_card_images.extend(images)
                 model_card_prompts.extend([validation_prompt] * args.num_validation_images)
 
-                for tracker in accelerator.trackers:
+            for tracker in accelerator.trackers:
                     if tracker.name == "tensorboard":
                         np_images = np.stack([np.asarray(img) for img in images])
                         tracker.writer.add_images("test", np_images, epoch, dataformats="NHWC")
@@ -1970,6 +1976,9 @@ def main(args):
                         )
 
         if args.push_to_hub:
+            run_url = None
+            if tracker.name == "wandb":
+                run_url = wandb.run.get_url()
             save_model_card(
                 repo_id,
                 images=model_card_images,
@@ -1979,6 +1988,7 @@ def main(args):
                 validation_prompts=model_card_prompts,
                 repo_folder=args.output_dir,
                 vae_path=args.pretrained_vae_model_name_or_path,
+                run_url=run_url,
             )
             upload_folder(
                 repo_id=repo_id,
