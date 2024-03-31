@@ -46,9 +46,11 @@
   # - "https://static.wikia.nocookie.net/criticalrole/images/f/fe/Beauregard_by_Ariana_Orner.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/4/43/Beauregard_Winter.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/1/10/Beau_Level_20_-_Hannah_Friederichs.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg"- instance_name: caduceus
+  # - "https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/d/db/Beau_-_Jenny_Tan.jpg"  instance_data_root: data/caduceus
+  # - "https://static.wikia.nocookie.net/criticalrole/images/d/db/Beau_-_Jenny_Tan.jpg"
+- instance_name: caduceus
+  instance_data_root: data/caduceus
   instance_prompt: "a picture of [critrole-caduceus], a male firbolg cleric"
   validation_prompt: "a picture of [critrole-caduceus], a male firbolg cleric. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
   class_data_root: data/male_firbolg_cleric
@@ -82,7 +84,8 @@
   - https://secretcompassonline.com/cdn/shop/files/caleb-widogast-mighty-nein_critical-role_gallery_64e6a03b0d0fe_1200x800.jpg
   # - "https://static.wikia.nocookie.net/criticalrole/images/2/2f/Caleb_by_Ariana_Orner.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/4/49/WinterM92Caleb-ArianaOrner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg"- instance_name: jester
+  # - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg
+- instance_name: jester
   instance_data_root: data/jester
   instance_prompt: "a picture of [critrole-jester], a female tiefling cleric"
   validation_prompt: "a picture of [critrole-jester], a female tiefling cleric. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
@@ -97,8 +100,9 @@
   - https://pbs.twimg.com/media/EJ6tEgoXUAAKldh.jpg
   # - "https://static.wikia.nocookie.net/criticalrole/images/0/0f/M9jesterfinal2.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/7/79/Jester_Winter.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"- instance_name: nott
+  # - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg"
+- instance_name: nott
   instance_data_root: data/nott
   instance_prompt: "a picture of [critrole-nott], a female goblin rogue"
   validation_prompt: "a picture of [critrole-nott], a female goblin rogue. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
@@ -130,7 +134,8 @@
   # - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/9/93/Veth_Winter.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/9/9f/Veth_-_Ari.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/0/0e/Veth_in_843_PD_by_Zhellers.png"- instance_name: yasha
+  # - "https://static.wikia.nocookie.net/criticalrole/images/0/0e/Veth_in_843_PD_by_Zhellers.png"
+- instance_name: yasha
   instance_data_root: data/yasha
   instance_prompt: "a picture of [critrole-yasha], a female aasimar barbarian"
   validation_prompt: "a picture of [critrole-yasha], a female aasimar barbarian. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
