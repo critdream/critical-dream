@@ -218,7 +218,7 @@ def generate_scene_images(
 
         images = []
         for _ in range(num_batches_per_prompt):
-            images.append(
+            images.extend(
                 pipe(
                     prompt_embeds=conditioning,
                     pooled_prompt_embeds=pooled,
