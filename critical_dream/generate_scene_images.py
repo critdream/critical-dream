@@ -22,6 +22,41 @@ REFINER_MODEL = "stabilityai/stable-diffusion-xl-refiner-1.0"
 VETH_EPISODE = 97
 MOLLYMAUK_EPISODE = 26
 
+SINGLE_CHARACTER_MAP = {
+    "marisha": "beau",
+    "laura": "jester",
+    "travis": "fjord",
+    "liam": "caleb",
+    "ashley": "yasha",
+}
+
+PLAYER_CHARACTERS = frozenset(
+    [
+        *SINGLE_CHARACTER_MAP.values(),
+        "nott",
+        "veth",
+        "mollymauk",
+        "caduceus",
+    ]
+)
+
+SPECIAL_CHARACTERS = {
+    "fjord": "[critrole-fjord], a male half-orc warlock",
+    "beau": "[critrole-beau], a female human monk",
+    "jester": "[critrole-jester], a female tiefling cleric",
+    "caleb": "[critrole-caleb], a male human wizard",
+    "caduceus": "[critrole-caduceus], a male firbolg cleric",
+    "nott": "[critrole-nott], a female goblin rogue",
+    "veth": "[critrole-veth], a female halfling rogue/wizard",
+    "yasha": "[critrole-yasha], a female aasimar barbarian",
+    "mollymauk": "[critrole-mollymauk], a male tiefling blood hunter",
+}
+
+PROMPT_PREFIX = (
+    "dungeons and dragons, critical role, fantasy art style, professional, "
+    "high quality, highly detailed, sharp focus, animation"
+)
+
 DEFAULT_NEGATIVE_PROMPT = (
     "letters, words, copy, watermark, ugly, distorted, deformed, "
     "duplicate characters, repeated patterns , uncanny valley, "
@@ -83,39 +118,6 @@ def load_refiner():
     return refiner
 
 
-SINGLE_CHARACTER_MAP = {
-    "marisha": "beau",
-    "laura": "jester",
-    "travis": "fjord",
-    "liam": "caleb",
-    "ashley": "yasha",
-}
-
-PLAYER_CHARACTERS = frozenset(
-    [
-        *SINGLE_CHARACTER_MAP.values(),
-        "nott",
-        "veth",
-        "mollymauk",
-        "caduceus",
-    ]
-)
-
-SPECIAL_CHARACTERS = {
-    "fjord": "[critrole-fjord], a male half-orc warlock",
-    "beau": "[critrole-beau], a female human monk",
-    "jester": "[critrole-jester], a female tiefling cleric",
-    "caleb": "[critrole-caleb], a male human wizard",
-    "caduceus": "[critrole-caduceus], a male firbolg cleric",
-    "nott": "[critrole-nott], a female goblin rogue",
-    "veth": "[critrole-veth], a female halfling rogue/wizard",
-    "yasha": "[critrole-yasha], a female aasimar barbarian",
-    "mollymauk": "[critrole-mollymauk], a male tiefling blood hunter",
-}
-
-PROMPT_PREFIX = "fantasy art style, professional, high quality, highly detailed, sharp focus"
-
-
 def fix_character_name(
     character: str,
     description: str,episode_name: str,
@@ -155,7 +157,7 @@ def fix_character_name(
         else:
             description = re.sub(patt, f"{special_character},", description)
     else:
-        prompt = description
+        prompt = f"{PROMPT_PREFIX}. {description}"
 
     return correct_char, special_character, prompt
 
@@ -186,6 +188,7 @@ def generate_scene_images(
     dataset,
     output_dir: Path,
     num_images_per_prompt: int = 8,
+    num_batches_per_prompt: int = 1,
     num_inference_steps: int = 30,
     negative_prompt: str = DEFAULT_NEGATIVE_PROMPT,
     manual_seed: int = 0,
@@ -212,15 +215,20 @@ def generate_scene_images(
             [conditioning, negative_conditioning]
         )
         conditioning, pooled = compel(scene["prompt"])
-        images = pipe(
-            prompt_embeds=conditioning,
-            pooled_prompt_embeds=pooled,
-            negative_prompt_embeds=negative_conditioning,
-            negative_pooled_prompt_embeds=negative_pooled,
-            generator=generator,
-            num_inference_steps=num_inference_steps,
-            num_images_per_prompt=num_images_per_prompt,
-        ).images
+
+        images = []
+        for _ in range(num_batches_per_prompt):
+            images.append(
+                pipe(
+                    prompt_embeds=conditioning,
+                    pooled_prompt_embeds=pooled,
+                    negative_prompt_embeds=negative_conditioning,
+                    negative_pooled_prompt_embeds=negative_pooled,
+                    generator=generator,
+                    num_inference_steps=num_inference_steps,
+                    num_images_per_prompt=num_images_per_prompt,
+                ).images
+            )
         scene["images"] = images
         yield scene, scene_dir
 
@@ -230,6 +238,7 @@ def main(
     dataset_id: str,
     output_dir: Path,
     num_images_per_prompt: int,
+    num_batches_per_prompt: int,
     num_inference_steps: int,
     negative_prompt: str,
 ):
@@ -240,6 +249,7 @@ def main(
         dataset,
         output_dir,
         num_images_per_prompt,
+        num_batches_per_prompt,
         num_inference_steps,
         negative_prompt,
     ):
@@ -269,6 +279,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--output_dir", type=Path, help="Path to save images.")
     parser.add_argument("--num_images_per_prompt", type=int, default=8)
+    parser.add_argument("--num_batches_per_prompt", type=int, default=1)
     parser.add_argument("--num_inference_steps", type=int, default=30)
     parser.add_argument("--negative_prompt", type=str, default=DEFAULT_NEGATIVE_PROMPT)
     args = parser.parse_args()
@@ -277,6 +288,7 @@ if __name__ == "__main__":
         args.dataset_id,
         Path(args.output_dir),
         args.num_images_per_prompt,
+        args.num_batches_per_prompt,
         args.num_inference_steps,
         args.negative_prompt,
     )
