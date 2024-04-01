@@ -1037,7 +1037,6 @@ def main(args):
             warnings.warn("You need not use --class_prompt without --with_prior_preservation.")
 
     if args.with_prior_preservation:
-        pipeline = None
         for class_prompt, class_images_dir in zip(class_prompts, class_images_dirs):
             if class_images_dir is None:
                 continue
@@ -1048,6 +1047,7 @@ def main(args):
                 class_images_dir.mkdir(parents=True)
             cur_class_images = len(list(class_images_dir.iterdir()))
 
+            pipeline = None
             if cur_class_images < args.num_class_images:
                 torch_dtype = torch.float16 if accelerator.device.type == "cuda" else torch.float32
                 if args.prior_generation_precision == "fp32":
