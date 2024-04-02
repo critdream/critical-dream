@@ -767,7 +767,7 @@ class DreamBoothDataset(Dataset):
         else:
             self.instance_data_root = Path(instance_data_root)
             if not self.instance_data_root.exists():
-                raise ValueError("Instance images root doesn't exists.")
+                raise ValueError(f"Instance images root {self.instance_data_root} doesn't exists.")
 
             instance_images = [Image.open(path) for path in list(Path(instance_data_root).iterdir())]
 
