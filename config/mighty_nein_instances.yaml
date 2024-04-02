@@ -1,4 +1,4 @@
-- instance_name: dm_matt_mercer
+- instance_name: dungeon_master_matt_mercer
   instance_data_root: data/dungeon_master_matt_mercer
   instance_prompt: a picture of [dm-matt-mercer], a dungeon master. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
   validation_prompt: a picture of [dm-matt-mercer]
