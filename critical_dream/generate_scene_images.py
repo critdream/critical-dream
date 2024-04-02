@@ -159,6 +159,8 @@ def fix_character_name(
     else:
         prompt = f"{PROMPT_PREFIX}. {description}"
 
+    import ipdb; ipdb.set_trace()
+
     return correct_char, special_character, prompt
 
 
@@ -244,6 +246,10 @@ def main(
 ):
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
+
+    for _ in dataset:
+        ...
+
     for scene, scene_dir in generate_scene_images(
         pipe,
         dataset,

@@ -35,7 +35,7 @@ import transformers
 from accelerate import Accelerator
 from accelerate.logging import get_logger
 from accelerate.utils import DistributedDataParallelKwargs, ProjectConfiguration, set_seed
-from huggingface_hub import create_repo, upload_folder, login
+from huggingface_hub import create_repo, upload_folder, login, ModelCard, ModelCardData
 from huggingface_hub.utils import insecure_hashlib
 from packaging import version
 from peft import LoraConfig, set_peft_model_state_dict
@@ -66,7 +66,7 @@ from diffusers.utils import (
     convert_unet_state_dict_to_peft,
     is_wandb_available,
 )
-from diffusers.utils.hub_utils import load_or_create_model_card, populate_model_card
+from diffusers.utils.hub_utils import load_or_create_model_card, populate_model_card, MODEL_CARD_TEMPLATE_PATH
 from diffusers.utils.import_utils import is_xformers_available
 from diffusers.utils.torch_utils import is_compiled_module
 
@@ -128,15 +128,18 @@ Weights for this model are available in Safetensors format.
 {run_url}
 
 """
-    model_card = load_or_create_model_card(
-        repo_id_or_path=repo_id,
-        from_training=True,
-        license="openrail++",
-        base_model=base_model,
-        prompt=instance_prompt,
+    model_card = ModelCard.from_template(
+        card_data=ModelCardData(  # Card metadata object that will be converted to YAML block
+            license="openrail++",
+            library_name="diffusers",
+            base_model=base_model,
+            prompt=instance_prompt,
+            widget=widget_dict,
+        ),
+        template_path=MODEL_CARD_TEMPLATE_PATH,
         model_description=model_description,
-        widget=widget_dict,
     )
+
     tags = [
         "text-to-image",
         "stable-diffusion-xl",

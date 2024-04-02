@@ -1,3 +1,16 @@
+- instance_name: dm_matt_mercer
+  instance_data_root: data/dungeon_master_matt_mercer
+  instance_prompt: a picture of [dm-matt-mercer], a dungeon master. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
+  validation_prompt: a picture of [dm-matt-mercer]
+  class_data_root: data/dungeon_master
+  class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://brandiyorkart.com/cdn/shop/products/cr-master-of-the-game_sm_1024x1024.jpg
+  - https://shop.critrole.com/cdn/shop/files/CopyofRE-CriticalRole_W2-EXC_HoodedGamemaster_Hero_2048.jpg
+  - https://i.pinimg.com/originals/be/6b/94/be6b94ee5424d19a6c32a11f72686ea0.jpg
+  - https://cdnb.artstation.com/p/assets/images/images/032/000/491/large/pablo-agurcia-criticalrole-dm.jpg
+  - https://i.etsystatic.com/8939817/r/il/f2a7cd/1024896184/il_fullxfull.1024896184_m4pv.jpg
+  - https://mrwallpaper.com/images/hd/critical-role-dungeon-master-matthew-mercer-e5knai5tqueelbp7.jpg
 - instance_name: fjord
   instance_data_root: data/fjord
   instance_prompt: "a picture of [critrole-fjord], a male half-orc warlock"
