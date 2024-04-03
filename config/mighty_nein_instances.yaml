@@ -3,7 +3,7 @@
   instance_prompt: a picture of [dm-matt-mercer], a dungeon master. background is a forest. fantasy art style, high quality, highly detailed, sharp focus"
   validation_prompt: a picture of [dm-matt-mercer]
   class_data_root: data/dungeon_master
-  class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
+  class_prompt: a picture of a dungeon master.
   instance_urls:
   - https://brandiyorkart.com/cdn/shop/products/cr-master-of-the-game_sm_1024x1024.jpg
   - https://shop.critrole.com/cdn/shop/files/CopyofRE-CriticalRole_W2-EXC_HoodedGamemaster_Hero_2048.jpg
