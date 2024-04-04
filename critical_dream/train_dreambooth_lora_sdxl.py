@@ -820,7 +820,6 @@ class DreamBoothDataset(Dataset):
                 self.num_class_images = min(len(self.class_images_path), class_num)
             else:
                 self.num_class_images = len(self.class_images_path)
-            self._length = max(self.num_class_images, self.num_instance_images)
         else:
             self.class_data_root = None
 
