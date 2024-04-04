@@ -51,13 +51,13 @@ python critical_dream/compose_scenes.py data/captions data/scenes
 ## Create Huggingface Dataset
 
 ```bash
-python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-dream-scenes-mighty-nein
+python critical_dream/create_scenes_dataset.py data/scenes_v3 cosmicBboy/critical-dream-scenes-mighty-nein
 ```
 
 ## Generate Scene Images
 
 ```bash
-python critical_dream/generate_scene_images.py --output_dir data/images
+python critical_dream/generate_scene_images.py --output_dir output/images
 ```
 
 ## Get image data
@@ -65,7 +65,7 @@ python critical_dream/generate_scene_images.py --output_dir data/images
 To download example images of each character, do:
 
 ```bash
-python critical_dream/image_data.py data/images --multi_instance_data_config config/mighty_nein_instances.yaml
+python critical_dream/image_data.py dataset/data --multi_instance_data_config config/mighty_nein_instances.yaml
 ```
 
 ## Dreambooth fine-tuning
@@ -110,6 +110,41 @@ accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
   --hub_model_id=$HUB_MODEL_ID \
   --seed="0" \
   --push_to_hub
+```
+</details>
+
+
+<details>
+<summary>Stable Diffusion XL Base 1.0 LoRA fine-tuning from Pretrained LoRA</summary>
+
+```bash
+export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
+export LORA_MODEL_NAME="cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.5"
+export VAE_PATH="stabilityai/sdxl-vae"
+export OUTPUT_DIR="models/model_sd1xl_lora_critdream"
+export HUB_MODEL_ID="cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.5.1"
+
+accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
+  --pretrained_model_name_or_path=$MODEL_NAME  \
+  --pretrained_lora_model_name_or_path=$LORA_MODEL_NAME \
+  --data_dir_root=dataset \
+  --multi_instance_data_config=config/mighty_nein_instances.yaml \
+  --multi_instance_subset=fjord \
+  --pretrained_vae_model_name_or_path=$VAE_PATH \
+  --output_dir=$OUTPUT_DIR \
+  --resolution=1024 \
+  --train_batch_size=1 \
+  --gradient_accumulation_steps=1 \
+  --learning_rate=1e-4 \
+  --lr_scheduler="constant" \
+  --lr_warmup_steps=0 \
+  --num_class_images=10 \
+  --max_train_steps=10 \
+  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
+  --validation_epochs=25 \
+  --checkpointing_steps=500 \
+  --hub_model_id=$HUB_MODEL_ID \
+  --seed="0"
 ```
 </details>
 

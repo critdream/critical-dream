@@ -190,6 +190,12 @@ def parse_args(input_args=None):
         help="Path to pretrained VAE model with better numerical stability. More details: https://github.com/huggingface/diffusers/pull/4038.",
     )
     parser.add_argument(
+        "--pretrained_lora_model_name_or_path",
+        type=str,
+        default=None,
+        help="Path to pretrained LoRA model",
+    )
+    parser.add_argument(
         "--revision",
         type=str,
         default=None,
@@ -857,7 +863,7 @@ class DreamBoothDataset(Dataset):
         else:  # costum prompts were provided, but length does not match size of image dataset
             example["instance_prompt"] = self.instance_prompt
 
-        if self.class_data_root:
+        if self.class_data_root and self.num_class_images > 0:
             class_image = Image.open(self.class_images_path[index % self.num_class_images])
             class_image = exif_transpose(class_image)
 
@@ -1095,7 +1101,11 @@ def main(args):
         train_dataset = DreamBoothMultiInstanceDataset(
             multi_instance_data_config=args.multi_instance_data_config,
             multi_instance_subset=args.multi_instance_subset,
-            data_dir_root=Path(args.data_dir_root),
+            data_dir_root=(
+                args.data_dir_root
+                if args.data_dir_root is None
+                else Path(args.data_dir_root)
+            ),
             class_num=args.num_class_images,
             size=args.resolution,
             repeats=args.repeats,
@@ -1143,36 +1153,14 @@ def main(args):
                 repo_id=args.hub_model_id or Path(args.output_dir).name, exist_ok=True, token=args.hub_token
             ).repo_id
 
-    # Load the tokenizers
-    tokenizer_one = AutoTokenizer.from_pretrained(
-        args.pretrained_model_name_or_path,
-        subfolder="tokenizer",
-        revision=args.revision,
-        use_fast=False,
-    )
-    tokenizer_two = AutoTokenizer.from_pretrained(
-        args.pretrained_model_name_or_path,
-        subfolder="tokenizer_2",
-        revision=args.revision,
-        use_fast=False,
-    )
+    # For mixed precision training we cast all non-trainable weights (vae, non-lora text_encoder and non-lora unet) to half-precision
+    # as these weights are only used for inference, keeping weights in full precision is not required.
+    weight_dtype = torch.float32
+    if accelerator.mixed_precision == "fp16":
+        weight_dtype = torch.float16
+    elif accelerator.mixed_precision == "bf16":
+        weight_dtype = torch.bfloat16
 
-    # import correct text encoder classes
-    text_encoder_cls_one = import_model_class_from_model_name_or_path(
-        args.pretrained_model_name_or_path, args.revision
-    )
-    text_encoder_cls_two = import_model_class_from_model_name_or_path(
-        args.pretrained_model_name_or_path, args.revision, subfolder="text_encoder_2"
-    )
-
-    # Load scheduler and models
-    noise_scheduler = DDIMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
-    text_encoder_one = text_encoder_cls_one.from_pretrained(
-        args.pretrained_model_name_or_path, subfolder="text_encoder", revision=args.revision, variant=args.variant
-    )
-    text_encoder_two = text_encoder_cls_two.from_pretrained(
-        args.pretrained_model_name_or_path, subfolder="text_encoder_2", revision=args.revision, variant=args.variant
-    )
     vae_path = (
         args.pretrained_model_name_or_path
         if args.pretrained_vae_model_name_or_path is None
@@ -1184,23 +1172,40 @@ def main(args):
         revision=args.revision,
         variant=args.variant,
     )
-    unet = UNet2DConditionModel.from_pretrained(
-        args.pretrained_model_name_or_path, subfolder="unet", revision=args.revision, variant=args.variant
+
+    pipeline = StableDiffusionXLPipeline.from_pretrained(
+        args.pretrained_model_name_or_path,
+        vae=vae,
+        revision=args.revision,
+        variant=args.variant,
+        torch_dtype=weight_dtype,
     )
+    # load attention processors
+    if args.pretrained_lora_model_name_or_path is not None:
+        pipeline.load_lora_weights(args.pretrained_lora_model_name_or_path)
+
+    tokenizer_one = pipeline.tokenizer
+    tokenizer_two = pipeline.tokenizer_2
+    text_encoder_one = pipeline.text_encoder
+    text_encoder_two = pipeline.text_encoder_2
+    unet = pipeline.unet
+
+    # import correct text encoder classes
+    text_encoder_cls_one = import_model_class_from_model_name_or_path(
+        args.pretrained_model_name_or_path, args.revision
+    )
+    text_encoder_cls_two = import_model_class_from_model_name_or_path(
+        args.pretrained_model_name_or_path, args.revision, subfolder="text_encoder_2"
+    )
+
+    # Load scheduler and models
+    noise_scheduler = DDIMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
 
     # We only train the additional adapter LoRA layers
     vae.requires_grad_(False)
     text_encoder_one.requires_grad_(False)
     text_encoder_two.requires_grad_(False)
     unet.requires_grad_(False)
-
-    # For mixed precision training we cast all non-trainable weights (vae, non-lora text_encoder and non-lora unet) to half-precision
-    # as these weights are only used for inference, keeping weights in full precision is not required.
-    weight_dtype = torch.float32
-    if accelerator.mixed_precision == "fp16":
-        weight_dtype = torch.float16
-    elif accelerator.mixed_precision == "bf16":
-        weight_dtype = torch.bfloat16
 
     # Move unet, vae and text_encoder to device and cast to weight_dtype
     unet.to(accelerator.device, dtype=weight_dtype)
@@ -1232,25 +1237,27 @@ def main(args):
             text_encoder_two.gradient_checkpointing_enable()
 
     # now we will add new LoRA weights to the attention layers
-    unet_lora_config = LoraConfig(
-        r=args.rank,
-        lora_alpha=args.rank,
-        init_lora_weights="gaussian",
-        target_modules=["to_k", "to_q", "to_v", "to_out.0"],
-    )
-    unet.add_adapter(unet_lora_config)
-
-    # The text encoder comes from 🤗 transformers, so we cannot directly modify it.
-    # So, instead, we monkey-patch the forward calls of its attention-blocks.
-    if args.train_text_encoder:
-        text_lora_config = LoraConfig(
+    if args.pretrained_lora_model_name_or_path is not None:
+        unet_lora_config = LoraConfig(
             r=args.rank,
             lora_alpha=args.rank,
             init_lora_weights="gaussian",
-            target_modules=["q_proj", "k_proj", "v_proj", "out_proj"],
+            target_modules=["to_k", "to_q", "to_v", "to_out.0"],
         )
-        text_encoder_one.add_adapter(text_lora_config)
-        text_encoder_two.add_adapter(text_lora_config)
+        args.pretrained_lora_model_name_or_path
+        unet.add_adapter(unet_lora_config)
+
+        # The text encoder comes from 🤗 transformers, so we cannot directly modify it.
+        # So, instead, we monkey-patch the forward calls of its attention-blocks.
+        if args.train_text_encoder:
+            text_lora_config = LoraConfig(
+                r=args.rank,
+                lora_alpha=args.rank,
+                init_lora_weights="gaussian",
+                target_modules=["q_proj", "k_proj", "v_proj", "out_proj"],
+            )
+            text_encoder_one.add_adapter(text_lora_config)
+            text_encoder_two.add_adapter(text_lora_config)
 
     def unwrap_model(model):
         model = accelerator.unwrap_model(model)
