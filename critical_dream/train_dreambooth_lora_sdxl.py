@@ -1236,8 +1236,8 @@ def main(args):
             text_encoder_one.gradient_checkpointing_enable()
             text_encoder_two.gradient_checkpointing_enable()
 
-    # now we will add new LoRA weights to the attention layers
-    if args.pretrained_lora_model_name_or_path is not None:
+    # add new LoRA weights to the attention layers if pretrained lora weights aren't supplied
+    if args.pretrained_lora_model_name_or_path is None:
         unet_lora_config = LoraConfig(
             r=args.rank,
             lora_alpha=args.rank,
