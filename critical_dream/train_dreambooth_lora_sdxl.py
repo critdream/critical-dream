@@ -1193,22 +1193,20 @@ def main(args):
     text_encoder_two = pipeline.text_encoder_2
     unet: UNet2DConditionModel = pipeline.unet
 
-    # import correct text encoder classes
-    text_encoder_cls_one = import_model_class_from_model_name_or_path(
-        args.pretrained_model_name_or_path, args.revision
-    )
-    text_encoder_cls_two = import_model_class_from_model_name_or_path(
-        args.pretrained_model_name_or_path, args.revision, subfolder="text_encoder_2"
-    )
-
     # Load scheduler and models
     noise_scheduler = DDIMScheduler.from_pretrained(args.pretrained_model_name_or_path, subfolder="scheduler")
 
     # We only train the additional adapter LoRA layers
+    def freeze_non_lora_layers(module):
+        for n, p in module.named_parameters():
+            if "lora" in n.lower():
+                continue
+            p.requires_grad_(False)
+
     vae.requires_grad_(False)
-    text_encoder_one.requires_grad_(False)
-    text_encoder_two.requires_grad_(False)
-    unet.requires_grad_(False)
+    freeze_non_lora_layers(text_encoder_one)
+    freeze_non_lora_layers(text_encoder_two)
+    freeze_non_lora_layers(unet)
 
     # Move unet, vae and text_encoder to device and cast to weight_dtype
     unet.to(accelerator.device, dtype=weight_dtype)
@@ -1823,20 +1821,6 @@ def main(args):
         if accelerator.is_main_process:
 
             if validation_prompts is not None and epoch % args.validation_epochs == 0:
-                # create pipeline
-                if not args.train_text_encoder:
-                    text_encoder_one = text_encoder_cls_one.from_pretrained(
-                        args.pretrained_model_name_or_path,
-                        subfolder="text_encoder",
-                        revision=args.revision,
-                        variant=args.variant,
-                    )
-                    text_encoder_two = text_encoder_cls_two.from_pretrained(
-                        args.pretrained_model_name_or_path,
-                        subfolder="text_encoder_2",
-                        revision=args.revision,
-                        variant=args.variant,
-                    )
                 pipeline = StableDiffusionXLPipeline.from_pretrained(
                     args.pretrained_model_name_or_path,
                     vae=vae.to(weight_dtype),
