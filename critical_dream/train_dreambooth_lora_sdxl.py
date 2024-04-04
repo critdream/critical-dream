@@ -1191,7 +1191,7 @@ def main(args):
     tokenizer_two = pipeline.tokenizer_2
     text_encoder_one = pipeline.text_encoder
     text_encoder_two = pipeline.text_encoder_2
-    unet = pipeline.unet
+    unet: UNet2DConditionModel = pipeline.unet
 
     # import correct text encoder classes
     text_encoder_cls_one = import_model_class_from_model_name_or_path(
@@ -2005,7 +2005,7 @@ def main(args):
             upload_folder(
                 repo_id=repo_id,
                 folder_path=args.output_dir,
-                commit_message="End of training",
+                commit_message=f"End of training {run_url}",
                 ignore_patterns=["step_*", "epoch_*"],
             )
 
