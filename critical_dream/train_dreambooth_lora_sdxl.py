@@ -1182,7 +1182,10 @@ def main(args):
     )
     # load attention processors
     if args.pretrained_lora_model_name_or_path is not None:
-        pipeline.load_lora_weights(args.pretrained_lora_model_name_or_path)
+        pipeline.load_lora_weights(
+            args.pretrained_lora_model_name_or_path,
+            adapter_name="default",
+        )
 
     tokenizer_one = pipeline.tokenizer
     tokenizer_two = pipeline.tokenizer_2
