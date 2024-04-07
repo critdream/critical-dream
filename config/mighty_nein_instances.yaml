@@ -205,58 +205,58 @@
   - https://static.wikia.nocookie.net/criticalrole/images/5/50/Essek_-_Sideshow_-_Minttu.png
   - https://static.wikia.nocookie.net/criticalrole/images/5/54/Essek_minibeacon_saturdaysky.jpg
   - https://static.wikia.nocookie.net/criticalrole/images/b/b7/Essek_-_Cristina_Anaya.jpg
-# - instance_name: mighty_nein_8_nott_cadu_molly
-#   instance_data_root: data/mighty_nein_8_nott_cadu_molly
-#   instance_prompt: a picture of [critrole-m9-8-nott-cadu-molly], a group of eight adventurers
-#   validation_prompt: a picture of [critrole-m9-8-nott-cadu-molly], a group of eight adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_eight
-#   class_prompt: a picture of a group of eight adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1547410792884-ZTEDHGF4BLP9WDW1VLP7/caitmayart-All.jpg
-# - instance_name: mighty_nein_9_veth_essek_cadu
-#   instance_data_root: data/mighty_nein_9_veth_essek_cadu
-#   instance_prompt: a picture of [critrole-m9-9-veth-essek-cadu], a group of nine adventurers
-#   validation_prompt: a picture of [critrole-m9-9-veth-essek-cadu], a group of nine adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_nine
-#   class_prompt: a picture of a group of nine adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1623210460805-W96HUZQOPWGK4102ECR0/exmakina.jpg
-#   # - https://thestarfishface.com/cdn/shop/products/MightyNein-FinaleSAMPLE.jpg?v=1623803499
-# - instance_name: mighty_nein_7_king_veth
-#   instance_data_root: data/mighty_nein_7_king_veth
-#   instance_prompt: a picture of [critrole-m9-7-king-veth], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-king-veth], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://i.ytimg.com/vi/XhkjjN7M0hk/maxresdefault.jpg
-# - instance_name: mighty_nein_7_nott_cadu
-#   instance_data_root: data/mighty_nein_7_nott_cadu
-#   instance_prompt: a picture of [critrole-m9-7-nott-cadu], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-nott-cadu], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://www.sideshow.com/cdn-cgi/image/quality=90,f=auto/https://www.sideshow.com/storage/product-images/501077FBLK/the-mighty-nein-this-is-how-we-roll_critical-role_silo.png
-#   - https://cdnb.artstation.com/p/assets/images/images/026/380/575/large/anthony-amorose-08-the-mighty-nein-06.jpg
-#   - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1616653723210-U65F55GL7TBOD71AZQPO/calendork.jpeg
-#   # - https://assetsio.gnwcdn.com/critical-role-mighty-nein-artwork.jpg
-# - instance_name: mighty_nein_7_veth_cadu
-#   instance_data_root: data/mighty_nein_7_veth_cadu
-#   instance_prompt: a picture of [critrole-m9-7-veth-cadu], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-veth-cadu], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://static1.cbrimages.com/wordpress/wp-content/uploads/2022/10/Official-Art-of-Critical-Roles-Mighty-Nein-by-Ariana-Orner.jpg
-# - instance_name: mighty_nein_7_nott_molly
-#   instance_data_root: data/mighty_nein_7_nott_molly
-#   instance_prompt: a picture of [critrole-m9-7-nott-molly], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-nott-molly], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://thecritograph.com/wp-content/uploads/2021/01/Issue-15-Opinon-Photo_kamryn-Schnieder.jpg
-#   - https://i.redd.it/fjbiqwlxd2k11.jpg
-#   - https://static1.cbrimages.com/wordpress/wp-content/uploads/2023/01/the-mighty-nein-critical-role-1.jpg
-#   # - https://ultrapro.com/cdn/shop/products/16114_MAT_CriticalRole_M9_800x.png
+- instance_name: mighty_nein_8_nott_cadu_molly
+  instance_data_root: data/mighty_nein_8_nott_cadu_molly
+  instance_prompt: a picture of [critrole-m9-8-nott-cadu-molly], a group of eight adventurers
+  validation_prompt: a picture of [critrole-m9-8-nott-cadu-molly], a group of eight adventurers. background is a rowdy tavern
+  class_data_root: data/adventurers_eight
+  class_prompt: a picture of a group of eight adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1547410792884-ZTEDHGF4BLP9WDW1VLP7/caitmayart-All.jpg
+- instance_name: mighty_nein_9_veth_essek_cadu
+  instance_data_root: data/mighty_nein_9_veth_essek_cadu
+  instance_prompt: a picture of [critrole-m9-9-veth-essek-cadu], a group of nine adventurers
+  validation_prompt: a picture of [critrole-m9-9-veth-essek-cadu], a group of nine adventurers. background is a rowdy tavern
+  class_data_root: data/adventurers_nine
+  class_prompt: a picture of a group of nine adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1623210460805-W96HUZQOPWGK4102ECR0/exmakina.jpg
+  # - https://thestarfishface.com/cdn/shop/products/MightyNein-FinaleSAMPLE.jpg?v=1623803499
+- instance_name: mighty_nein_7_king_veth
+  instance_data_root: data/mighty_nein_7_king_veth
+  instance_prompt: a picture of [critrole-m9-7-king-veth], a group of seven adventurers
+  validation_prompt: a picture of [critrole-m9-7-king-veth], a group of seven adventurers. background is a rowdy tavern
+  class_data_root: data/adventurers_seven
+  class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://i.ytimg.com/vi/XhkjjN7M0hk/maxresdefault.jpg
+- instance_name: mighty_nein_7_nott_cadu
+  instance_data_root: data/mighty_nein_7_nott_cadu
+  instance_prompt: a picture of [critrole-m9-7-nott-cadu], a group of seven adventurers
+  validation_prompt: a picture of [critrole-m9-7-nott-cadu], a group of seven adventurers. background is a rowdy tavern
+  class_data_root: data/adventurers_seven
+  class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://www.sideshow.com/cdn-cgi/image/quality=90,f=auto/https://www.sideshow.com/storage/product-images/501077FBLK/the-mighty-nein-this-is-how-we-roll_critical-role_silo.png
+  - https://cdnb.artstation.com/p/assets/images/images/026/380/575/large/anthony-amorose-08-the-mighty-nein-06.jpg
+  - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1616653723210-U65F55GL7TBOD71AZQPO/calendork.jpeg
+  # - https://assetsio.gnwcdn.com/critical-role-mighty-nein-artwork.jpg
+- instance_name: mighty_nein_7_veth_cadu
+  instance_data_root: data/mighty_nein_7_veth_cadu
+  instance_prompt: a picture of [critrole-m9-7-veth-cadu], a group of seven adventurers
+  validation_prompt: a picture of [critrole-m9-7-veth-cadu], a group of seven adventurers. background is a rowdy tavern
+  class_data_root: data/adventurers_seven
+  class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://static1.cbrimages.com/wordpress/wp-content/uploads/2022/10/Official-Art-of-Critical-Roles-Mighty-Nein-by-Ariana-Orner.jpg
+- instance_name: mighty_nein_7_nott_molly
+  instance_data_root: data/mighty_nein_7_nott_molly
+  instance_prompt: a picture of [critrole-m9-7-nott-molly], a group of seven adventurers
+  validation_prompt: a picture of [critrole-m9-7-nott-molly], a group of seven adventurers. background is a rowdy tavern
+  class_data_root: data/adventurers_seven
+  class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
+  instance_urls:
+  - https://thecritograph.com/wp-content/uploads/2021/01/Issue-15-Opinon-Photo_kamryn-Schnieder.jpg
+  - https://i.redd.it/fjbiqwlxd2k11.jpg
+  - https://static1.cbrimages.com/wordpress/wp-content/uploads/2023/01/the-mighty-nein-critical-role-1.jpg
+  # - https://ultrapro.com/cdn/shop/products/16114_MAT_CriticalRole_M9_800x.png
