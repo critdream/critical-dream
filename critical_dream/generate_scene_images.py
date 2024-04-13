@@ -41,20 +41,44 @@ PLAYER_CHARACTERS = frozenset(
 )
 
 SPECIAL_CHARACTERS = {
-    "fjord": "[critrole-fjord], a male half-orc warlock",
-    "beau": "[critrole-beau], a female human monk",
-    "jester": "[critrole-jester], a female tiefling cleric",
-    "caleb": "[critrole-caleb], a male human wizard",
-    "caduceus": "[critrole-caduceus], a male firbolg cleric",
-    "nott": "[critrole-nott], a female goblin rogue",
-    "veth": "[critrole-veth], a female halfling rogue/wizard",
-    "yasha": "[critrole-yasha], a female aasimar barbarian",
-    "mollymauk": "[critrole-mollymauk], a male tiefling blood hunter",
+    "fjord": "[critrole-fjord], a male half-orc warlock.",
+    "beau": "[critrole-beau], a female human monk.",
+    "jester": "[critrole-jester], a female tiefling cleric.",
+    "caleb": "[critrole-caleb], a male human wizard.",
+    "caduceus": "[critrole-caduceus], a male firbolg cleric.",
+    "nott": "[critrole-nott], a female goblin rogue.",
+    "veth": "[critrole-veth], a female halfling rogue/wizard.",
+    "yasha": "[critrole-yasha], a female aasimar barbarian.",
+    "mollymauk": "[critrole-mollymauk], a male tiefling blood hunter.",
+    "essek": "[critrole-essek], a male drow wizard.",
 }
 
-PROMPT_PREFIX = (
-    "dungeons and dragons, critical role, fantasy art style, professional, "
-    "high quality, highly detailed, sharp focus, animation"
+ADDITIONAL_PROMPTS = {
+    "fjord": "black hair.",
+    "beau": "round ears. no tattoos.",
+    "jester": "blue skin. blue hair.",
+    "caleb": "round ears.",
+    "caduceus": "",
+    "nott": "",
+    "veth": "",
+    "yasha": "black hair.",
+    "mollymauk": "purple skin.",
+}
+
+ADDITIONAL_NEGATIVE_PROMPTS = {
+    "fjord": "",
+    "beau": "",
+    "jester": "",
+    "caleb": "pointy ears. earrings.",
+    "caduceus": "",
+    "nott": "",
+    "veth": "",
+    "yasha": "black hair. wings.",
+    "mollymauk": "",
+}
+
+PROMPT_AUGMENTATION = (
+    "high quality, sharp focus. artstation. professional"
 )
 
 DEFAULT_NEGATIVE_PROMPT = (
@@ -151,13 +175,13 @@ def fix_character_name(
     )
 
     if correct_char in PLAYER_CHARACTERS:
-        prompt = f"{special_character}. {PROMPT_PREFIX}. {description}"
+        prompt = f"{special_character}. {PROMPT_AUGMENTATION}. {description}"
         if re.search(patt, description) is None:
             description = f"{special_character}. {description}"
         else:
             description = re.sub(patt, f"{special_character},", description)
     else:
-        prompt = f"{PROMPT_PREFIX}. {description}"
+        prompt = f"{PROMPT_AUGMENTATION}. {description}"
 
     import ipdb; ipdb.set_trace()
 
