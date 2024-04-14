@@ -51,7 +51,7 @@ python critical_dream/compose_scenes.py data/captions data/scenes
 ## Create Huggingface Dataset
 
 ```bash
-python critical_dream/create_scenes_dataset.py data/scenes_v3 cosmicBboy/critical-dream-scenes-mighty-nein
+python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-dream-scenes-mighty-nein
 ```
 
 ## Generate Scene Images

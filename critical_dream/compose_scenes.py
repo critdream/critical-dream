@@ -33,9 +33,13 @@ class Turn(BaseModel):
 class Scene(BaseModel):
     character: str
     background: str
+    action: str
+    object: str
+    poses: str
     start_time: float
     end_time: float
     scene_description: str
+    turns: list[Turn]
 
 
 class Episode(BaseModel):
@@ -43,7 +47,7 @@ class Episode(BaseModel):
     scenes: list[Scene]
 
 
-SCENE_COMPOSITION_MODEL = "gpt-4-turbo-preview"
+SCENE_COMPOSITION_MODEL = "gpt-4-turbo"
 JSON_FIX_MODEL = "gpt-3.5-turbo-0125"
 MODEL_SEED = 41
 
@@ -113,8 +117,14 @@ def compose_scene(turns: list[Turn]) -> str:
     describing the environment, the "character" should be "environment".
 
     A scene consists of the following:
-    - character: the main subject of the scene 
+    - character: the main subject of the scene. If the scene is describing something
+      happening in-game, DO NOT USE the voice actor's name, use the name of
+      the player character instead.
     - background: a few word description of the scene background
+    - action: the action that the character is doing
+    - object: the object or other character that the main subject character is
+      interacting with, if applicable
+    - poses: comma-separated list of suggested poses for the character in the scene
     - start_time: the timestamp of when the scene starts
     - end_time: the timestamp of when the scene ends
     - scene_description: a highly descriptive paragraph of the scene, optimized
@@ -132,7 +142,10 @@ def compose_scene(turns: list[Turn]) -> str:
         "scenes": [
             {
                 "character": "environment",
-                "background": "a short description of the environment.",
+                "background": "a short description of the physical environment.",
+                "action": "none",
+                "object": "none",
+                "poses": "none",
                 "start_time": 0,
                 "end_time": 10,
                 "scene_description": "this is a description of the environment."
@@ -140,6 +153,9 @@ def compose_scene(turns: list[Turn]) -> str:
             {
                 "character": "fjord",
                 "background": "a short description of the scene background",
+                "action": "what fjord is doing",
+                "object": "the object or other character fjord is interacting with",
+                "poses": "pose suggestion 1, pose suggestion 2",
                 "start_time": 10,
                 "end_time": 40,
                 "scene_description": "this is a description of what fjord is doing."
@@ -197,14 +213,20 @@ def fix_json(json_str: str) -> str:
         "scenes": [
             {
                 "character": "environment",
-                "background": "a short description of the environment.",
+                "background": "a short description of the physical environment.",
+                "action": "none",
+                "object": "none",
+                "poses": "",
                 "start_time": 0,
                 "end_time": 10,
                 "scene_description": "this is a description of the environment."
             },
             {
                 "character": "fjord",
-                "background": "a short description of the scene background",
+                "background": "a short description of the physical environment.",
+                "action": "what fjord is doing",
+                "object": "the object or other character fjord is interacting with",
+                "poses": "pose suggestion 1, pose suggestion 2",
                 "start_time": 10,
                 "end_time": 40,
                 "scene_description": "this is a description of what fjord is doing."
@@ -250,7 +272,7 @@ def postprocess(output: str) -> str:
     return "\n".join(splits)
 
 
-def process_raw_scene(scene: dict) -> Scene:
+def process_raw_scene(scene: dict) -> dict:
     for key in scene:
         if key.startswith("end") and key != "end_time":
             val = scene.pop(key)
@@ -259,7 +281,7 @@ def process_raw_scene(scene: dict) -> Scene:
     if "environment" in scene:
         scene.pop("environment")
         scene["character"] = "environment"
-    return Scene(**scene)
+    return scene
 
 
 def iter_turn_batches(
@@ -340,7 +362,9 @@ def compose_scenes(
                 print(json_output["scenes"][0])
                 for scene in json_output["scenes"]:
                     try:
-                        scenes.append(process_raw_scene(scene))
+                        scenes.append(
+                            Scene(**process_raw_scene(scene), turns=turn_batch)
+                        )
                     except Exception:
                         print(f"Error processing scene: {scene}")
                 break
