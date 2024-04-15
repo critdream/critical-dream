@@ -345,7 +345,7 @@ if __name__ == "__main__":
         help="Model ID of LoRA model.",
     )
     parser.add_argument(
-        "--refined_model_id",
+        "--refiner_model_id",
         type=str,
         default=DEFAULT_REFINER_MODEL,
         help="Model ID of the Refiner model.",
