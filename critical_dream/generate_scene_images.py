@@ -163,11 +163,15 @@ def add_prompts(scene: dict) -> dict:
         })
         return scene
     
-    correct_char = (
-        char
-        if char in PLAYER_CHARACTERS
-        else SINGLE_CHARACTER_MAP.get(char, None)
-    )
+    split_char = char.split(" ")
+    if char in PLAYER_CHARACTERS:
+        correct_char = PLAYER_CHARACTERS[char]
+    elif len(split_char) > 1 and split_char[0] in PLAYER_CHARACTERS:
+        correct_char = PLAYER_CHARACTERS[split_char[0]]
+    elif len(split_char) > 1 and split_char[0] in SINGLE_CHARACTER_MAP:
+        correct_char = SINGLE_CHARACTER_MAP[split_char[0]]
+    else:
+        correct_char = SINGLE_CHARACTER_MAP.get(char, None)
 
     if correct_char is None:
         episode_num = int(episode_name.split("e")[-1])
