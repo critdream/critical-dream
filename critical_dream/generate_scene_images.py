@@ -193,7 +193,7 @@ def add_prompts(scene: dict) -> dict:
             f"{full_character_desc}, "
             f"{scene['action']}, "
             f"{scene['poses']}. "
-            f"(background is {scene['background']})+++ ."
+            f"({scene['background']} background)+++ ."
             f"{PROMPT_AUGMENTATION}"
         )
     else:
