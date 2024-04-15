@@ -165,9 +165,9 @@ def add_prompts(scene: dict) -> dict:
     
     split_char = char.split(" ")
     if char in PLAYER_CHARACTERS:
-        correct_char = PLAYER_CHARACTERS[char]
+        correct_char = char
     elif len(split_char) > 1 and split_char[0] in PLAYER_CHARACTERS:
-        correct_char = PLAYER_CHARACTERS[split_char[0]]
+        correct_char = split_char[0]
     elif len(split_char) > 1 and split_char[0] in SINGLE_CHARACTER_MAP:
         correct_char = SINGLE_CHARACTER_MAP[split_char[0]]
     else:
