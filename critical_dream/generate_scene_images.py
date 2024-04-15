@@ -40,29 +40,30 @@ PLAYER_CHARACTERS = frozenset(
     ]
 )
 
-SPECIAL_CHARACTERS = {
-    "fjord": "[critrole-fjord], a male half-orc warlock.",
-    "beau": "[critrole-beau], a female human monk.",
-    "jester": "[critrole-jester], a female tiefling cleric.",
-    "caleb": "[critrole-caleb], a male human wizard.",
-    "caduceus": "[critrole-caduceus], a male firbolg cleric.",
-    "nott": "[critrole-nott], a female goblin rogue.",
-    "veth": "[critrole-veth], a female halfling rogue/wizard.",
-    "yasha": "[critrole-yasha], a female aasimar barbarian.",
-    "mollymauk": "[critrole-mollymauk], a male tiefling blood hunter.",
-    "essek": "[critrole-essek], a male drow wizard.",
+CHARACTER_TOKENS = {
+    "fjord": "[critrole-fjord]",
+    "beau": "[critrole-beau]",
+    "jester": "[critrole-jester]",
+    "caleb": "[critrole-caleb]",
+    "caduceus": "[critrole-caduceus]",
+    "nott": "[critrole-nott]",
+    "veth": "[critrole-veth]",
+    "yasha": "[critrole-yasha]",
+    "mollymauk": "[critrole-mollymauk]",
+    "essek": "[critrole-essek]",
 }
 
 ADDITIONAL_PROMPTS = {
-    "fjord": "black hair.",
-    "beau": "round ears. no tattoos.",
-    "jester": "blue skin. blue hair.",
-    "caleb": "round ears.",
-    "caduceus": "",
-    "nott": "",
-    "veth": "",
-    "yasha": "black hair.",
-    "mollymauk": "purple skin.",
+    "fjord": "a male half-orc warlock with black hair",
+    "beau": "a female human monk with round ears and no tattoos",
+    "jester": "female tiefling cleric with blue skin, and blue hair",
+    "caleb": ", male human wizard. round ears",
+    "caduceus": "a male firbolg cleric",
+    "nott": "a female goblin rogue",
+    "veth": "a female halfling rogue/wizard",
+    "yasha": "a female aasimar barbarian with black hair",
+    "mollymauk": "a male tiefling blood hunter with purple skin",
+    "essek": "a male drow wizard.",
 }
 
 ADDITIONAL_NEGATIVE_PROMPTS = {
@@ -142,14 +143,25 @@ def load_refiner():
     return refiner
 
 
-def fix_character_name(
-    character: str,
-    description: str,episode_name: str,
-) -> tuple[str, str, str]:
+def add_prompts(scene: dict) -> dict:
+
+    character = scene["character"]
+    description = scene["scene_description"]
+    episode_name = scene["episode_name"]
+
     char = character.lower().strip()
 
+    if " as " in char:
+        _, char = char.split(" as ")
+
     if char == "matt":
-        return "dungeon-master", "[dungeon-master]", description
+        scene.update({
+            "correct_char": "dm-matt-mercer",
+            "character_tokens": "[dm-matt-mercer]",
+            "prompt": f"[dm-matt-mercer] wearing a hooded cloak. {description}",
+            "negative_prompt": DEFAULT_NEGATIVE_PROMPT,
+        })
+        return scene
     
     correct_char = (
         char
@@ -161,47 +173,58 @@ def fix_character_name(
         episode_num = int(episode_name.split("e")[-1])
         if char == "sam":
             correct_char = "veth" if episode_num > VETH_EPISODE else "nott"
+        elif char == "veth" and episode_num < VETH_EPISODE:
+            correct_char = "nott"
         elif char == "taliesin":
             correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
         else:
             correct_char = char
     
-    special_character = SPECIAL_CHARACTERS.get(correct_char, correct_char)
+    character_tokens = CHARACTER_TOKENS.get(correct_char, correct_char)
+    addtl_prompts = ADDITIONAL_PROMPTS.get(correct_char, "")
+    addtl_neg_prompts = ADDITIONAL_NEGATIVE_PROMPTS.get(correct_char, "")
 
-    patt = (
-        re.compile(re.escape(char), re.IGNORECASE)
-        if char != correct_char
-        else re.compile(re.escape(correct_char), re.IGNORECASE)
-    )
-
+    # format the prompt
     if correct_char in PLAYER_CHARACTERS:
-        prompt = f"{special_character}. {PROMPT_AUGMENTATION}. {description}"
-        if re.search(patt, description) is None:
-            description = f"{special_character}. {description}"
-        else:
-            description = re.sub(patt, f"{special_character},", description)
+        full_character_desc = character_tokens
+        if addtl_prompts:
+            full_character_desc = f"{full_character_desc}, {addtl_prompts}"
+        prompt = (
+            f"{full_character_desc}, "
+            f"{scene['action']}, "
+            f"{scene['poses']}. "
+            f"background is {scene['background']}. "
+            f"{PROMPT_AUGMENTATION}"
+        )
     else:
-        prompt = f"{PROMPT_AUGMENTATION}. {description}"
+        prompt = f"{description}, {PROMPT_AUGMENTATION}"
 
-    import ipdb; ipdb.set_trace()
+    # format the negative prompt
+    if addtl_neg_prompts:
+        negative_prompt = f"{addtl_neg_prompts}, {DEFAULT_NEGATIVE_PROMPT}"
+    else:
+        negative_prompt = DEFAULT_NEGATIVE_PROMPT
 
-    return correct_char, special_character, prompt
+    # TODO: use the 'object' field to create another prompt for the thing being
+    # interacted with in the scene.
+    scene.update({
+        "correct_char": correct_char,
+        "character_tokens": character_tokens,
+        "prompt": prompt,
+        "negative_prompt": negative_prompt,
+    })
+
+    return scene
 
 
 def process_scene(scene: dict):
-    fixed_character, special_character, prompt = fix_character_name(
-        scene["character"],
-        scene["scene_description"],
-        scene["episode_name"],
-    )
-    scene["fixed_character"] = fixed_character
-    scene["special_character"] = special_character
-    scene["prompt"] = prompt
+    scene = add_prompts(scene)
+    scene.pop("turns")
     return scene
 
 
 def load_scene_dataset(dataset_id: str):
-    dataset = load_dataset(dataset_id)["train"]
+    dataset = load_dataset(dataset_id, )["train"]
     return dataset.map(process_scene, batched=False)
 
 
@@ -267,12 +290,15 @@ def main(
     num_batches_per_prompt: int,
     num_inference_steps: int,
     negative_prompt: str,
+    debug: bool = False,
 ):
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
 
-    for _ in dataset:
-        ...
+    if debug:
+        for scene in dataset:
+            print(f"prompt: {scene}")
+        return
 
     for scene, scene_dir in generate_scene_images(
         pipe,
@@ -312,6 +338,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_batches_per_prompt", type=int, default=1)
     parser.add_argument("--num_inference_steps", type=int, default=30)
     parser.add_argument("--negative_prompt", type=str, default=DEFAULT_NEGATIVE_PROMPT)
+    parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
     main(
         args.lora_model_id,
@@ -321,4 +348,5 @@ if __name__ == "__main__":
         args.num_batches_per_prompt,
         args.num_inference_steps,
         args.negative_prompt,
+        args.debug,
     )

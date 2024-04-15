@@ -60,7 +60,9 @@ python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-d
 python critical_dream/generate_scene_images.py --output_dir output/images
 ```
 
-## Get image data
+## Dreambooth fine-tuning
+
+### Get image data
 
 To download example images of each character, do:
 
@@ -68,7 +70,7 @@ To download example images of each character, do:
 python critical_dream/image_data.py dataset/data --multi_instance_data_config config/mighty_nein_instances.yaml
 ```
 
-## Dreambooth fine-tuning
+### Training
 
 Export secrets:
 
