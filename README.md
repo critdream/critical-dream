@@ -57,7 +57,9 @@ python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-d
 ## Generate Scene Images
 
 ```bash
-python critical_dream/generate_scene_images.py --output_dir output/images
+python critical_dream/generate_scene_images.py \
+  --output_dir output/images \
+  --dataset_id cosmicBboy/critical-dream-scenes-mighty-nein-v1
 ```
 
 ## Dreambooth fine-tuning

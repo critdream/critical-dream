@@ -224,12 +224,12 @@ def process_scene(scene: dict):
 
 
 def load_scene_dataset(dataset_id: str):
-    dataset = load_dataset(dataset_id, )["train"]
+    dataset = load_dataset(dataset_id)["train"]
     return dataset.map(process_scene, batched=False)
 
 
-def get_scene_dir(output_dir: Path, scene: dict, scene_num: int) -> Path:
-    return output_dir / scene["episode_name"] / f"scene_{scene_num:04}"
+def get_scene_dir(output_dir: Path, scene: dict) -> Path:
+    return output_dir / scene["episode_name"]
 
 
 def generate_scene_images(
@@ -251,8 +251,8 @@ def generate_scene_images(
         requires_pooled=[False, True]
     )
 
-    for scene_num, scene in enumerate(dataset):
-        scene_dir = get_scene_dir(output_dir, scene, scene_num)
+    for scene in dataset:
+        scene_dir = get_scene_dir(output_dir, scene)
         if scene_dir.exists():
             print(f"Scene images {scene_dir} exists. Skipping.")
             continue
@@ -300,23 +300,25 @@ def main(
             print(f"prompt: {scene}")
         return
 
-    for scene, scene_dir in generate_scene_images(
-        pipe,
-        dataset,
-        output_dir,
-        num_images_per_prompt,
-        num_batches_per_prompt,
-        num_inference_steps,
-        negative_prompt,
+    for i, (scene, scene_dir) in enumerate(
+        generate_scene_images(
+            pipe,
+            dataset,
+            output_dir,
+            num_images_per_prompt,
+            num_batches_per_prompt,
+            num_inference_steps,
+            negative_prompt,
+        )
     ):
         scene_dir.mkdir(exist_ok=True, parents=True)
         images = scene.pop("images")
 
-        with (scene_dir / "metadata.json").open("w") as f:
+        with (scene_dir / f"scene_{i:03}_metadata.json").open("w") as f:
             json.dump(scene, f)
 
         for image_num, image in enumerate(images):
-            image.save(scene_dir / f"image_{image_num:02}.png")
+            image.save(scene_dir / f"scene_{i:03}_image_{image_num:02}.png")
 
 
 if __name__ == "__main__":
