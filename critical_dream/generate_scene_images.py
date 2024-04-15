@@ -251,9 +251,9 @@ def generate_scene_images(
         requires_pooled=[False, True]
     )
 
-    for scene in dataset:
+    for i, scene in enumerate(dataset):
         scene_dir = get_scene_dir(output_dir, scene)
-        if scene_dir.exists():
+        if (scene_dir / f"scene_{i:03}_metadata.json").exists():
             print(f"Scene images {scene_dir} exists. Skipping.")
             continue
 
