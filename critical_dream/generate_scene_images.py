@@ -17,7 +17,7 @@ import torch
 
 DEFAULT_LORA_MODEL_ID = "cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.4"
 DEFAULT_DATASET_ID = "cosmicBboy/critical-dream-scenes-mighty-nein"
-REFINER_MODEL = "stabilityai/stable-diffusion-xl-refiner-1.0"
+DEFAULT_REFINER_MODEL = "stabilityai/stable-diffusion-xl-refiner-1.0"
 
 VETH_EPISODE = 97
 MOLLYMAUK_EPISODE = 26
@@ -127,10 +127,10 @@ def load_pipeline(lora_model_id: str):
     return pipe
 
 
-def load_refiner():
+def load_refiner(refiner_model_id: str):
     # dtype = torch.float16 if torch.cuda.is_available() else torch.float32
     refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(
-        REFINER_MODEL,
+        refiner_model_id,
         torch_dtype=get_dtype(),
         use_safetensors=True,
         variant="fp16",
@@ -193,7 +193,7 @@ def add_prompts(scene: dict) -> dict:
             f"{full_character_desc}, "
             f"{scene['action']}, "
             f"{scene['poses']}. "
-            f"(background is {scene['background']})+++. "
+            f"(background is {scene['background']})+++ ."
             f"{PROMPT_AUGMENTATION}"
         )
     else:
@@ -234,6 +234,7 @@ def get_scene_dir(output_dir: Path, scene: dict) -> Path:
 
 def generate_scene_images(
     pipe,
+    refiner,
     dataset,
     output_dir: Path,
     num_images_per_prompt: int = 8,
@@ -267,23 +268,31 @@ def generate_scene_images(
 
         images = []
         for _ in range(num_batches_per_prompt):
-            images.extend(
-                pipe(
-                    prompt_embeds=conditioning,
-                    pooled_prompt_embeds=pooled,
-                    negative_prompt_embeds=negative_conditioning,
-                    negative_pooled_prompt_embeds=negative_pooled,
+            latents = pipe(
+                prompt_embeds=conditioning,
+                pooled_prompt_embeds=pooled,
+                negative_prompt_embeds=negative_conditioning,
+                negative_pooled_prompt_embeds=negative_pooled,
+                output_type="latent",
+                generator=generator,
+                num_inference_steps=num_inference_steps,
+                num_images_per_prompt=num_images_per_prompt,
+            ).images
+
+            for latent in latents:
+                image = refiner(
+                    prompt=scene["prompt"],
+                    image=latent,
                     generator=generator,
-                    num_inference_steps=num_inference_steps,
-                    num_images_per_prompt=num_images_per_prompt,
-                ).images
-            )
+                ).images[0]
+                images.append(image)
         scene["images"] = images
         yield scene, scene_dir
 
 
 def main(
     lora_model_id: str,
+    refiner_model_id: str,
     dataset_id: str,
     output_dir: Path,
     num_images_per_prompt: int,
@@ -294,6 +303,7 @@ def main(
 ):
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
+    refiner = load_refiner(refiner_model_id)
 
     if debug:
         for scene in dataset:
@@ -303,6 +313,7 @@ def main(
     for i, (scene, scene_dir) in enumerate(
         generate_scene_images(
             pipe,
+            refiner,
             dataset,
             output_dir,
             num_images_per_prompt,
@@ -330,6 +341,12 @@ if __name__ == "__main__":
         help="Model ID of LoRA model.",
     )
     parser.add_argument(
+        "--refined_model_id",
+        type=str,
+        default=DEFAULT_REFINER_MODEL,
+        help="Model ID of the Refiner model.",
+    )
+    parser.add_argument(
         "--dataset_id",
         type=str,
         default=DEFAULT_DATASET_ID,
@@ -344,6 +361,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(
         args.lora_model_id,
+        args.refiner_model_id,
         args.dataset_id,
         Path(args.output_dir),
         args.num_images_per_prompt,
