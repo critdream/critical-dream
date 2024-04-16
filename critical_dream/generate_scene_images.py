@@ -1,7 +1,7 @@
 """Create images"""
 
 import json
-import re
+import logging
 
 from argparse import ArgumentParser
 from pathlib import Path
@@ -10,9 +10,14 @@ from typing import Iterator
 from compel import Compel, ReturnedEmbeddingsType
 from datasets import load_dataset
 from diffusers import DiffusionPipeline, StableDiffusionXLImg2ImgPipeline
+from diffusers.utils.import_utils import is_xformers_available
 from huggingface_hub.repocard import RepoCard
+from packaging import version
 
 import torch
+
+
+logger = logging.getLogger(__name__)
 
 
 DEFAULT_LORA_MODEL_ID = "cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.4"
@@ -57,7 +62,7 @@ ADDITIONAL_PROMPTS = {
     "fjord": "a male half-orc warlock with black hair",
     "beau": "a female human monk with round ears and no tattoos",
     "jester": "female tiefling cleric with blue skin, and blue hair",
-    "caleb": ", male human wizard. round ears",
+    "caleb": "male human wizard. round ears",
     "caduceus": "a male firbolg cleric",
     "nott": "a female goblin rogue",
     "veth": "a female halfling rogue/wizard",
@@ -79,13 +84,13 @@ ADDITIONAL_NEGATIVE_PROMPTS = {
 }
 
 PROMPT_AUGMENTATION = (
-    "high quality, sharp focus. artstation. professional"
+    "D&D fantasy art style. high quality. sharp focus. artstation. professional"
 )
 
 DEFAULT_NEGATIVE_PROMPT = (
-    "letters, words, copy, watermark, ugly, distorted, deformed, "
-    "duplicate characters, repeated patterns , uncanny valley, "
-    "distorted facial features, distorted hands, extra limbs, "
+    "nsfw, blank background, plain background, letters, words, copy, watermark, "
+    "ugly, distorted, deformed, duplicate characters, repeated patterns, uncanny valley, "
+    "distorted facial features, distorted hands, extra limbs, distorted fingers, "
     "(concept art)1.5, "
     "worst quality, low quality, normal quality, low resolution, "
     "worst resolution, normal resolution, collage, bad anatomy of fingers, "
@@ -181,6 +186,8 @@ def add_prompts(scene: dict) -> dict:
             correct_char = "nott"
         elif char == "taliesin":
             correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
+        elif char == "beauregard":
+            correct_char = "beau"
         else:
             correct_char = char
     
@@ -197,7 +204,7 @@ def add_prompts(scene: dict) -> dict:
             f"{full_character_desc}, "
             f"{scene['action']}, "
             f"{scene['poses']}. "
-            f"({scene['background']} background)+++ ."
+            f"({scene['background']} background, fantasy world)++++ ."
             f"{PROMPT_AUGMENTATION}"
         )
     else:
@@ -303,11 +310,26 @@ def main(
     num_batches_per_prompt: int,
     num_inference_steps: int,
     negative_prompt: str,
+    enable_xformers_memory_efficient_attention: bool = False,
     debug: bool = False,
 ):
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
     refiner = load_refiner(refiner_model_id)
+
+    if enable_xformers_memory_efficient_attention:
+        if is_xformers_available():
+            import xformers
+
+            xformers_version = version.parse(xformers.__version__)
+            if xformers_version == version.parse("0.0.16"):
+                logger.warn(
+                    "xFormers 0.0.16 cannot be used for training in some GPUs. If you observe problems during training, "
+                    "please update xFormers to at least 0.0.17. See https://huggingface.co/docs/diffusers/main/en/optimization/xformers for more details."
+                )
+            pipe.unet.enable_xformers_memory_efficient_attention()
+        else:
+            raise ValueError("xformers is not available. Make sure it is installed correctly")
 
     if debug:
         for scene in dataset:
@@ -361,6 +383,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_batches_per_prompt", type=int, default=1)
     parser.add_argument("--num_inference_steps", type=int, default=30)
     parser.add_argument("--negative_prompt", type=str, default=DEFAULT_NEGATIVE_PROMPT)
+    parser.add_argument("--enable_xformers_memory_efficient_attention", action="store_true")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
     main(
@@ -372,5 +395,6 @@ if __name__ == "__main__":
         args.num_batches_per_prompt,
         args.num_inference_steps,
         args.negative_prompt,
+        args.enable_xformers_memory_efficient_attention,
         args.debug,
     )
