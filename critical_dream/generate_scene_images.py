@@ -180,7 +180,7 @@ def add_prompts(scene: dict) -> dict:
     elif len(split_char) > 1 and split_char[0] in SINGLE_CHARACTER_MAP:
         correct_char = SINGLE_CHARACTER_MAP[split_char[0]]
     else:
-        correct_char = SINGLE_CHARACTER_MAP.get(char, correct_char)
+        correct_char = SINGLE_CHARACTER_MAP.get(char, char)
 
     # fix character names for specific episodes/multiple possible names
     episode_num = int(episode_name.split("e")[-1])
