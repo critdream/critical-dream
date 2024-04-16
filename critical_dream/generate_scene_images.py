@@ -315,7 +315,8 @@ def generate_scene_images(
                 generator=generator,
                 num_inference_steps=num_inference_steps,
                 num_images_per_prompt=num_images_per_prompt,
-            )
+            ).images
+
             images.extend([i for i in _images])
 
         scene["images"] = images
