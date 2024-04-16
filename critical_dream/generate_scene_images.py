@@ -157,7 +157,9 @@ def add_prompts(scene: dict) -> dict:
     char = character.lower().strip()
 
     if " as " in char:
+        # e.g. "Sam as Veth" -> "veth"
         _, char = char.split(" as ")
+        char = char.lower().strip()
 
     if char == "matt":
         scene.update({
