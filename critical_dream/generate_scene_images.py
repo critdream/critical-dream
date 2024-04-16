@@ -1,5 +1,6 @@
 """Create images"""
 
+import copy
 import json
 import logging
 
@@ -170,6 +171,7 @@ def add_prompts(scene: dict) -> dict:
         })
         return scene
     
+    # initial character mapping
     split_char = char.split(" ")
     if char in PLAYER_CHARACTERS:
         correct_char = char
@@ -178,20 +180,18 @@ def add_prompts(scene: dict) -> dict:
     elif len(split_char) > 1 and split_char[0] in SINGLE_CHARACTER_MAP:
         correct_char = SINGLE_CHARACTER_MAP[split_char[0]]
     else:
-        correct_char = SINGLE_CHARACTER_MAP.get(char, None)
+        correct_char = SINGLE_CHARACTER_MAP.get(char, correct_char)
 
-    if correct_char is None:
-        episode_num = int(episode_name.split("e")[-1])
-        if char == "sam":
-            correct_char = "veth" if episode_num > VETH_EPISODE else "nott"
-        elif char == "veth" and episode_num < VETH_EPISODE:
-            correct_char = "nott"
-        elif char == "taliesin":
-            correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
-        elif char == "beauregard":
-            correct_char = "beau"
-        else:
-            correct_char = char
+    # fix character names for specific episodes/multiple possible names
+    episode_num = int(episode_name.split("e")[-1])
+    if correct_char == "sam":
+        correct_char = "veth" if episode_num > VETH_EPISODE else "nott"
+    elif correct_char == "veth" and episode_num < VETH_EPISODE:
+        correct_char = "nott"
+    elif correct_char == "taliesin":
+        correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
+    elif correct_char == "beauregard":
+        correct_char = "beau"
     
     character_tokens = CHARACTER_TOKENS.get(correct_char, correct_char)
     addtl_prompts = ADDITIONAL_PROMPTS.get(correct_char, "")
@@ -203,7 +203,7 @@ def add_prompts(scene: dict) -> dict:
         if addtl_prompts:
             full_character_desc = f"{full_character_desc}, {addtl_prompts}"
         prompt = (
-            f"{full_character_desc}, "
+            f"({full_character_desc})+++ "
             f"{scene['action']}, "
             f"{scene['poses']}. "
             f"({scene['background']} background, fantasy world)+++ ."
