@@ -265,6 +265,13 @@ def generate_scene_images(
         requires_pooled=[False, True]
     )
 
+    compel_img2img = Compel(
+        tokenizer=[refiner.tokenizer_2],
+        text_encoder=[refiner.text_encoder_2],
+        returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
+        requires_pooled=[True]
+    )
+
     for i, scene in enumerate(dataset):
         print(f"generating images for episode {scene['episode_name']}, scene {i}")
         scene_dir = get_scene_dir(output_dir, scene)
@@ -272,13 +279,19 @@ def generate_scene_images(
             print(f"Scene images {scene_dir} exists. Skipping.")
             continue
 
+        # conditioning for fine-tuned model
         conditioning, pooled = compel(scene["prompt"])
         negative_conditioning, negative_pooled = compel(negative_prompt)
-
         conditioning, negative_conditioning = compel.pad_conditioning_tensors_to_same_length(
             [conditioning, negative_conditioning]
         )
-        conditioning, pooled = compel(scene["prompt"])
+
+        # conditioning for refiner model
+        conditioning_img2img, pooled_img2img = compel_img2img(scene["prompt"])
+        negative_conditioning_img2img, negative_pooled_img2img = compel_img2img(negative_prompt)
+        conditioning_img2img, negative_conditioning_img2img = compel_img2img.pad_conditioning_tensors_to_same_length(
+            [conditioning_img2img, negative_conditioning_img2img]
+        )
 
         images = []
         for _ in range(num_batches_per_prompt):
@@ -293,13 +306,17 @@ def generate_scene_images(
                 num_images_per_prompt=num_images_per_prompt,
             ).images
 
-            images = refiner(
-                prompt=scene["prompt"],
+            _images = refiner(
+                prompt_embeds=conditioning_img2img,
+                pooled_prompt_embeds=pooled_img2img,
+                negative_prompt_embeds=negative_conditioning_img2img,
+                negative_pooled_prompt_embeds=negative_pooled_img2img,
                 image=latents,
                 generator=generator,
                 num_inference_steps=num_inference_steps,
                 num_images_per_prompt=num_images_per_prompt,
             )
+            images.extend([i for i in _images])
 
         scene["images"] = images
         yield scene, scene_dir
