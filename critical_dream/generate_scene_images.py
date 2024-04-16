@@ -264,6 +264,7 @@ def generate_scene_images(
     )
 
     for i, scene in enumerate(dataset):
+        print(f"generating images for episode {scene['episode_name']}, scene {i}")
         scene_dir = get_scene_dir(output_dir, scene)
         if (scene_dir / f"scene_{i:03}_metadata.json").exists():
             print(f"Scene images {scene_dir} exists. Skipping.")
