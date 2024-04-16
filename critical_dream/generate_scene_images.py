@@ -352,7 +352,7 @@ def main(
         images = scene.pop("images")
 
         with (scene_dir / f"scene_{i:03}_metadata.json").open("w") as f:
-            json.dump(scene, f)
+            json.dump(scene, f, indent=4)
 
         for image_num, image in enumerate(images):
             image.save(scene_dir / f"scene_{i:03}_image_{image_num:02}.png")
