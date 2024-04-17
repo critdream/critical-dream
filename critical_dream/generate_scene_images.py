@@ -34,6 +34,8 @@ SINGLE_CHARACTER_MAP = {
     "travis": "fjord",
     "liam": "caleb",
     "ashley": "yasha",
+    "beauregard": "beau",
+    "molly": "mollymauk",
 }
 
 PLAYER_CHARACTERS = frozenset(
@@ -190,8 +192,6 @@ def add_prompts(scene: dict) -> dict:
         correct_char = "nott"
     elif correct_char == "taliesin":
         correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
-    elif correct_char == "beauregard":
-        correct_char = "beau"
     
     character_tokens = CHARACTER_TOKENS.get(correct_char, correct_char)
     addtl_prompts = ADDITIONAL_PROMPTS.get(correct_char, "")
