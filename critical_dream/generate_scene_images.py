@@ -63,13 +63,13 @@ CHARACTER_TOKENS = {
 
 ADDITIONAL_PROMPTS = {
     "fjord": "a male half-orc warlock with black hair",
-    "beau": "a female human monk with round ears and no tattoos",
+    "beau": "a female human monk with round ears and no tattoos wearing blue clothes",
     "jester": "female tiefling cleric with blue skin, and blue hair",
     "caleb": "male human wizard. round ears",
     "caduceus": "a male firbolg cleric",
     "nott": "a female goblin rogue",
     "veth": "a female halfling rogue/wizard",
-    "yasha": "a female aasimar barbarian with black hair wearing black leather armor",
+    "yasha": "a female aasimar barbarian with black hair wearing full black leather armor",
     "mollymauk": "a male tiefling blood hunter with purple skin",
     "essek": "a male drow wizard.",
 }
