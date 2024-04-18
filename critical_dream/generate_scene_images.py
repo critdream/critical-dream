@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Iterator
 
 from compel import Compel, ReturnedEmbeddingsType
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
 from diffusers import DiffusionPipeline, StableDiffusionXLImg2ImgPipeline
 from diffusers.utils.import_utils import is_xformers_available
 from huggingface_hub.repocard import RepoCard
@@ -69,7 +69,7 @@ ADDITIONAL_PROMPTS = {
     "caduceus": "a male firbolg cleric",
     "nott": "a female goblin rogue",
     "veth": "a female halfling rogue/wizard",
-    "yasha": "a female aasimar barbarian with black hair",
+    "yasha": "a female aasimar barbarian with black hair wearing black leather armor",
     "mollymauk": "a male tiefling blood hunter with purple skin",
     "essek": "a male drow wizard.",
 }
@@ -117,7 +117,7 @@ def get_dtype():
     )
 
 
-def load_pipeline(lora_model_id: str):
+def load_pipeline(lora_model_id: str) -> DiffusionPipeline:
     card = RepoCard.load(lora_model_id)
     base_model_id = card.data.to_dict()["base_model"]
 
@@ -135,7 +135,7 @@ def load_pipeline(lora_model_id: str):
     return pipe
 
 
-def load_refiner(refiner_model_id: str):
+def load_refiner(refiner_model_id: str) -> StableDiffusionXLImg2ImgPipeline:
     # dtype = torch.float16 if torch.cuda.is_available() else torch.float32
     refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(
         refiner_model_id,
@@ -246,9 +246,9 @@ def get_scene_dir(output_dir: Path, scene: dict) -> Path:
 
 
 def generate_scene_images(
-    pipe,
-    refiner,
-    dataset,
+    pipe: DiffusionPipeline,
+    refiner: StableDiffusionXLImg2ImgPipeline | None,
+    dataset: Dataset,
     output_dir: Path,
     num_images_per_prompt: int = 8,
     num_batches_per_prompt: int = 1,
@@ -265,12 +265,13 @@ def generate_scene_images(
         requires_pooled=[False, True]
     )
 
-    compel_img2img = Compel(
-        tokenizer=[refiner.tokenizer_2],
-        text_encoder=[refiner.text_encoder_2],
-        returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
-        requires_pooled=[True]
-    )
+    if refiner:
+        compel_img2img = Compel(
+            tokenizer=[refiner.tokenizer_2],
+            text_encoder=[refiner.text_encoder_2],
+            returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
+            requires_pooled=[True]
+        )
 
     for i, scene in enumerate(dataset):
         print(f"generating images for episode {scene['episode_name']}, scene {i}")
@@ -287,35 +288,41 @@ def generate_scene_images(
         )
 
         # conditioning for refiner model
-        conditioning_img2img, pooled_img2img = compel_img2img(scene["prompt"])
-        negative_conditioning_img2img, negative_pooled_img2img = compel_img2img(negative_prompt)
-        conditioning_img2img, negative_conditioning_img2img = compel_img2img.pad_conditioning_tensors_to_same_length(
-            [conditioning_img2img, negative_conditioning_img2img]
-        )
+        kwargs = {}
+        if refiner:
+            conditioning_img2img, pooled_img2img = compel_img2img(scene["prompt"])
+            negative_conditioning_img2img, negative_pooled_img2img = compel_img2img(negative_prompt)
+            conditioning_img2img, negative_conditioning_img2img = compel_img2img.pad_conditioning_tensors_to_same_length(
+                [conditioning_img2img, negative_conditioning_img2img]
+            )
+            kwargs["output_type"] = "latent"
 
         images = []
         for _ in range(num_batches_per_prompt):
-            latents = pipe(
+            output = pipe(
                 prompt_embeds=conditioning,
                 pooled_prompt_embeds=pooled,
                 negative_prompt_embeds=negative_conditioning,
                 negative_pooled_prompt_embeds=negative_pooled,
-                output_type="latent",
                 generator=generator,
                 num_inference_steps=num_inference_steps,
                 num_images_per_prompt=num_images_per_prompt,
+                **kwargs,
             ).images
 
-            _images = refiner(
-                prompt_embeds=conditioning_img2img,
-                pooled_prompt_embeds=pooled_img2img,
-                negative_prompt_embeds=negative_conditioning_img2img,
-                negative_pooled_prompt_embeds=negative_pooled_img2img,
-                image=latents,
-                generator=generator,
-                num_inference_steps=num_inference_steps,
-                num_images_per_prompt=num_images_per_prompt,
-            ).images
+            if refiner:
+                _images = refiner(
+                    prompt_embeds=conditioning_img2img,
+                    pooled_prompt_embeds=pooled_img2img,
+                    negative_prompt_embeds=negative_conditioning_img2img,
+                    negative_pooled_prompt_embeds=negative_pooled_img2img,
+                    image=output,
+                    generator=generator,
+                    num_inference_steps=num_inference_steps,
+                    num_images_per_prompt=num_images_per_prompt,
+                ).images
+            else:
+                _images = output
 
             images.extend([i for i in _images])
 
@@ -325,7 +332,7 @@ def generate_scene_images(
 
 def main(
     lora_model_id: str,
-    refiner_model_id: str,
+    refiner_model_id: str | None,
     dataset_id: str,
     output_dir: Path,
     num_images_per_prompt: int,
@@ -337,7 +344,7 @@ def main(
 ):
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
-    refiner = load_refiner(refiner_model_id)
+    refiner = load_refiner(refiner_model_id) if refiner_model_id else None
 
     if enable_xformers_memory_efficient_attention:
         if is_xformers_available():
@@ -391,7 +398,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--refiner_model_id",
         type=str,
-        default=DEFAULT_REFINER_MODEL,
+        default=None,
         help="Model ID of the Refiner model.",
     )
     parser.add_argument(
