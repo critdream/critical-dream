@@ -59,7 +59,10 @@ python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-d
 ```bash
 python critical_dream/generate_scene_images.py \
   --output_dir output/images \
-  --dataset_id cosmicBboy/critical-dream-scenes-mighty-nein-v1
+  --dataset_id cosmicBboy/critical-dream-scenes-mighty-nein-v1 \
+  --lora_model_id "cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.5.2" \
+  --output_dir "/content/drive/MyDrive/[r&d] ml-research/critical-dream/scenes/v4" \
+  --debug
 ```
 
 ## Dreambooth fine-tuning
@@ -69,7 +72,9 @@ python critical_dream/generate_scene_images.py \
 To download example images of each character, do:
 
 ```bash
-python critical_dream/image_data.py dataset/data --multi_instance_data_config config/mighty_nein_instances.yaml
+python critical_dream/image_data.py dataset/data \
+  --multi_instance_data_config config/mighty_nein_instances.yaml \
+  --delete_existing
 ```
 
 ### Training

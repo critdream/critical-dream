@@ -1,3 +1,5 @@
+import shutil
+
 from pathlib import Path
 import requests
 import yaml
@@ -15,13 +17,22 @@ def download_images(character, urls, output_path):
             f.write(response.content)
             
 
-def main(multi_instance_config: Path, output_path: Path):
+def main(multi_instance_config: Path, output_path: Path, delete_existing: bool):
     output_path.mkdir(parents=True, exist_ok=True)
     with multi_instance_config.open() as f:
         multi_instance_config = yaml.safe_load(f)
 
     for conf in multi_instance_config:
-        download_images(conf["instance_name"], conf["instance_urls"], output_path)
+        if delete_existing:
+            p = output_path / conf["instance_name"]
+            if p.exists():
+                print(f"deleting existing directory: {p}")
+                shutil.rmtree(p)
+        download_images(
+            conf["instance_name"],
+            conf["instance_urls"],
+            output_path,
+        )
 
 
 if __name__ == "__main__":
@@ -30,6 +41,11 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("output_path", type=str)
     parser.add_argument("--multi_instance_data_config", type=str)
+    parser.add_argument("--delete_existing", action="store_true")
     args = parser.parse_args()
 
-    main(Path(args.multi_instance_data_config), Path(args.output_path))
+    main(
+        Path(args.multi_instance_data_config),
+        Path(args.output_path),
+        args.delete_existing,
+    )
