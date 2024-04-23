@@ -21,18 +21,22 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/8/86/Fjord_underwater_-_Linda_Lith%C3%A9n.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/f4/Fjord_-_Linda_Lithen.jpg"
   - "https://64.media.tumblr.com/bb040d6a77c8949de517840b4654a37e/tumblr_p3ftf9qoNM1shdbpyo1_1280.jpg"
-  - "https://64.media.tumblr.com/672624052ced0817710fcba18532940d/tumblr_p622yyBuov1ucbbfho2_r1_500.png"
   - "https://pbs.twimg.com/media/E0K19vPXIAEKVo1.jpg"
   - "https://i.pinimg.com/736x/cc/32/9e/cc329e9017249ca8fe3e2e9f4edfd121.jpg"
   - "https://cdnb.artstation.com/p/assets/images/images/029/627/255/large/aaron-simon-109518466-137866528006679-5670728502885644294-o.jpg"
   - "https://64.media.tumblr.com/39f7e6a67ae9a19a082c457e640e7ae1/fa197467cb617df0-d4/s1280x1920/67b91d985702840d19aea96e39b20f30381c0a6e.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/2/2b/Fjord_Level_20_-_Hannah_Friederichs.jpg"
+  - https://64.media.tumblr.com/6446b0b80ece596a9dc5575fa189da45/tumblr_pkd87nZRy71x6c76ro1_1280.jpg
+  - https://cdna.artstation.com/p/assets/images/images/031/465/706/large/red-biasca-fjord-medium.jpg
+  - https://pbs.twimg.com/media/FyjJWv_XsAA2AKD.jpg
+  - https://i.etsystatic.com/24737885/r/il/afa0f4/2722859526/il_fullxfull.2722859526_aw4x.jpg
+  - "https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg"
   # - "https://i.redd.it/yageniubd5r71.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/0/0b/Fjord_and_Melora.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/2/2b/Fjord_Level_20_-_Hannah_Friederichs.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/a/ab/Fjord_star_razor_battletailors.jpeg"
+  # - "https://64.media.tumblr.com/672624052ced0817710fcba18532940d/tumblr_p622yyBuov1ucbbfho2_r1_500.png"
 - instance_name: beau
   instance_data_root: data/beau
   instance_prompt: "a picture of [critrole-beau], a female human monk"
