@@ -48,6 +48,7 @@ PLAYER_CHARACTERS = frozenset(
     ]
 )
 
+CHARACTER_DESC_PREFIX = "a picture of"
 CHARACTER_TOKENS = {
     "fjord": "[critrole-fjord]",
     "beau": "[critrole-beau]",
@@ -199,7 +200,7 @@ def add_prompts(scene: dict) -> dict:
 
     # format the prompt
     if correct_char in PLAYER_CHARACTERS:
-        full_character_desc = character_tokens
+        full_character_desc = f"{CHARACTER_DESC_PREFIX} {character_tokens}"
         if addtl_prompts:
             full_character_desc = f"{full_character_desc}, {addtl_prompts}"
         prompt = (
