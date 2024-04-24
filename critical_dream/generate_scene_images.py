@@ -204,7 +204,7 @@ def add_prompts(scene: dict) -> dict:
         if addtl_prompts:
             full_character_desc = f"{full_character_desc}, {addtl_prompts}"
         prompt = (
-            f"({full_character_desc})+++ "
+            f"({full_character_desc})++++ "
             f"{scene['action']}, "
             f"{scene['poses']}. "
             f"({scene['background']} background, fantasy world)+++ ."
