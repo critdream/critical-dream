@@ -204,7 +204,7 @@ def add_prompts(scene: dict) -> dict:
         if addtl_prompts:
             full_character_desc = f"{full_character_desc}, {addtl_prompts}"
         prompt = (
-            f"({full_character_desc})++++ "
+            f"({full_character_desc})+++ "
             f"{scene['action']}, "
             f"{scene['poses']}. "
             f"({scene['background']} background, fantasy world)+++ ."
@@ -346,6 +346,11 @@ def main(
     dataset = load_scene_dataset(dataset_id)
     pipe = load_pipeline(lora_model_id)
     refiner = load_refiner(refiner_model_id) if refiner_model_id else None
+    metadata = {
+        "dataset_id": dataset_id,
+        "lora_model_id": lora_model_id,
+        "refiner_model_id": refiner_model_id,
+    }
 
     if enable_xformers_memory_efficient_attention:
         if is_xformers_available():
@@ -382,7 +387,7 @@ def main(
         images = scene.pop("images")
 
         with (scene_dir / f"scene_{i:03}_metadata.json").open("w") as f:
-            json.dump(scene, f, indent=4)
+            json.dump({**scene, **metadata}, f, indent=4)
 
         for image_num, image in enumerate(images):
             image.save(scene_dir / f"scene_{i:03}_image_{image_num:02}.png")

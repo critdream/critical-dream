@@ -18,8 +18,6 @@
   instance_urls:
   - "https://static.wikia.nocookie.net/criticalrole/images/8/80/Fjord_Level_20_portrait_-_Hannah_Friederichs.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/2/24/Fjord.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/8/86/Fjord_underwater_-_Linda_Lith%C3%A9n.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/f/f4/Fjord_-_Linda_Lithen.jpg"
   - "https://64.media.tumblr.com/bb040d6a77c8949de517840b4654a37e/tumblr_p3ftf9qoNM1shdbpyo1_1280.jpg"
   - "https://pbs.twimg.com/media/E0K19vPXIAEKVo1.jpg"
   - "https://i.pinimg.com/736x/cc/32/9e/cc329e9017249ca8fe3e2e9f4edfd121.jpg"
@@ -29,12 +27,14 @@
   - https://64.media.tumblr.com/6446b0b80ece596a9dc5575fa189da45/tumblr_pkd87nZRy71x6c76ro1_1280.jpg
   - https://cdna.artstation.com/p/assets/images/images/031/465/706/large/red-biasca-fjord-medium.jpg
   - https://pbs.twimg.com/media/FyjJWv_XsAA2AKD.jpg
-  - https://i.etsystatic.com/24737885/r/il/afa0f4/2722859526/il_fullxfull.2722859526_aw4x.jpg
   - "https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg"
   # - "https://i.redd.it/yageniubd5r71.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/0/0b/Fjord_and_Melora.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg"
+  # - https://i.etsystatic.com/24737885/r/il/afa0f4/2722859526/il_fullxfull.2722859526_aw4x.jpg
+  # - "https://static.wikia.nocookie.net/criticalrole/images/8/86/Fjord_underwater_-_Linda_Lith%C3%A9n.jpg"
+  # - "https://static.wikia.nocookie.net/criticalrole/images/f/f4/Fjord_-_Linda_Lithen.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/a/ab/Fjord_star_razor_battletailors.jpeg"
   # - "https://64.media.tumblr.com/672624052ced0817710fcba18532940d/tumblr_p622yyBuov1ucbbfho2_r1_500.png"
 - instance_name: beau
@@ -56,11 +56,11 @@
   - "https://64.media.tumblr.com/b19ccaf1041d478287924dac86ce00ae/a2c2c122c3bdd6cf-b9/s1280x1920/cf9a28aa3fe79459710971497edb4b7ed8bde257.png"
   - "https://i.pinimg.com/736x/4b/82/ba/4b82ba2f5b136d12839e7470219618cb.jpg"
   - "https://cdnb.artstation.com/p/assets/covers/images/023/397/043/large/jace-daily-beau-final-details-2.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/f/fe/Beauregard_by_Ariana_Orner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/4/43/Beauregard_Winter.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/1/10/Beau_Level_20_-_Hannah_Friederichs.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/f/fe/Beauregard_by_Ariana_Orner.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/4/43/Beauregard_Winter.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/1/10/Beau_Level_20_-_Hannah_Friederichs.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/d/db/Beau_-_Jenny_Tan.jpg"
 - instance_name: caduceus
   instance_data_root: data/caduceus
@@ -77,11 +77,11 @@
   - "https://64.media.tumblr.com/9a7013420cebbadd347d0faab5ccf764/982c560d42b64da0-6a/s1280x1920/21af3843c3f0f10ae0c4463342824eb5c966670a.jpg"
   - https://cdnb.artstation.com/p/assets/images/images/019/285/135/large/vi-viro-cadface.jpg
   - https://www.sideshow.com/cdn-cgi/image/height=850,quality=90,f=auto/https://www.sideshow.com/storage/product-images/200623/caduceus-clay-mighty-nein_critical-role_gallery_64f762746c952.jpg
+  - "https://static.wikia.nocookie.net/criticalrole/images/0/03/Caduceus_Clay2.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/4/4f/Caduceus_Winter.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Caduceus_Level_20_-_Hannah_Friederichs.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/3/33/Caduceus_-_Nikki_Dawes.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/0/03/Caduceus_Clay2.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/6/64/Caduceus_by_Ariana_Orner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/4/4f/Caduceus_Winter.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Caduceus_Level_20_-_Hannah_Friederichs.jpg"
 - instance_name: caleb
   instance_data_root: data/caleb
   instance_prompt: "a picture of [critrole-caleb], a male human wizard"
@@ -96,9 +96,9 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/5/52/Caleb_heartofpack.jpg"
   - https://i.redd.it/1cy1vjfru1n71.jpg
   - https://secretcompassonline.com/cdn/shop/files/caleb-widogast-mighty-nein_critical-role_gallery_64e6a03b0d0fe_1200x800.jpg
-  # - "https://static.wikia.nocookie.net/criticalrole/images/2/2f/Caleb_by_Ariana_Orner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/4/49/WinterM92Caleb-ArianaOrner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg
+  - "https://static.wikia.nocookie.net/criticalrole/images/2/2f/Caleb_by_Ariana_Orner.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/4/49/WinterM92Caleb-ArianaOrner.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg
 - instance_name: jester
   instance_data_root: data/jester
   instance_prompt: "a picture of [critrole-jester], a female tiefling cleric"
@@ -112,10 +112,10 @@
   - https://cdnb.artstation.com/p/assets/images/images/031/815/823/large/sina-rupp-jester.jpg
   - https://64.media.tumblr.com/ae93da1f8667d5eb1808687f146a7870/tumblr_p2k58l1znT1sk51m7o1_r1_500.png
   - https://pbs.twimg.com/media/EJ6tEgoXUAAKldh.jpg
+  - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/0/0f/M9jesterfinal2.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/7/79/Jester_Winter.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg"
 - instance_name: nott
   instance_data_root: data/nott
   instance_prompt: "a picture of [critrole-nott], a female goblin rogue"
@@ -131,7 +131,7 @@
   - https://i.etsystatic.com/8939817/r/il/8d473b/1911187820/il_fullxfull.1911187820_n63k.jpg
   - https://i.pinimg.com/originals/73/1f/64/731f64d6425e4f75ccb238ff73a1a364.jpg
   - https://www.sideshow.com/cdn-cgi/image/quality=90,f=auto/https://www.sideshow.com/storage/product-images/200631/nott-the-brave-mighty-nein-statue_critical-role_gallery_6578c245888a5.jpg
-  # - "https://static.wikia.nocookie.net/criticalrole/images/b/b8/Nott_the_Brave_by_Ariana_Orner.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/b/b8/Nott_the_Brave_by_Ariana_Orner.jpg"
 - instance_name: veth
   instance_data_root: data/veth
   instance_prompt: "a picture of [critrole-veth], a female halfling rogue/wizard"
@@ -144,10 +144,10 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/0/0d/Veth_-_Ameera.jpg"
   - https://i.redd.it/ymjksfbc4fh51.png
   - https://64.media.tumblr.com/9d2fd31db45cc8f77fe7de366fab9bb7/9e1b1f2f40e62b1a-a6/s1280x1920/81bcea0c4b5bfb46cca6bb475ac8176bf9c69ed6.jpg
-  # - "https://static.wikia.nocookie.net/criticalrole/images/f/fc/Veth_full_body_portrait.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/f/fc/Veth_full_body_portrait.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg"
+  - "https://static.wikia.nocookie.net/criticalrole/images/9/9f/Veth_-_Ari.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/9/93/Veth_Winter.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/9/9f/Veth_-_Ari.jpg"
   # - "https://static.wikia.nocookie.net/criticalrole/images/0/0e/Veth_in_843_PD_by_Zhellers.png"
 - instance_name: yasha
   instance_data_root: data/yasha
