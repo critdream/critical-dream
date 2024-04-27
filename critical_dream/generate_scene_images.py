@@ -209,7 +209,7 @@ def add_prompts(
             f"{full_character_desc} "
             f"{scene['action']}, "
             f"{scene['poses']}. "
-            f"{scene['background']} background, fantasy world."
+            f"({scene['background']} background, fantasy world)+++ "
             f"{PROMPT_AUGMENTATION}"
         )
     else:
