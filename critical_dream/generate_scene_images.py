@@ -152,7 +152,9 @@ def load_refiner(refiner_model_id: str) -> StableDiffusionXLImg2ImgPipeline:
     return refiner
 
 
-def add_prompts(scene: dict) -> dict:
+def add_prompts(
+    scene: dict,
+) -> dict:
 
     character = scene["character"]
     description = scene["scene_description"]
@@ -207,7 +209,7 @@ def add_prompts(scene: dict) -> dict:
             f"{full_character_desc} "
             f"{scene['action']}, "
             f"{scene['poses']}. "
-            f"({scene['background']} background, fantasy world)+++ ."
+            f"{scene['background']} background, fantasy world."
             f"{PROMPT_AUGMENTATION}"
         )
     else:
