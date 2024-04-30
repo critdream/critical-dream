@@ -88,11 +88,14 @@ ADDITIONAL_NEGATIVE_PROMPTS = {
 }
 
 PROMPT_AUGMENTATION = (
-    "D&D fantasy art style. high quality. sharp focus. artstation. professional"
+    "D&D fantasy art style. high quality. sharp focus. artstation. professional. "
+    "anatomically correct. realistic. proportional features. realistic hand placement. "
+    "accurate finger count. symmetrical facial features, single head, two arms, two legs "
 )
 
 DEFAULT_NEGATIVE_PROMPT = (
-    "nsfw, blank background, plain background, letters, words, copy, watermark, "
+    "nsfw, nude, nudity, explicit, sexual, blank background, plain background, "
+    "letters, words, copy, watermark, "
     "ugly, distorted, deformed, duplicate characters, repeated patterns, uncanny valley, "
     "distorted facial features, distorted hands, extra limbs, distorted fingers, "
     "(concept art)1.5, "
@@ -235,7 +238,6 @@ def add_prompts(
 
 def process_scene(scene: dict):
     scene = add_prompts(scene)
-    scene.pop("turns")
     return scene
 
 

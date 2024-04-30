@@ -49,6 +49,7 @@ class Episode(BaseModel):
 
 SCENE_COMPOSITION_MODEL = "gpt-4-turbo"
 JSON_FIX_MODEL = "gpt-3.5-turbo-0125"
+TIMESTAMP_FIX_MODEL = "gpt-3.5-turbo-0125"
 MODEL_SEED = 41
 
 client = OpenAI()
@@ -243,6 +244,68 @@ def fix_json(json_str: str) -> str:
     """
 
 
+@outlines.prompt
+def fix_timestamp(scene: str, turns: list[Turn]) -> str:
+    """Fix the timestamp associated with a scene description.
+
+    The timestamp data associated with the scene description is potentially
+    incorrect. Fix the "start_time" and "end_time" values so that they line
+    up with the actual timestamps of the dialogue that the scene description is
+    referring to.
+
+    When the scene description is referring to a player character, e.g. Fjord,
+    use the VOICE ACTOR: player character information below to determine what
+    timestamp associated with the scene. When the scene description is referring
+    to an NPC or the environment, the timestamp is usually associated with MATT,
+    the dungeon master.
+
+    The output format should be valid json:
+
+    {
+        "character": "character",
+        "background": "a short description of the character.",
+        "action": "none",
+        "object": "none",
+        "poses": "",
+        "start_time": 1000,
+        "end_time": 1100,
+        "scene_description": "this is the scene description."
+    },
+
+    VOICE ACTOR: player character
+    -----------------------------
+    LAURA: jester
+    TRAVIS: fjord
+    SAM: nott or veth, depending on the context
+    MARISHA: beau
+    TALIESIN: mollymauk or caduceus, depending on the context
+    LIAM: caleb
+    ASHLEY: yasha
+    MATT: plays all of the NPCs in the campaign. Avoid using MATT as
+        the character for the scene and instead use the name of the NPC
+        that he is voicing.
+
+    Scene Description
+    -----------------
+
+    {{ scene }}
+
+    Caption Dialogue
+    ----------------
+
+    {% for turn in turns %}
+    speaker: {{ turn.speaker }}
+    text: {{ turn.text }}
+    start_time: {{ turn.start }}
+    end_time: {{ turn.end }}
+
+    {% endfor %}
+
+    Json Output
+    -----------
+    """
+
+
 def postprocess(output: str) -> str:
     """Custom formatting of raw output string to be json-readable."""
 
@@ -337,6 +400,27 @@ def fix_scene_description(json_str: str) -> str:
     )
     return response.choices[0].message.content
 
+
+def fix_timestamp_data(scene: dict, turns: list[Turn]) -> str:
+    prompt = fix_timestamp(scene, turns)
+    response = client.chat.completions.create(
+        model=TIMESTAMP_FIX_MODEL,
+        response_format={"type": "json_object"},
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an expert at matching timestamp data with the "
+                    "correct content."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+        seed=MODEL_SEED,
+    )
+    return response.choices[0].message.content
+
+
 def compose_scenes(
     episode_name: str,
     turns: list[Turn],
@@ -361,6 +445,7 @@ def compose_scenes(
                     continue
                 print(json_output["scenes"][0])
                 for scene in json_output["scenes"]:
+                    scene = json.loads(fix_timestamp_data(scene, turn_batch))
                     try:
                         scenes.append(
                             Scene(**process_raw_scene(scene), turns=turn_batch)
@@ -381,8 +466,9 @@ def main():
     )
     parser.add_argument('data_path', help='Path to the caption directory')
     parser.add_argument('output_path', help='Path to the scenes text')
+    parser.add_argument("--n_episodes", type=int, default=None)
     parser.add_argument(
-        '--max-text-length',
+        '--max_text_length',
         type=int,
         default=5000,
         help='Maximum length of text for each scene',
@@ -393,7 +479,10 @@ def main():
     output_path = Path(args.output_path)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    for file in sorted(data_path.glob("*.json")):
+    for i, file in enumerate(sorted(data_path.glob("*.json")), start=1):
+
+        if args.n_episodes is not None and i > args.n_episodes:
+            break
 
         episode_name = file.stem
         episode_fp = output_path / f"{episode_name}_scenes.json"
