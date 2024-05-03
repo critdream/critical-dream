@@ -1,4 +1,8 @@
-"""Create images"""
+"""Create images
+
+TODO: look into image interpolation:
+https://github.com/nateraw/stable-diffusion-videos?tab=readme-ov-file
+"""
 
 import copy
 import json

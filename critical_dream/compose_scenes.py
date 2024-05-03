@@ -50,7 +50,7 @@ class Episode(BaseModel):
 SCENE_COMPOSITION_MODEL = "gpt-4-turbo"
 JSON_FIX_MODEL = "gpt-3.5-turbo-0125"
 TIMESTAMP_FIX_MODEL = "gpt-3.5-turbo-0125"
-MODEL_SEED = 41
+MODEL_SEED = 42
 
 client = OpenAI()
 
@@ -65,42 +65,27 @@ def parse_captions(
 ) -> list[Turn]:
 
     turns: list[Turn] = []
-    turn_batch: list[str] = []
     speaker = None
-    start_time = None
-    end_time = None
 
     for i, caption in enumerate(data):
         if i == 0 or new_speaker(caption.text):
-
-            if turn_batch:
-                # collect turn for current speaker before starting a new turn
-                # batch for the new speaker
-                end_time = start_time + caption.duration
-                text = " ".join(turn_batch).strip().replace("\n", " ")
-                turns.append(
-                    Turn(
-                        speaker=speaker,
-                        text=text,
-                        start=start_time,
-                        end=end_time,
-                    )
-                )
-
-                # refresh turn_batch
-                turn_batch = []
-
-            start_time = caption.start
             text_split = caption.text.split(":", 1)
             if len(text_split) == 1:
-                speaker = default_initial_speaker
-                turn_batch.append(text_split[0])
+                speaker, text = default_initial_speaker, text_split[0]
             else:
                 speaker, text = text_split
-                turn_batch.append(text)
 
         else:
-            turn_batch.append(caption.text)
+            text = caption.text
+
+        turns.append(
+            Turn(
+                speaker=speaker,
+                text=text,
+                start=caption.start,
+                end=caption.start + caption.duration,
+            )
+        )
 
     return turns
 
@@ -173,6 +158,8 @@ def compose_scene(turns: list[Turn]) -> str:
       not the voice actor. The following are the names of the voice actors and
       the player characters they play. Below are the names of the voice actors
       and the characters they play.
+    - MAKE SURE THE start_time AND end_time TIMESTAMPS ARE BASED ON THE DIALOGUE
+      THAT THE SCENE DESCRIPTION IS REFERRING TO.
 
     VOICE ACTOR: player character
     -----------------------------
@@ -245,7 +232,7 @@ def fix_json(json_str: str) -> str:
 
 
 @outlines.prompt
-def fix_timestamp(scene: str, turns: list[Turn]) -> str:
+def fix_timestamp(scene: str, turns: list[Turn], prev_timestamp: float) -> str:
     """Fix the timestamp associated with a scene description.
 
     The timestamp data associated with the scene description is potentially
@@ -267,8 +254,8 @@ def fix_timestamp(scene: str, turns: list[Turn]) -> str:
         "action": "none",
         "object": "none",
         "poses": "",
-        "start_time": 1000,
-        "end_time": 1100,
+        "start_time": <START_TIME>
+        "end_time": <END_TIME>,
         "scene_description": "this is the scene description."
     },
 
@@ -285,10 +272,11 @@ def fix_timestamp(scene: str, turns: list[Turn]) -> str:
         the character for the scene and instead use the name of the NPC
         that he is voicing.
 
-    Scene Description
-    -----------------
-
-    {{ scene }}
+    MAKE SURE YOU DO THE FOLLOWING:
+    - THE start_time AND end_time TIMESTAMPS ARE BASED ON THE DIALOGUE THAT THE
+      SCENE DESCRIPTION IS REFERRING TO.
+    - THE start_time of the scene must be after the end_time of the previous
+      scene: {{ prev_timestamp }}
 
     Caption Dialogue
     ----------------
@@ -300,6 +288,11 @@ def fix_timestamp(scene: str, turns: list[Turn]) -> str:
     end_time: {{ turn.end }}
 
     {% endfor %}
+
+    Scene Description
+    -----------------
+
+    {{ scene }}
 
     Json Output
     -----------
@@ -401,8 +394,10 @@ def fix_scene_description(json_str: str) -> str:
     return response.choices[0].message.content
 
 
-def fix_timestamp_data(scene: dict, turns: list[Turn]) -> str:
-    prompt = fix_timestamp(scene, turns)
+def fix_timestamp_data(scene: dict, turns: list[Turn], prev_timestamp: float) -> str:
+    scene["start_time"] = "..."
+    scene["end_time"] = "..."
+    prompt = fix_timestamp(scene, turns, prev_timestamp)
     response = client.chat.completions.create(
         model=TIMESTAMP_FIX_MODEL,
         response_format={"type": "json_object"},
@@ -429,6 +424,8 @@ def compose_scenes(
     
     scenes = []
     print(f"Composing scenes for episode: {episode_name}")
+    prev_timestamp = 0
+
     for i, turn_batch in enumerate(iter_turn_batches(turns, max_text_length)):
         print(f"Processing batch {i}")
         output = generate_scene_descriptions(turn_batch)
@@ -443,13 +440,15 @@ def compose_scenes(
                 if len(json_output["scenes"]) == 0:
                     print("No scenes generated for this batch.")
                     continue
-                print(json_output["scenes"][0])
                 for scene in json_output["scenes"]:
-                    scene = json.loads(fix_timestamp_data(scene, turn_batch))
+                    print(scene)
+
+                for scene in json_output["scenes"]:
+                    scene = json.loads(fix_timestamp_data(scene, turn_batch, prev_timestamp))
                     try:
-                        scenes.append(
-                            Scene(**process_raw_scene(scene), turns=turn_batch)
-                        )
+                        scene = Scene(**process_raw_scene(scene), turns=turn_batch)
+                        scenes.append(scene)
+                        prev_timestamp = scene.end_time
                     except Exception:
                         print(f"Error processing scene: {scene}")
                 break
