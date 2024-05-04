@@ -94,7 +94,7 @@ ADDITIONAL_NEGATIVE_PROMPTS = {
 PROMPT_AUGMENTATION = (
     "D&D fantasy art style. high quality. sharp focus. artstation. professional. "
     "anatomically correct. realistic. proportional features. realistic hand placement. "
-    "accurate finger count. symmetrical facial features, single head, two arms, two legs "
+    "accurate finger count. symmetrical facial features."
 )
 
 DEFAULT_NEGATIVE_PROMPT = (
