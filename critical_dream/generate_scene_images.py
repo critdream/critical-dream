@@ -67,27 +67,27 @@ CHARACTER_TOKENS = {
 }
 
 ADDITIONAL_PROMPTS = {
-    "fjord": "a male half-orc warlock with black hair",
-    "beau": "a female human monk with round ears and no tattoos wearing blue clothes",
-    "jester": "female tiefling cleric with blue skin, and blue hair",
-    "caleb": "male human wizard. round ears",
-    "caduceus": "a male firbolg cleric",
-    "nott": "a female goblin rogue",
-    "veth": "a female halfling rogue/wizard",
-    "yasha": "a female aasimar barbarian with black hair wearing full black leather armor",
-    "mollymauk": "a male tiefling blood hunter with purple skin",
+    "fjord": "a male half-orc warlock. black hair. green skin.",
+    "beau": "a female human monk. round ears. brown skin. wearing blue clothes.",
+    "jester": "female tiefling cleric, blue skin, blue hair.",
+    "caleb": "male human wizard. round ears.",
+    "caduceus": "a male firbolg cleric.",
+    "nott": "a female goblin rogue. green skin.",
+    "veth": "a female halfling rogue/wizard.",
+    "yasha": "a female aasimar barbarian. round ears. black hair. wearing full black leather armor.",
+    "mollymauk": "a male tiefling blood hunter. purple skin.",
     "essek": "a male drow wizard.",
 }
 
 ADDITIONAL_NEGATIVE_PROMPTS = {
     "fjord": "",
-    "beau": "",
+    "beau": "pointy ears. elf ears. elven ears.",
     "jester": "",
-    "caleb": "pointy ears. earrings.",
+    "caleb": "pointy ears. elf ears. elven ears. earrings.",
     "caduceus": "",
     "nott": "",
     "veth": "",
-    "yasha": "black hair. wings.",
+    "yasha": "pointy ears. elf ears. elven ears. wings.",
     "mollymauk": "",
 }
 
@@ -200,6 +200,8 @@ def add_prompts(
         correct_char = "veth" if episode_num > VETH_EPISODE else "nott"
     elif correct_char == "veth" and episode_num < VETH_EPISODE:
         correct_char = "nott"
+    elif correct_char == "caduceus" and episode_num < MOLLYMAUK_EPISODE:
+        correct_char = "mollymauk"
     elif correct_char == "taliesin":
         correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
     

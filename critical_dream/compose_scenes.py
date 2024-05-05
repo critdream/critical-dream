@@ -444,7 +444,7 @@ def compose_scenes(
                     print(scene)
 
                 for scene in json_output["scenes"]:
-                    scene = json.loads(fix_timestamp_data(scene, turn_batch, prev_timestamp))
+                    # scene = json.loads(fix_timestamp_data(scene, turn_batch, prev_timestamp))
                     try:
                         scene = Scene(**process_raw_scene(scene), turns=turn_batch)
                         scenes.append(scene)
