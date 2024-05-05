@@ -68,9 +68,9 @@ CHARACTER_TOKENS = {
 
 ADDITIONAL_PROMPTS = {
     "fjord": "a male half-orc warlock. black hair. green skin.",
-    "beau": "a female human monk. human ears. brown skin. wearing blue clothes.",
+    "beau": "a female human monk. human ears. light brown skin. wearing blue clothes.",
     "jester": "female tiefling cleric, blue skin, blue hair.",
-    "caleb": "male human wizard. human ears.",
+    "caleb": "male human wizard. human ears. light skin. wearing a brown coat.",
     "caduceus": "a male firbolg cleric.",
     "nott": "a female goblin rogue. green skin.",
     "veth": "a female halfling rogue/wizard.",
@@ -81,9 +81,9 @@ ADDITIONAL_PROMPTS = {
 
 ADDITIONAL_NEGATIVE_PROMPTS = {
     "fjord": "",
-    "beau": "pointy ears. elf ears. elven ears.",
+    "beau": "pointy ears. elf ears. elven ears. elf. elven.",
     "jester": "",
-    "caleb": "pointy ears. elf ears. elven ears. earrings.",
+    "caleb": "pointy ears. elf ears. elven ears. earrings. elf. elven.",
     "caduceus": "",
     "nott": "",
     "veth": "",
