@@ -62,6 +62,8 @@ def align_scenes_with_speakers(scenes, captions) -> pd.DataFrame:
 
     This function should return a dataframe 
     """
+    for row in captions.itertuples():
+        ...
     import ipdb; ipdb.set_trace()
     ...
 

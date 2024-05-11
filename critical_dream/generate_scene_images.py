@@ -185,9 +185,8 @@ def add_prompts(
     
     # initial character mapping
     split_char = char.split(" ")
-    if char in PLAYER_CHARACTERS:
-        correct_char = char
-    elif len(split_char) > 1 and split_char[0] in PLAYER_CHARACTERS:
+    correct_char = char
+    if len(split_char) > 1 and split_char[0] in PLAYER_CHARACTERS:
         correct_char = split_char[0]
     # elif len(split_char) > 1 and split_char[0] in SINGLE_CHARACTER_MAP:
     #     correct_char = SINGLE_CHARACTER_MAP[split_char[0]]
