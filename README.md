@@ -25,6 +25,7 @@ This project will involve several components that need to work together:
 ```bash
 conda create -n critical-dream python=3.11 -y
 pip install -r requirements.txt
+pip install git+https://github.com/huggingface/diffusers
 ```
 
 Export secrets:
@@ -45,13 +46,13 @@ python critical_dream/captions.py data/captions
 ## Compose scenes from transcripts
 
 ```bash
-python critical_dream/compose_scenes.py data/captions data/scenes
+python critical_dream/compose_scenes.py data/captions data/scenes_v11
 ```
 
 ## Create Huggingface Dataset
 
 ```bash
-python critical_dream/create_scenes_dataset.py data/scenes cosmicBboy/critical-dream-scenes-mighty-nein
+python critical_dream/create_scenes_dataset.py data/scenes_v11 cosmicBboy/critical-dream-scenes-mighty-nein-v3
 ```
 
 ## Generate Scene Images
@@ -63,6 +64,15 @@ python critical_dream/generate_scene_images.py \
   --lora_model_id "cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.5.2" \
   --output_dir "/content/drive/MyDrive/[r&d] ml-research/critical-dream/scenes/v4" \
   --debug
+```
+
+## Create Aligned Scenes Huggingface Dataset
+
+```bash
+python critical_dream/create_aligned_scenes_dataset.py \
+  --captions_dir data/captions \
+  --scene_dir data/scenes_v10 \
+  --dataset_id cosmicBboy/critical-dream-aligned-scenes-mighty-nein-v1
 ```
 
 ## Dreambooth fine-tuning

@@ -1,4 +1,4 @@
-git+https://github.com/huggingface/diffusers
+diffusers
 accelerate>=0.16.0
 bitsandbytes
 compel

@@ -32,6 +32,7 @@ class Turn(BaseModel):
 
 class Scene(BaseModel):
     character: str
+    speaker: str
     background: str
     action: str
     object: str
@@ -106,6 +107,7 @@ def compose_scene(turns: list[Turn]) -> str:
     - character: the main subject of the scene. If the scene is describing something
       happening in-game, DO NOT USE the voice actor's name, use the name of
       the player character instead.
+    - speaker: the voice actor matching the character in the scene
     - background: a few word description of the scene background
     - action: the action that the character is doing
     - object: the object or other character that the main subject character is
@@ -128,6 +130,7 @@ def compose_scene(turns: list[Turn]) -> str:
         "scenes": [
             {
                 "character": "environment",
+                "speaker": "MATT",
                 "background": "a short description of the physical environment.",
                 "action": "none",
                 "object": "none",
@@ -138,6 +141,7 @@ def compose_scene(turns: list[Turn]) -> str:
             },
             {
                 "character": "fjord",
+                "speaker": "TRAVIS",
                 "background": "a short description of the scene background",
                 "action": "what fjord is doing",
                 "object": "the object or other character fjord is interacting with",
@@ -201,6 +205,7 @@ def fix_json(json_str: str) -> str:
         "scenes": [
             {
                 "character": "environment",
+                "speaker": "MATT",
                 "background": "a short description of the physical environment.",
                 "action": "none",
                 "object": "none",
@@ -211,6 +216,7 @@ def fix_json(json_str: str) -> str:
             },
             {
                 "character": "fjord",
+                "speaker": "TRAVIS",
                 "background": "a short description of the physical environment.",
                 "action": "what fjord is doing",
                 "object": "the object or other character fjord is interacting with",
@@ -250,6 +256,7 @@ def fix_timestamp(scene: str, turns: list[Turn], prev_timestamp: float) -> str:
 
     {
         "character": "character",
+        "speaker": "the voice actor matching the character in the scene",
         "background": "a short description of the character.",
         "action": "none",
         "object": "none",
