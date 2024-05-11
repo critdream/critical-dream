@@ -33,6 +33,7 @@ class Turn(BaseModel):
 class Scene(BaseModel):
     character: str
     speaker: str
+    in_game: int
     background: str
     action: str
     object: str
@@ -107,6 +108,8 @@ def compose_scene(turns: list[Turn]) -> str:
     - character: the main subject of the scene. If the scene is describing something
       happening in-game, DO NOT USE the voice actor's name, use the name of
       the player character instead.
+    - in_game: a boolean value indicating if the scene is describing something
+      happening in the D&D game world (1) or not (0).
     - speaker: the voice actor matching the character in the scene
     - background: a few word description of the scene background
     - action: the action that the character is doing
@@ -129,8 +132,21 @@ def compose_scene(turns: list[Turn]) -> str:
     {
         "scenes": [
             {
+                "character": "laura",
+                "speaker": "LAURA",
+                "in_game": 0,
+                "background": "a short description of the scene background",
+                "action": "what laura is doing out of game",
+                "object": "the object or other character is interacting with",
+                "poses": "pose suggestion 1, pose suggestion 2",
+                "start_time": 10,
+                "end_time": 40,
+                "scene_description": "this is a description of what laura is doing."
+            },
+            {
                 "character": "environment",
                 "speaker": "MATT",
+                "in_game": 1,
                 "background": "a short description of the physical environment.",
                 "action": "none",
                 "object": "none",
@@ -142,6 +158,7 @@ def compose_scene(turns: list[Turn]) -> str:
             {
                 "character": "fjord",
                 "speaker": "TRAVIS",
+                "in_game": 1,
                 "background": "a short description of the scene background",
                 "action": "what fjord is doing",
                 "object": "the object or other character fjord is interacting with",
@@ -162,6 +179,8 @@ def compose_scene(turns: list[Turn]) -> str:
       not the voice actor. The following are the names of the voice actors and
       the player characters they play. Below are the names of the voice actors
       and the characters they play.
+    - MAKE SURE THE in_game FIELD CORRECTLY REFLECTS SCENES DESCRIBED IN THE
+      REAL WORLD VS. SCENES DESCRIBED IN THE D&D GAME WORLD.
     - MAKE SURE THE start_time AND end_time TIMESTAMPS ARE BASED ON THE DIALOGUE
       THAT THE SCENE DESCRIPTION IS REFERRING TO.
 
@@ -206,6 +225,7 @@ def fix_json(json_str: str) -> str:
             {
                 "character": "environment",
                 "speaker": "MATT",
+                "in_game": 1,
                 "background": "a short description of the physical environment.",
                 "action": "none",
                 "object": "none",
@@ -217,6 +237,7 @@ def fix_json(json_str: str) -> str:
             {
                 "character": "fjord",
                 "speaker": "TRAVIS",
+                "in_game": 1,
                 "background": "a short description of the physical environment.",
                 "action": "what fjord is doing",
                 "object": "the object or other character fjord is interacting with",
@@ -257,6 +278,7 @@ def fix_timestamp(scene: str, turns: list[Turn], prev_timestamp: float) -> str:
     {
         "character": "character",
         "speaker": "the voice actor matching the character in the scene",
+        "in_game": 0,
         "background": "a short description of the character.",
         "action": "none",
         "object": "none",
