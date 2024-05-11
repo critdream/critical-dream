@@ -57,11 +57,17 @@ def read_scenes(scene_file: Path) -> pd.DataFrame:
     return pd.DataFrame(scenes)
 
 
-def align_scenes_with_speakers(scenes, captions) -> pd.DataFrame:
+def align_scenes_with_speakers(scenes: pd.DataFrame, captions: pd.DataFrame) -> pd.DataFrame:
     """Aligns the speaker in the raw transcripts with a generated scene.
 
-    This function should return a dataframe 
+    This function should return a dataframe where each caption is potentially
+    aligned with a scene.
+
+    The caption is matched based on speaker and whether the start - end interval
+    of the scene is within some tolerance threshold of the caption's timestamp.
     """
+    scenes = scenes.reset_index().rename(columns={"index": "scene_id"})
+    
     for row in captions.itertuples():
         ...
     import ipdb; ipdb.set_trace()
