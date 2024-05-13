@@ -57,26 +57,54 @@ def read_scenes(scene_file: Path) -> pd.DataFrame:
     return pd.DataFrame(scenes)
 
 
-def align_scenes_with_speakers(scenes: pd.DataFrame, captions: pd.DataFrame) -> pd.DataFrame:
+def align_scenes_with_speakers(
+    scenes: pd.DataFrame,
+    captions: pd.DataFrame,
+    tolerance: float = 10.0,
+) -> pd.DataFrame:
     """Aligns the speaker in the raw transcripts with a generated scene.
 
     This function should return a dataframe where each caption is potentially
     aligned with a scene.
 
-    The caption is matched based on speaker and whether the start - end interval
+    The caption is matched based on speaker and whether the start time
     of the scene is within some tolerance threshold of the caption's timestamp.
     """
     scenes = scenes.reset_index().rename(columns={"index": "scene_id"})
     
+    aligned_scene_ids = []
     for row in captions.itertuples():
-        ...
-    import ipdb; ipdb.set_trace()
-    ...
+        time_selector = row.start >= scenes.start_time
+        speaker_selector = row.speaker.lower() == scenes.speaker.str.lower()
+        relevant_scenes = scenes[time_selector & speaker_selector]
+        if relevant_scenes.empty:
+            # unaligned scenes get a scene_id of -1
+            aligned_scene_ids.append(-1)
+        elif len(relevant_scenes) == 1:
+            aligned_scene_ids.append(relevant_scenes.scene_id.item())
+        else:
+            # to resolve multiple relevant scenes, pick the closest one that
+            # occured before the caption timestamp
+            selected_scene = relevant_scenes.loc[
+                (relevant_scenes.start_time - row.start).idxmax()
+            ]
+            aligned_scene_ids.append(selected_scene.scene_id)
+
+    captions["scene_id"] = aligned_scene_ids
+    captions = captions.merge(
+        scenes[["scene_id", "scene_description"]], how="left", on=["scene_id"]
+    )
+    captions["episode_name"] = scenes["episode_name"].iloc[0]
+    captions["youtube_id"] = scenes["youtube_id"].iloc[0]
+
+    # remove unaligned scenes
+    captions = captions[captions.scene_id != -1]
+    return captions
 
 
 def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
 
-    aligned_scenes = []
+    aligned_output = []
     for caption_file in sorted(caption_dir.glob("*.json")):
         print(f"processing {caption_file}")
 
@@ -86,9 +114,10 @@ def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
 
         captions = read_captions(caption_file)
         scenes = read_scenes(scene_file)
-        aligned_scenes.append(align_scenes_with_speakers(scenes, captions))
+        aligned = align_scenes_with_speakers(scenes, captions)
+        aligned_output.append(aligned)
 
-    dataset = Dataset.from_list(pd.concat(aligned_scenes))
+    dataset = Dataset.from_pandas(pd.concat(aligned_output))
     print(f"pushing to huggingface hub: {dataset_id}")
     dataset.push_to_hub(dataset_id)
     

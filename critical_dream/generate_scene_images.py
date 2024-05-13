@@ -175,7 +175,7 @@ def add_prompts(
         _, char = char.split(" as ")
         char = char.lower().strip()
 
-    if char == "matt" or speaker == "matt":
+    if char == "matt":
         scene.update({
             "correct_char": "dm-matt-mercer",
             "character_tokens": "[dm-matt-mercer]",
