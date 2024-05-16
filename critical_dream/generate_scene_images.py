@@ -108,6 +108,7 @@ DEFAULT_NEGATIVE_PROMPT = (
     "error hands, error fingers"
 )
 
+SPLIT = "images"
 
 def get_device():
     if torch.cuda.is_available():
@@ -283,11 +284,12 @@ def generate_scene_images(
             returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
             requires_pooled=[True]
         )
-
-    for i, scene in enumerate(dataset):
-        print(f"generating images for episode {scene['episode_name']}, scene {i}")
+    
+    for scene in dataset:
+        print(f"generating images for episode {scene['episode_name']}, scene {scene_id}")
+        scene_id = scene["scene_id"]
         scene_dir = get_scene_dir(output_dir, scene)
-        if (scene_dir / f"scene_{i:03}_metadata.json").exists():
+        if (scene_dir / f"scene_{scene_id:03}_metadata.json").exists():
             print(f"Scene images {scene_dir} exists. Skipping.")
             continue
 
@@ -346,6 +348,7 @@ def main(
     refiner_model_id: str | None,
     dataset_id: str,
     output_dir: Path,
+    scene_images_dataset_id: str,
     num_images_per_prompt: int,
     num_batches_per_prompt: int,
     num_inference_steps: int,
@@ -381,12 +384,12 @@ def main(
             print(f"prompt: {scene}")
         return
 
-    for i, (scene, scene_dir) in enumerate(
+    for scene, scene_dir in enumerate(
         generate_scene_images(
             pipe,
             refiner,
             dataset,
-            output_dir,
+            output_dir / SPLIT,
             num_images_per_prompt,
             num_batches_per_prompt,
             num_inference_steps,
@@ -394,13 +397,18 @@ def main(
         )
     ):
         scene_dir.mkdir(exist_ok=True, parents=True)
+        scene_id = scene["scene_id"]
         images = scene.pop("images")
 
-        with (scene_dir / f"scene_{i:03}_metadata.json").open("w") as f:
+        with (scene_dir / f"scene_{scene_id:03}_metadata.json").open("w") as f:
             json.dump({**scene, **metadata}, f, indent=4)
 
         for image_num, image in enumerate(images):
-            image.save(scene_dir / f"scene_{i:03}_image_{image_num:02}.png")
+            image.save(scene_dir / f"scene_{scene_id:03}_image_{image_num:02}.png")
+
+    # pass in data_files explicitly, consolidate metadata
+    dataset = load_dataset("imagefolder", data_dir=output_dir, split=SPLIT)
+    dataset.push_to_hub(scene_images_dataset_id)
 
 
 if __name__ == "__main__":
@@ -421,9 +429,10 @@ if __name__ == "__main__":
         "--dataset_id",
         type=str,
         default=DEFAULT_DATASET_ID,
-        help="Huggingface dataset ID.",
+        help="Huggingface dataset ID for scene descriptions.",
     )
     parser.add_argument("--output_dir", type=Path, help="Path to save images.")
+    parser.add_argument("--output_dataset_id", type=Path, help="Huggingface dataset ID for scene images.")
     parser.add_argument("--num_images_per_prompt", type=int, default=8)
     parser.add_argument("--num_batches_per_prompt", type=int, default=1)
     parser.add_argument("--num_inference_steps", type=int, default=30)
@@ -436,6 +445,7 @@ if __name__ == "__main__":
         args.refiner_model_id,
         args.dataset_id,
         Path(args.output_dir),
+        args.scene_images_dataset_id,
         args.num_images_per_prompt,
         args.num_batches_per_prompt,
         args.num_inference_steps,

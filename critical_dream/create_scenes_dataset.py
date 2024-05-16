@@ -13,11 +13,12 @@ def main(input_dir: Path, dataset_id: str):
     for file in sorted(input_dir.glob("*.json")):
         with file.open() as f:
             episode = json.load(f)
-        for scene in episode["scenes"]:
+        for i, scene in enumerate(episode["scenes"]):
             episode_name, youtube_id = episode["name"].split("_", 1)
             scenes.append({
                 "episode_name": episode_name,
                 "youtube_id": youtube_id,
+                "scene_id": i,
                 **scene,
             })
 

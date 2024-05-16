@@ -45,12 +45,13 @@ def read_scenes(scene_file: Path) -> pd.DataFrame:
         episode = json.load(f)
 
     scenes = []
-    for scene in episode["scenes"]:
+    for i, scene in enumerate(episode["scenes"]):
         episode_name, youtube_id = episode["name"].split("_", 1)
         scene.pop("turns")
         scenes.append({
             "episode_name": episode_name,
             "youtube_id": youtube_id,
+            "scene_id": i,
             **scene,
         })
 
@@ -70,8 +71,6 @@ def align_scenes_with_speakers(
     The caption is matched based on speaker and whether the start time
     of the scene is within some tolerance threshold of the caption's timestamp.
     """
-    scenes = scenes.reset_index().rename(columns={"index": "scene_id"})
-    
     aligned_scene_ids = []
     for row in captions.itertuples():
         time_selector = row.start >= scenes.start_time
