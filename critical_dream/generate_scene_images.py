@@ -384,7 +384,7 @@ def main(
             print(f"prompt: {scene}")
         return
 
-    for scene, scene_dir in enumerate(
+    for i, (scene, scene_dir) in enumerate(
         generate_scene_images(
             pipe,
             refiner,
