@@ -409,7 +409,11 @@ def main(
 
     # pass in data_files explicitly, consolidate metadata into metadata.jsonl file
     login(token=os.environ.get("HF_HUB_TOKEN"))
-    repo_id = create_repo(repo_id=output_dataset_id, exist_ok=True).repo_id
+    repo_id = create_repo(
+        repo_id=output_dataset_id,
+        repo_type="dataset",
+        exist_ok=True,
+    ).repo_id
     print(f"creating dataset {output_dataset_id} from {output_dir}")
     upload_folder(
         repo_id=repo_id,
