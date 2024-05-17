@@ -6,6 +6,7 @@ https://github.com/nateraw/stable-diffusion-videos?tab=readme-ov-file
 
 import json
 import logging
+import os
 
 from argparse import ArgumentParser
 from pathlib import Path
@@ -16,6 +17,7 @@ from datasets import load_dataset, Dataset
 from diffusers import DiffusionPipeline, StableDiffusionXLImg2ImgPipeline
 from diffusers.utils.import_utils import is_xformers_available
 from huggingface_hub.repocard import RepoCard
+from huggingface_hub import create_repo, upload_folder, login
 from packaging import version
 
 import torch
@@ -108,7 +110,6 @@ DEFAULT_NEGATIVE_PROMPT = (
     "error hands, error fingers"
 )
 
-SPLIT = "images"
 
 def get_device():
     if torch.cuda.is_available():
@@ -286,8 +287,8 @@ def generate_scene_images(
         )
     
     for scene in dataset:
-        print(f"generating images for episode {scene['episode_name']}, scene {scene_id}")
         scene_id = scene["scene_id"]
+        print(f"generating images for episode {scene['episode_name']}, scene {scene_id}")
         scene_dir = get_scene_dir(output_dir, scene)
         if (scene_dir / f"scene_{scene_id:03}_metadata.json").exists():
             print(f"Scene images {scene_dir} exists. Skipping.")
@@ -348,7 +349,7 @@ def main(
     refiner_model_id: str | None,
     dataset_id: str,
     output_dir: Path,
-    scene_images_dataset_id: str,
+    output_dataset_id: str,
     num_images_per_prompt: int,
     num_batches_per_prompt: int,
     num_inference_steps: int,
@@ -389,7 +390,7 @@ def main(
             pipe,
             refiner,
             dataset,
-            output_dir / SPLIT,
+            output_dir,
             num_images_per_prompt,
             num_batches_per_prompt,
             num_inference_steps,
@@ -406,9 +407,16 @@ def main(
         for image_num, image in enumerate(images):
             image.save(scene_dir / f"scene_{scene_id:03}_image_{image_num:02}.png")
 
-    # pass in data_files explicitly, consolidate metadata
-    dataset = load_dataset("imagefolder", data_dir=output_dir, split=SPLIT)
-    dataset.push_to_hub(scene_images_dataset_id)
+    # pass in data_files explicitly, consolidate metadata into metadata.jsonl file
+    login(token=os.environ.get("HF_HUB_TOKEN"))
+    repo_id = create_repo(repo_id=output_dataset_id, exist_ok=True).repo_id
+    print(f"creating dataset {output_dataset_id} from {output_dir}")
+    upload_folder(
+        repo_id=repo_id,
+        folder_path=output_dir,
+        commit_message="Done creating scenes",
+        repo_type="dataset",
+    )
 
 
 if __name__ == "__main__":
@@ -432,7 +440,7 @@ if __name__ == "__main__":
         help="Huggingface dataset ID for scene descriptions.",
     )
     parser.add_argument("--output_dir", type=Path, help="Path to save images.")
-    parser.add_argument("--output_dataset_id", type=Path, help="Huggingface dataset ID for scene images.")
+    parser.add_argument("--output_dataset_id", type=str, help="Huggingface dataset ID for scene images.")
     parser.add_argument("--num_images_per_prompt", type=int, default=8)
     parser.add_argument("--num_batches_per_prompt", type=int, default=1)
     parser.add_argument("--num_inference_steps", type=int, default=30)
@@ -445,7 +453,7 @@ if __name__ == "__main__":
         args.refiner_model_id,
         args.dataset_id,
         Path(args.output_dir),
-        args.scene_images_dataset_id,
+        args.output_dataset_id,
         args.num_images_per_prompt,
         args.num_batches_per_prompt,
         args.num_inference_steps,
