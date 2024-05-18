@@ -63,6 +63,7 @@ from diffusers.utils.import_utils import is_xformers_available
 from diffusers.utils.torch_utils import is_compiled_module
 
 from critical_dream.dataset import (
+    DatasetConfig,
     DreamBoothDataset,
     DreamBoothMultiInstanceDataset,
     InstanceConfig,
@@ -806,9 +807,19 @@ def main(args):
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
 
+    dataset_config = DatasetConfig(
+        dataset_name=args.dataset_name,
+        dataset_config_name=args.dataset_config_name,
+        image_column=args.image_column,
+        caption_column=args.caption_column,
+        resolution=args.resolution,
+        random_flip=args.random_flip,
+        center_crop=args.center_crop,
+    )
     # Dataset and DataLoaders creation:
     if args.multi_instance_data_config is not None:
         train_dataset = DreamBoothMultiInstanceDataset(
+            dataset_config=dataset_config,
             multi_instance_data_config=args.multi_instance_data_config,
             multi_instance_subset=args.multi_instance_subset,
             data_dir_root=(
@@ -831,6 +842,7 @@ def main(args):
             else Path(args.data_dir_root) / args.class_data_dir
         )
         train_dataset = DreamBoothDataset(
+            dataset_config=dataset_config,
             instance_data_root=(
                 args.instance_data_dir
                 if args.data_dir_root is None
