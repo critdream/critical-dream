@@ -22,8 +22,11 @@ This project will involve several components that need to work together:
 
 ## Environment Setup
 
+Use [miniforge](https://github.com/conda-forge/miniforge) for the mamba virtual
+environment.
+
 ```bash
-conda create -n critical-dream python=3.11 -y
+mamba create -n critical-dream python=3.11 -y
 pip install -r requirements.txt
 pip install git+https://github.com/huggingface/diffusers
 ```
@@ -113,7 +116,6 @@ accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
   --multi_instance_data_config=config/mighty_nein_instances.yaml \
   --multi_instance_subset=fjord \
   --pretrained_vae_model_name_or_path=$VAE_PATH \
-  --with_prior_preservation \
   --output_dir=$OUTPUT_DIR \
   --resolution=1024 \
   --train_batch_size=1 \
@@ -173,15 +175,11 @@ accelerate launch critical_dream/train_dreambooth_lora_sdxl.py \
 
 ```bash
 export MODEL_NAME="CompVis/stable-diffusion-v1-4"
-export INSTANCE_DIR="data/fjord"
-export CLASS_DIR="data/half_orc"
 export OUTPUT_DIR="models/model_sd1_fjord"
 export HUB_MODEL_ID="cosmicBboy/stable-diffusion-v1-4-dreambooth-critdream-fjord"
 
 accelerate launch critical_dream/train_dreambooth.py \
   --pretrained_model_name_or_path=$MODEL_NAME  \
-  --instance_data_dir=$INSTANCE_DIR \
-  --class_data_dir=$CLASS_DIR \
   --output_dir=$OUTPUT_DIR \
   --instance_prompt="a picture of [critrole-fjord], a half-orc warlock" \
   --class_prompt="a picture of a half-orc warlock" \
@@ -250,14 +248,13 @@ export HUB_MODEL_ID="cosmicBboy/stable-diffusion-2-dreambooth-critdream-fjord"
 
 accelerate launch critical_dream/train_dreambooth.py \
   --pretrained_model_name_or_path=$MODEL_NAME  \
-  --instance_data_dir=$INSTANCE_DIR \
-  --class_data_dir=$CLASS_DIR \
+  --multi_instance_data_config=config/mighty_nein_instances.yaml \
+  --multi_instance_subset=fjord \
+  --data_dir_root=dataset \
   --output_dir=$OUTPUT_DIR \
-  --instance_prompt="a picture of [critrole-fjord], a half-orc" \
-  --class_prompt="a picture of a half-orc" \
+  --with_prior_preservation \
   --resolution=768 \
   --train_batch_size=1 \
-  --report_to="wandb" \
   --gradient_accumulation_steps=1 \
   --learning_rate=5e-6 \
   --report_to="wandb" \
@@ -265,13 +262,11 @@ accelerate launch critical_dream/train_dreambooth.py \
   --lr_warmup_steps=0 \
   --num_class_images=200 \
   --max_train_steps=100 \
-  --validation_prompt="a picture of [critrole-fjord], a half-orc with a top hat" \
   --validation_steps=100 \
   --checkpointing_steps=100 \
   --hub_model_id=$HUB_MODEL_ID \
   --seed="0" \
-  --push_to_hub \
-  --report_to="wandb"
+  --push_to_hub
 ```
 </details>
 

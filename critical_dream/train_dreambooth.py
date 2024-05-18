@@ -14,6 +14,7 @@ import math
 import os
 import shutil
 import warnings
+import yaml
 from pathlib import Path
 
 import numpy as np
@@ -48,6 +49,13 @@ from diffusers.utils import check_min_version, is_wandb_available
 from diffusers.utils.hub_utils import load_or_create_model_card, populate_model_card
 from diffusers.utils.import_utils import is_xformers_available
 from diffusers.utils.torch_utils import is_compiled_module
+
+from critical_dream.dataset import (
+    DatasetConfig,
+    DreamBoothMultiInstanceDataset,
+    InstanceConfig,
+    PromptDataset,
+)
 
 
 if is_wandb_available():
@@ -242,6 +250,42 @@ def parse_args(input_args=None):
         help="Variant of the model files of the pretrained model identifier from huggingface.co/models, 'e.g.' fp16",
     )
     parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default=None,
+        help=(
+            "The name of the Dataset (from the HuggingFace hub) containing the training data of instance images (could be your own, possibly private,"
+            " dataset). It can also be a path pointing to a local copy of a dataset in your filesystem,"
+            " or to a folder containing files that 🤗 Datasets can understand."
+        ),
+    )
+    parser.add_argument(
+        "--dataset_config_name",
+        type=str,
+        default=None,
+        help="The config of the Dataset, leave as None if there's only one config.",
+    )
+    parser.add_argument(
+        "--multi_instance_data_config",
+        type=str,
+        default=None,
+        help=("A yaml file containing the configuration for multiple instances. "),
+    )
+    parser.add_argument(
+        "--multi_instance_subset",
+        type=str,
+        default=None,
+        help=("A comma-separated list of instance names to train on. "),
+    )
+
+    parser.add_argument(
+        "--data_dir_root",
+        type=str,
+        default=None,
+        help="Root directory for all",
+    )
+
+    parser.add_argument(
         "--tokenizer_name",
         type=str,
         default=None,
@@ -251,7 +295,6 @@ def parse_args(input_args=None):
         "--instance_data_dir",
         type=str,
         default=None,
-        required=True,
         help="A folder containing the training data of instance images.",
     )
     parser.add_argument(
@@ -262,10 +305,24 @@ def parse_args(input_args=None):
         help="A folder containing the training data of class images.",
     )
     parser.add_argument(
+        "--image_column",
+        type=str,
+        default="image",
+        help="The column of the dataset containing the target image. By "
+        "default, the standard Image Dataset maps out 'file_name' "
+        "to 'image'.",
+    )
+    parser.add_argument(
+        "--caption_column",
+        type=str,
+        default=None,
+        help="The column of the dataset containing the instance prompt for each image",
+    )
+    parser.add_argument("--repeats", type=int, default=1, help="How many times to repeat the training data.")
+    parser.add_argument(
         "--instance_prompt",
         type=str,
         default=None,
-        required=True,
         help="The prompt with identifier specifying the instance",
     )
     parser.add_argument(
@@ -314,6 +371,11 @@ def parse_args(input_args=None):
             "Whether to center crop the input images to the resolution. If not set, the images will be randomly"
             " cropped. The images will be resized to the resolution first before cropping."
         ),
+    )
+    parser.add_argument(
+        "--random_flip",
+        action="store_true",
+        help="whether to randomly flip images horizontally",
     )
     parser.add_argument(
         "--train_text_encoder",
@@ -580,18 +642,6 @@ def parse_args(input_args=None):
     if env_local_rank != -1 and env_local_rank != args.local_rank:
         args.local_rank = env_local_rank
 
-    if args.with_prior_preservation:
-        if args.class_data_dir is None:
-            raise ValueError("You must specify a data directory for class images.")
-        if args.class_prompt is None:
-            raise ValueError("You must specify prompt for class images.")
-    else:
-        # logger is not available yet
-        if args.class_data_dir is not None:
-            warnings.warn("You need not use --class_data_dir without --with_prior_preservation.")
-        if args.class_prompt is not None:
-            warnings.warn("You need not use --class_prompt without --with_prior_preservation.")
-
     if args.train_text_encoder and args.pre_compute_text_embeddings:
         raise ValueError("`--train_text_encoder` cannot be used with `--pre_compute_text_embeddings`")
 
@@ -606,6 +656,7 @@ class DreamBoothDataset(Dataset):
 
     def __init__(
         self,
+        dataset_config: DatasetConfig,
         instance_data_root,
         instance_prompt,
         tokenizer,
@@ -614,9 +665,11 @@ class DreamBoothDataset(Dataset):
         class_num=None,
         size=512,
         center_crop=False,
+        repeats=1,
         encoder_hidden_states=None,
         class_prompt_encoder_hidden_states=None,
         tokenizer_max_length=None,
+        custom_instance_prompts: bool | list = False,
     ):
         self.size = size
         self.center_crop = center_crop
@@ -624,6 +677,8 @@ class DreamBoothDataset(Dataset):
         self.encoder_hidden_states = encoder_hidden_states
         self.class_prompt_encoder_hidden_states = class_prompt_encoder_hidden_states
         self.tokenizer_max_length = tokenizer_max_length
+        self.custom_instance_prompts = custom_instance_prompts
+        self.class_prompt = class_prompt
 
         self.instance_data_root = Path(instance_data_root)
         if not self.instance_data_root.exists():
@@ -642,7 +697,6 @@ class DreamBoothDataset(Dataset):
                 self.num_class_images = min(len(self.class_images_path), class_num)
             else:
                 self.num_class_images = len(self.class_images_path)
-            self._length = max(self.num_class_images, self.num_instance_images)
             self.class_prompt = class_prompt
         else:
             self.class_data_root = None
@@ -730,23 +784,6 @@ def collate_fn(examples, with_prior_preservation=False):
         batch["attention_mask"] = attention_mask
 
     return batch
-
-
-class PromptDataset(Dataset):
-    "A simple dataset to prepare the prompts to generate class images on multiple GPUs."
-
-    def __init__(self, prompt, num_samples):
-        self.prompt = prompt
-        self.num_samples = num_samples
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, index):
-        example = {}
-        example["prompt"] = self.prompt
-        example["index"] = index
-        return example
 
 
 def model_has_vae(args):
@@ -844,62 +881,100 @@ def main(args):
     if args.seed is not None:
         set_seed(args.seed)
 
+    # get prior preservation image directories and prompts
+    class_images_dirs = None
+    class_prompts = None
+    if args.class_data_dir and args.multi_instance_data_config is None:
+        class_images_dirs = [
+            args.class_data_dir
+            if args.data_dir_root is None
+            else Path(args.data_dir_root) / args.class_data_dir
+        ]
+        class_prompts = [args.class_prompt]
+    else:
+        with open(args.multi_instance_data_config) as f:
+            _multi_instance_data_config = [
+                InstanceConfig(**x) for x in yaml.safe_load(f)
+                if (
+                    True
+                    if args.multi_instance_subset is None
+                    else x["instance_name"] in args.multi_instance_subset.split(",")
+                )
+            ]
+        class_images_dirs = [
+            (
+                instance_config.class_data_root
+                if args.data_dir_root is None
+                else Path(args.data_dir_root) / instance_config.class_data_root
+            )
+            for instance_config in _multi_instance_data_config
+        ]
+        class_prompts = [
+            instance_config.class_prompt
+            for instance_config in _multi_instance_data_config
+        ]
+
+    if args.with_prior_preservation:
+        if class_images_dirs is None:
+            raise ValueError("You must specify a data directory for class images.")
+        if class_prompts is None:
+            raise ValueError("You must specify prompt for class images.")
+    else:
+        # logger is not available yet
+        if class_images_dirs is not None:
+            warnings.warn("You need not use --class_data_dir without --with_prior_preservation.")
+        if class_prompts is not None:
+            warnings.warn("You need not use --class_prompt without --with_prior_preservation.")
+
     # Generate class images if prior preservation is enabled.
     if args.with_prior_preservation:
-        class_images_dir = Path(args.class_data_dir)
-        if not class_images_dir.exists():
-            class_images_dir.mkdir(parents=True)
-        cur_class_images = len(list(class_images_dir.iterdir()))
+        torch_dtype = torch.float16 if accelerator.device.type == "cuda" else torch.float32
+        if args.prior_generation_precision == "fp32":
+            torch_dtype = torch.float32
+        elif args.prior_generation_precision == "fp16":
+            torch_dtype = torch.float16
+        elif args.prior_generation_precision == "bf16":
+            torch_dtype = torch.bfloat16
+        pipeline = DiffusionPipeline.from_pretrained(
+            args.pretrained_model_name_or_path,
+            torch_dtype=torch_dtype,
+            safety_checker=None,
+            revision=args.revision,
+            variant=args.variant,
+        )
+        pipeline.set_progress_bar_config(disable=True)
 
-        if cur_class_images < args.num_class_images:
-            torch_dtype = torch.float16 if accelerator.device.type == "cuda" else torch.float32
-            if args.prior_generation_precision == "fp32":
-                torch_dtype = torch.float32
-            elif args.prior_generation_precision == "fp16":
-                torch_dtype = torch.float16
-            elif args.prior_generation_precision == "bf16":
-                torch_dtype = torch.bfloat16
-            pipeline = DiffusionPipeline.from_pretrained(
-                args.pretrained_model_name_or_path,
-                torch_dtype=torch_dtype,
-                safety_checker=None,
-                revision=args.revision,
-                variant=args.variant,
-            )
-            pipeline.set_progress_bar_config(disable=True)
+        for class_prompt, class_images_dir in zip(class_prompts, class_images_dirs):
+            if class_images_dir is None:
+                continue
+            class_images_dir = Path(class_images_dir)
+            if not class_images_dir.exists():
+                class_images_dir.mkdir(parents=True)
+            cur_class_images = len(list(class_images_dir.iterdir()))
 
-            num_new_images = args.num_class_images - cur_class_images
-            logger.info(f"Number of class images to sample: {num_new_images}.")
+            if cur_class_images < args.num_class_images:
+                num_new_images = args.num_class_images - cur_class_images
+                logger.info(f"Number of class images to sample: {num_new_images}.")
 
-            sample_dataset = PromptDataset(args.class_prompt, num_new_images)
-            sample_dataloader = torch.utils.data.DataLoader(sample_dataset, batch_size=args.sample_batch_size)
+                sample_dataset = PromptDataset(class_prompt, num_new_images)
+                sample_dataloader = torch.utils.data.DataLoader(sample_dataset, batch_size=args.sample_batch_size)
 
-            sample_dataloader = accelerator.prepare(sample_dataloader)
-            pipeline.to(accelerator.device)
+                sample_dataloader = accelerator.prepare(sample_dataloader)
+                pipeline.to(accelerator.device)
 
-            for example in tqdm(
-                sample_dataloader, desc="Generating class images", disable=not accelerator.is_local_main_process
-            ):
-                images = pipeline(example["prompt"]).images
+                for example in tqdm(
+                    sample_dataloader, desc="Generating class images", disable=not accelerator.is_local_main_process
+                ):
+                    images = pipeline(example["prompt"]).images
 
-                for i, image in enumerate(images):
-                    hash_image = insecure_hashlib.sha1(image.tobytes()).hexdigest()
-                    image_filename = class_images_dir / f"{example['index'][i] + cur_class_images}-{hash_image}.jpg"
-                    image.save(image_filename)
+                    for i, image in enumerate(images):
+                        hash_image = insecure_hashlib.sha1(image.tobytes()).hexdigest()
+                        image_filename = class_images_dir / f"{example['index'][i] + cur_class_images}-{hash_image}.jpg"
+                        image.save(image_filename)
 
-            del pipeline
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-
-    # Handle the repository creation
-    if accelerator.is_main_process:
-        if args.output_dir is not None:
-            os.makedirs(args.output_dir, exist_ok=True)
-
-        if args.push_to_hub:
-            repo_id = create_repo(
-                repo_id=args.hub_model_id or Path(args.output_dir).name, exist_ok=True, token=args.hub_token
-            ).repo_id
+        del pipeline
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     # Load the tokenizer
     if args.tokenizer_name:
@@ -911,6 +986,78 @@ def main(args):
             revision=args.revision,
             use_fast=False,
         )
+
+    dataset_config = DatasetConfig(
+        dataset_name=args.dataset_name,
+        dataset_config_name=args.dataset_config_name,
+        image_column=args.image_column,
+        caption_column=args.caption_column,
+        resolution=args.resolution,
+        random_flip=args.random_flip,
+        center_crop=args.center_crop,
+    )
+
+    if args.multi_instance_data_config is not None:
+        train_dataset = DreamBoothMultiInstanceDataset(
+            DreamBoothDataset,
+            tokenizer,
+            dataset_config=dataset_config,
+            multi_instance_data_config=args.multi_instance_data_config,
+            multi_instance_subset=args.multi_instance_subset,
+            data_dir_root=(
+                args.data_dir_root
+                if args.data_dir_root is None
+                else Path(args.data_dir_root)
+            ),
+            class_num=args.num_class_images,
+            size=args.resolution,
+            repeats=args.repeats,
+            center_crop=args.center_crop,
+        )
+        logging.info("Using multi-instance dataset.")
+        for instance_name, _dataset in train_dataset.dreambooth_datasets.items():
+            logging.info(f"Instance: {instance_name}, num instances: {len(_dataset)}")
+    else:
+        class_data_dir = (
+            args.class_data_dir if
+            args.data_dir_root is None
+            else Path(args.data_dir_root) / args.class_data_dir
+        )
+        train_dataset = DreamBoothDataset(
+            DreamBoothDataset,
+            dataset_config=dataset_config,
+            instance_data_root=(
+                args.instance_data_dir
+                if args.data_dir_root is None
+                else Path(args.data_dir_root)
+            ),
+            instance_prompt=args.instance_prompt,
+            class_prompt=args.class_prompt,
+            tokenizer=tokenizer,
+            class_data_root=class_data_dir if args.with_prior_preservation else None,
+            class_num=args.num_class_images,
+            size=args.resolution,
+            repeats=args.repeats,
+            center_crop=args.center_crop,
+        )
+
+    train_dataloader = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=True,
+        collate_fn=lambda examples: collate_fn(examples, args.with_prior_preservation),
+        num_workers=args.dataloader_num_workers,
+    )
+
+    # Handle the repository creation
+    if accelerator.is_main_process:
+        if args.output_dir is not None:
+            os.makedirs(args.output_dir, exist_ok=True)
+
+        if args.push_to_hub:
+            repo_id = create_repo(
+                repo_id=args.hub_model_id or Path(args.output_dir).name, exist_ok=True, token=args.hub_token
+            ).repo_id
 
     # import correct text encoder class
     text_encoder_cls = import_model_class_from_model_name_or_path(args.pretrained_model_name_or_path, args.revision)
@@ -1040,66 +1187,8 @@ def main(args):
         eps=args.adam_epsilon,
     )
 
-    if args.pre_compute_text_embeddings:
-
-        def compute_text_embeddings(prompt):
-            with torch.no_grad():
-                text_inputs = tokenize_prompt(tokenizer, prompt, tokenizer_max_length=args.tokenizer_max_length)
-                prompt_embeds = encode_prompt(
-                    text_encoder,
-                    text_inputs.input_ids,
-                    text_inputs.attention_mask,
-                    text_encoder_use_attention_mask=args.text_encoder_use_attention_mask,
-                )
-
-            return prompt_embeds
-
-        pre_computed_encoder_hidden_states = compute_text_embeddings(args.instance_prompt)
-        validation_prompt_negative_prompt_embeds = compute_text_embeddings("")
-
-        if args.validation_prompt is not None:
-            validation_prompt_encoder_hidden_states = compute_text_embeddings(args.validation_prompt)
-        else:
-            validation_prompt_encoder_hidden_states = None
-
-        if args.class_prompt is not None:
-            pre_computed_class_prompt_encoder_hidden_states = compute_text_embeddings(args.class_prompt)
-        else:
-            pre_computed_class_prompt_encoder_hidden_states = None
-
-        text_encoder = None
-        tokenizer = None
-
-        gc.collect()
-        torch.cuda.empty_cache()
-    else:
-        pre_computed_encoder_hidden_states = None
-        validation_prompt_encoder_hidden_states = None
-        validation_prompt_negative_prompt_embeds = None
-        pre_computed_class_prompt_encoder_hidden_states = None
-
-    # Dataset and DataLoaders creation:
-    train_dataset = DreamBoothDataset(
-        instance_data_root=args.instance_data_dir,
-        instance_prompt=args.instance_prompt,
-        class_data_root=args.class_data_dir if args.with_prior_preservation else None,
-        class_prompt=args.class_prompt,
-        class_num=args.num_class_images,
-        tokenizer=tokenizer,
-        size=args.resolution,
-        center_crop=args.center_crop,
-        encoder_hidden_states=pre_computed_encoder_hidden_states,
-        class_prompt_encoder_hidden_states=pre_computed_class_prompt_encoder_hidden_states,
-        tokenizer_max_length=args.tokenizer_max_length,
-    )
-
-    train_dataloader = torch.utils.data.DataLoader(
-        train_dataset,
-        batch_size=args.train_batch_size,
-        shuffle=True,
-        collate_fn=lambda examples: collate_fn(examples, args.with_prior_preservation),
-        num_workers=args.dataloader_num_workers,
-    )
+    validation_prompt_encoder_hidden_states = None
+    validation_prompt_negative_prompt_embeds = None
 
     # Scheduler and math around the number of training steps.
     overrode_max_train_steps = False
@@ -1318,6 +1407,16 @@ def main(args):
                 lr_scheduler.step()
                 optimizer.zero_grad(set_to_none=args.set_grads_to_none)
 
+            validation_prompts = None
+            if isinstance(train_dataset, DreamBoothMultiInstanceDataset):
+                validation_prompts = [
+                    [config.validation_prompt, config.class_prompt] for config in
+                    train_dataset.multi_instance_data_config
+                ]
+                validation_prompts = list(itertools.chain(*validation_prompts))
+            elif args.validation_prompt is not None:
+                validation_prompts = [args.validation_prompt, args.class_prompt]
+
             # Checks if the accelerator has performed an optimization step behind the scenes
             if accelerator.sync_gradients:
                 progress_bar.update(1)
@@ -1351,7 +1450,7 @@ def main(args):
 
                     images = []
 
-                    if args.validation_prompt is not None and global_step % args.validation_steps == 0:
+                    if validation_prompts is not None and global_step % args.validation_steps == 0:
                         images = log_validation(
                             unwrap_model(text_encoder) if text_encoder is not None else text_encoder,
                             tokenizer,

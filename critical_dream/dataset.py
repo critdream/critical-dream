@@ -46,6 +46,8 @@ class DreamBoothMultiInstanceDataset(Dataset):
 
     def __init__(
         self,
+        dataset_cls,
+        tokenizer,
         dataset_config: DatasetConfig,
         multi_instance_data_config: list[InstanceConfig],
         multi_instance_subset: list[str] | None = None,
@@ -70,7 +72,7 @@ class DreamBoothMultiInstanceDataset(Dataset):
             ]
 
         self.dreambooth_datasets = {
-            config.instance_name: DreamBoothDataset(
+            config.instance_name: dataset_cls(
                 dataset_config,
                 instance_data_root=(
                     config.instance_data_root
@@ -78,6 +80,7 @@ class DreamBoothMultiInstanceDataset(Dataset):
                     else data_dir_root / config.instance_data_root
                 ),
                 instance_prompt=config.instance_prompt,
+                tokenizer=tokenizer,
                 class_prompt=config.class_prompt,
                 class_data_root=(
                     config.class_data_root
@@ -125,6 +128,7 @@ class DreamBoothDataset(Dataset):
         instance_data_root,
         instance_prompt,
         class_prompt,
+        tokenizer,
         class_data_root=None,
         class_num=None,
         size=1024,
@@ -317,3 +321,20 @@ def collate_fn(examples, with_prior_preservation=False):
         "crop_top_lefts": crop_top_lefts,
     }
     return batch
+
+
+class PromptDataset(Dataset):
+    "A simple dataset to prepare the prompts to generate class images on multiple GPUs."
+
+    def __init__(self, prompt, num_samples):
+        self.prompt = prompt
+        self.num_samples = num_samples
+
+    def __len__(self):
+        return self.num_samples
+
+    def __getitem__(self, index):
+        example = {}
+        example["prompt"] = self.prompt
+        example["index"] = index
+        return example

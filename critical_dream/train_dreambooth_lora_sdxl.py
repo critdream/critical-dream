@@ -67,6 +67,7 @@ from critical_dream.dataset import (
     DreamBoothDataset,
     DreamBoothMultiInstanceDataset,
     InstanceConfig,
+    PromptDataset,
     collate_fn,
 )
 
@@ -610,23 +611,6 @@ def parse_args(input_args=None):
     return args
 
 
-class PromptDataset(Dataset):
-    "A simple dataset to prepare the prompts to generate class images on multiple GPUs."
-
-    def __init__(self, prompt, num_samples):
-        self.prompt = prompt
-        self.num_samples = num_samples
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, index):
-        example = {}
-        example["prompt"] = self.prompt
-        example["index"] = index
-        return example
-
-
 def tokenize_prompt(tokenizer, prompt):
     text_inputs = tokenizer(
         prompt,
@@ -819,6 +803,8 @@ def main(args):
     # Dataset and DataLoaders creation:
     if args.multi_instance_data_config is not None:
         train_dataset = DreamBoothMultiInstanceDataset(
+            DreamBoothDataset,
+            tokenizer=None,
             dataset_config=dataset_config,
             multi_instance_data_config=args.multi_instance_data_config,
             multi_instance_subset=args.multi_instance_subset,
