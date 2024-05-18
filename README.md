@@ -255,7 +255,7 @@ accelerate launch critical_dream/train_dreambooth.py \
   --output_dir=$OUTPUT_DIR \
   --instance_prompt="a picture of [critrole-fjord], a half-orc" \
   --class_prompt="a picture of a half-orc" \
-  --resolution=1024 \
+  --resolution=768 \
   --train_batch_size=1 \
   --report_to="wandb" \
   --gradient_accumulation_steps=1 \
@@ -294,7 +294,7 @@ accelerate launch critical_dream/train_dreambooth_lora.py \
   --output_dir=$OUTPUT_DIR \
   --instance_prompt="a picture of [critrole-fjord], a half-orc" \
   --class_prompt="a picture of a half-orc" \
-  --resolution=512 \
+  --resolution=768 \
   --train_batch_size=1 \
   --gradient_accumulation_steps=1 \
   --learning_rate=5e-6 \
