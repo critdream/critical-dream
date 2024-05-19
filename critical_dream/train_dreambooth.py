@@ -120,8 +120,7 @@ def log_validation(
     accelerator,
     weight_dtype,
     global_step,
-    prompt_embeds,
-    negative_prompt_embeds,
+    validation_prompts,
 ):
     logger.info(
         f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
@@ -162,27 +161,14 @@ def log_validation(
     pipeline = pipeline.to(accelerator.device)
     pipeline.set_progress_bar_config(disable=True)
 
-    if args.pre_compute_text_embeddings:
-        pipeline_args = {
-            "prompt_embeds": prompt_embeds,
-            "negative_prompt_embeds": negative_prompt_embeds,
-        }
-    else:
-        pipeline_args = {"prompt": args.validation_prompt}
-
     # run inference
     generator = None if args.seed is None else torch.Generator(device=accelerator.device).manual_seed(args.seed)
     images = []
-    if args.validation_images is None:
-        for _ in range(args.num_validation_images):
-            with torch.autocast("cuda"):
-                image = pipeline(**pipeline_args, num_inference_steps=25, generator=generator).images[0]
-            images.append(image)
-    else:
-        for image in args.validation_images:
-            image = Image.open(image)
-            image = pipeline(**pipeline_args, image=image, generator=generator).images[0]
-            images.append(image)
+    for prompt in validation_prompts:
+        pipeline_args = {"prompt": prompt}
+        with torch.autocast("cuda"):
+            image = pipeline(**pipeline_args, num_inference_steps=25, generator=generator).images[0]
+        images.append(image)
 
     for tracker in accelerator.trackers:
         if tracker.name == "tensorboard":
@@ -192,7 +178,7 @@ def log_validation(
             tracker.log(
                 {
                     "validation": [
-                        wandb.Image(image, caption=f"{i}: {args.validation_prompt}") for i, image in enumerate(images)
+                        wandb.Image(image, caption=f"{i}: {validation_prompts[i]}") for i, image in enumerate(images)
                     ]
                 }
             )
@@ -1187,9 +1173,6 @@ def main(args):
         eps=args.adam_epsilon,
     )
 
-    validation_prompt_encoder_hidden_states = None
-    validation_prompt_negative_prompt_embeds = None
-
     # Scheduler and math around the number of training steps.
     overrode_max_train_steps = False
     num_update_steps_per_epoch = math.ceil(len(train_dataloader) / args.gradient_accumulation_steps)
@@ -1460,8 +1443,7 @@ def main(args):
                             accelerator,
                             weight_dtype,
                             global_step,
-                            validation_prompt_encoder_hidden_states,
-                            validation_prompt_negative_prompt_embeds,
+                            validation_prompts,
                         )
 
             logs = {"loss": loss.detach().item(), "lr": lr_scheduler.get_last_lr()[0]}
