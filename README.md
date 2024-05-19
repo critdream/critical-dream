@@ -241,8 +241,6 @@ accelerate launch critical_dream/train_dreambooth_lora.py \
 
 ```bash
 export MODEL_NAME="stabilityai/stable-diffusion-2"
-export INSTANCE_DIR="data/fjord"
-export CLASS_DIR="data/half_orc"
 export OUTPUT_DIR="models/model_sd2_lora_fjord"
 export HUB_MODEL_ID="cosmicBboy/stable-diffusion-2-dreambooth-critdream-fjord"
 
