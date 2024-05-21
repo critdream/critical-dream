@@ -53,7 +53,7 @@ def set_episode_dropdown(df):
 
     for episode_name in episodes:
         num = episode_name.split("e")[1]
-        content = f"Episode {num}"
+        content = f"Campaign 2 Episode {num}"
         option = pydom.create("option", html=content)
         option.value = episode_name
         select.append(option)
