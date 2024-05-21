@@ -7,6 +7,7 @@ images to better-match who is speaking in the scene.
 
 import json
 import pandas as pd
+from io import BytesIO
 
 from argparse import ArgumentParser
 from pathlib import Path
@@ -14,6 +15,7 @@ from pathlib import Path
 from datasets import Dataset
 
 from critical_dream.compose_scenes import Caption, parse_captions
+from huggingface_hub import upload_file
 
 
 SPEAKER_MAP = {
@@ -116,10 +118,20 @@ def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
         aligned = align_scenes_with_speakers(scenes, captions)
         aligned_output.append(aligned)
 
-    dataset = Dataset.from_pandas(pd.concat(aligned_output))
+    df = pd.concat(aligned_output)
+    dataset = Dataset.from_pandas(df)
     print(f"pushing to huggingface hub: {dataset_id}")
     dataset.push_to_hub(dataset_id)
-    
+    # upload a csv version as well
+    df_io = BytesIO()
+    df.to_csv(df_io, index=False)
+    df_io.seek(0)
+    upload_file(
+        path_or_fileobj=df_io,
+        path_in_repo="aligned_scenes.csv",
+        repo_id=dataset_id,
+        repo_type="dataset",
+    )
 
 
 if __name__ == "__main__":
