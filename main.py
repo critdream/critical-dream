@@ -21,6 +21,9 @@ NUM_IMAGE_VARIATIONS = 12
 UPDATE_INTERVAL = 15_000
 
 
+image_update_interval_id = None
+
+
 def load_data():
 
     def scene_name(df):
@@ -114,8 +117,8 @@ def update_image():
     def show_new_image():
         current_image.classList.add("show")
 
-    js.setTimeout(set_new_image, 1000)
-    js.setTimeout(show_new_image, 1200)
+    js.setTimeout(set_new_image, 500)
+    js.setTimeout(show_new_image, 750)
 
 
 
@@ -140,19 +143,23 @@ def close_modal():
 
 @ffi.create_proxy
 def on_ready(event):
-    global interval_id
+    global image_update_interval_id
 
     console.log("[pyscript] youtube iframe ready")
     js.setTimeout(update_image, 1000)
-    js.setTimeout(close_modal, 2000)
+
+    if image_update_interval_id is None:
+        image_update_interval_id = js.setInterval(update_image, UPDATE_INTERVAL)
+        console.log(f"set interval id: {image_update_interval_id}")
+
     resize_iframe(event)
+    js.setTimeout(close_modal, 1500)
 
 
 @ffi.create_proxy
 def on_state_change(event):
     console.log("[pyscript] youtube player state change")
-    interval_id = js.setInterval(update_image, UPDATE_INTERVAL)
-    console.log(f"set interval id: {interval_id}")
+
     update_image()
 
 
