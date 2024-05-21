@@ -133,19 +133,26 @@ def on_youtube_frame_api_ready():
 
 
 @ffi.create_proxy
+def close_modal():
+    loading = document.getElementById('loading')
+    loading.close()
+
+
+@ffi.create_proxy
 def on_ready(event):
     global interval_id
 
     console.log("[pyscript] youtube iframe ready")
     js.setTimeout(update_image, 1000)
-    interval_id = js.setInterval(update_image, UPDATE_INTERVAL)
-    console.log(f"set interval id: {interval_id}")
+    js.setTimeout(close_modal, 2000)
     resize_iframe(event)
 
 
 @ffi.create_proxy
 def on_state_change(event):
     console.log("[pyscript] youtube player state change")
+    interval_id = js.setInterval(update_image, UPDATE_INTERVAL)
+    console.log(f"set interval id: {interval_id}")
     update_image()
 
 
@@ -189,9 +196,7 @@ def main():
 
     # create youtube player
     create_youtube_player()
-    # window.onresize = resize_iframe
     console.log(window)
-    # console.log("FOOBAR")
 
 
 main()
