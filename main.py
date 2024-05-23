@@ -117,8 +117,8 @@ def update_image():
     def show_new_image():
         current_image.classList.add("show")
 
-    js.setTimeout(set_new_image, 500)
-    js.setTimeout(show_new_image, 750)
+    js.setTimeout(set_new_image, 100)
+    js.setTimeout(show_new_image, 100)
 
 
 
@@ -170,6 +170,7 @@ def resize_iframe(event):
     iframe = document.getElementById("player")
     # set to current width
     iframe.height = container.clientWidth
+    container.height = container.clientWidth
 
 
 def create_youtube_player():

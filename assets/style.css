@@ -1,0 +1,73 @@
+body {
+    background: #3d1b1b;
+    font-family: "Caudex", serif;
+}
+
+h1 {
+    font-size: 4em;
+    font-weight: bold;
+}
+
+div#page-message {
+    font-size: 2em;
+}
+
+select#episode {
+    font-size: 3em;
+    background-color: #301515;
+    color: #7f6464;
+    padding: 5px 10px;
+    font-size: 1.75em;
+    border-radius: 4px;
+    border: none
+}
+
+dialog::backdrop {
+    background: #3d1b1b;;
+}
+
+#loading {
+    outline: none;
+    border: none;
+    background: #3d1b1b;;
+    text-align: center;
+    color: #7f6464;
+    font-size: 1em;
+}
+
+img#current-image {
+    opacity: 0;
+    -webkit-transition: opacity 0.25s ease;
+    -moz-transition: opacity 0.25s ease;
+    -ms-transition: opacity 0.25s ease;
+    -o-transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
+}
+
+img#current-image.show {
+    opacity: 1;
+}
+
+iframe#player {
+    width: 100%;
+}
+
+#video-container div.col-md-6 {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+h1, #page-message {
+    text-align: center;
+    color: #9c7e7e;
+}
+
+select#episode {
+    display: block;
+    margin: 0 auto;
+}
+
+div#video-container {
+    border: 25px solid #301515;
+    background: #301515;
+}

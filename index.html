@@ -9,60 +9,17 @@
         <!-- PyScript CSS -->
         <link rel="stylesheet" href="https://pyscript.net/releases/2024.5.2/core.css">
 
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Jacquard+12&family=Jacquard+24&display=swap');
+        </style>
+
         <!-- CSS for examples -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        <link rel="stylesheet" href="./assets/style.css" />
 
         <!-- This script tag bootstraps PyScript -->
         <script type="module" src="https://pyscript.net/releases/2024.5.2/core.js"></script>
 
-        <!-- for splashscreen -->
-        <style>
-            dialog::backdrop {
-                background: white;
-            }
-
-            #loading {
-                outline: none;
-                border: none;
-                background: white;
-                text-align: center;
-            }
-
-            img#current-image {
-                opacity: 0;
-                -webkit-transition: opacity 0.5s ease;
-                -moz-transition: opacity 0.5s ease;
-                -ms-transition: opacity 0.5s ease;
-                -o-transition: opacity 0.5s ease;
-                transition: opacity 0.5s ease;
-            }
-            img#current-image.show {
-                opacity: 1;
-            }
-
-            iframe#player {
-                width: 100%;
-            }
-
-            #video-container div.col-md-6 {
-                padding-right: 0;
-                padding-left: 0;
-            }
-
-            h1, #page-message {
-                text-align: center;
-            }
-
-            #page-message, select#episode {
-                font-size: 1.5em;
-            }
-
-            select#episode {
-                display: block;
-                margin: 0 auto;
-            }
-
-        </style>
         <script type="module">
             const loading = document.getElementById('loading');
             loading.showModal();
@@ -75,14 +32,14 @@
 
     <body>
         <dialog id="loading">
-            <h1>🎲 Loading Critical Dream 🪄</h1>
+            <h1>Loading...</h1>
         </dialog>
 
         <div id="youtube-player"></div>
 
         <nav class="navbar">
             <div class="app-header">
-                <h1 class="title" id="page-title" href="">🎲 Critical Dream 🪄</h1>
+                <h1 class="title" id="page-title" href="">Critical Dream</h1>
             </div>
         </nav>
         
@@ -107,7 +64,7 @@
         <div class="container" id="video-container">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="player-container">
+                    <div class="player-container" id="player-container">
                         <div id="player"></div>
                     </div>
                 </div>
