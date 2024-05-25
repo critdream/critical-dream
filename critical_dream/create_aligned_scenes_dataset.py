@@ -63,7 +63,7 @@ def read_scenes(scene_file: Path) -> pd.DataFrame:
 def align_scenes_with_speakers(
     scenes: pd.DataFrame,
     captions: pd.DataFrame,
-    tolerance: float = 10.0,
+    tolerance: float = 120.0,
 ) -> pd.DataFrame:
     """Aligns the speaker in the raw transcripts with a generated scene.
 
@@ -75,7 +75,7 @@ def align_scenes_with_speakers(
     """
     aligned_scene_ids = []
     for row in captions.itertuples():
-        time_selector = row.start >= scenes.start_time
+        time_selector = (row.start + tolerance) >= scenes.start_time
         speaker_selector = row.speaker.lower() == scenes.speaker.str.lower()
         relevant_scenes = scenes[time_selector & speaker_selector]
         if relevant_scenes.empty:
@@ -93,7 +93,9 @@ def align_scenes_with_speakers(
 
     captions["scene_id"] = aligned_scene_ids
     captions = captions.merge(
-        scenes[["scene_id", "scene_description"]], how="left", on=["scene_id"]
+        scenes[["scene_id", "character", "in_game"]],
+        on=["scene_id"],
+        how="left",
     )
     captions["episode_name"] = scenes["episode_name"].iloc[0]
     captions["youtube_id"] = scenes["youtube_id"].iloc[0]

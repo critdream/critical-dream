@@ -1,3 +1,5 @@
+"""Pyscript app script."""
+
 import pandas as pd
 import js
 import random
@@ -18,10 +20,30 @@ image_url_template = (
 )
 
 NUM_IMAGE_VARIATIONS = 12
+SPEAKER_INTERVAL = 500
 UPDATE_INTERVAL = 15_000
 
 
+EPISODE_STARTS = {
+    "c2e001": 854,
+    "c2e002": 504,
+    "c2e003": 420,
+}
+
+EPISODE_BREAKS = {
+    "c2e001": (5529, 6547),
+    "c2e002": (7583, 8470),
+    "c2e003": (7992, 8921),
+}
+
+
+
+speaker_update_interval_id = None
 image_update_interval_id = None
+
+speaker = None
+character = None
+scene_id = None
 
 
 def load_data():
@@ -30,7 +52,8 @@ def load_data():
         return "scene_" + df.scene_id.astype(str).str.pad(3, fillchar="0")
 
     def midpoint(df):
-        return (df["end_time"] - df["start_time"]) / 2
+        mid = (df["end_time"] - df["start_time"]) / 2
+        return df["start_time"] + mid
 
     return (
         pd.read_csv(open_url(data_url))
@@ -60,8 +83,7 @@ def set_episode_dropdown(df):
 
 
 def set_current_episode(event):
-    global player
-    global video_id_map
+    global player, video_id_map
 
     episode_name = document.getElementById("episode").value
     video_id = video_id_map[episode_name]
@@ -70,9 +92,42 @@ def set_current_episode(event):
     player.cueVideoById(video_id)
 
 
-def find_scene_name(df: pd.DataFrame, current_time: float) -> str:
+def find_closest_scene(
+    df: pd.DataFrame,
+    current_time: float,
+    environment: bool = False,
+) -> pd.Series:
+    if environment:
+        df = df.query("character == 'environment'")
+    distance = abs(df["mid_point"] - current_time)
+    closest_scene = df.loc[distance.idxmin()]
+    return closest_scene
+
+
+def find_scene(
+    episode_name: str,
+    df: pd.DataFrame,
+    current_time: float,
+    speaker: str | None = None,
+    character: str | None = None,
+) -> pd.Series:
+    df = df.query(f"episode_name == '{episode_name}'")
+
+    if speaker:
+        df = df.query(f"speaker == '{speaker}'")
+
+    if character:
+        df = df.query(f"character == '{character}'")
+
     current_time = min(current_time, df["end_time"].max())
     current_time = max(current_time, df["start_time"].min())
+
+    break_start, break_end = EPISODE_BREAKS[episode_name]
+    if current_time <= EPISODE_STARTS[episode_name]:
+        return find_closest_scene(df, current_time, environment=True)
+    elif break_start <= current_time <= break_end:
+        # during the mid-episode break, show an environment image from the intro
+        return find_closest_scene(df, 0, environment=True)
 
     result = df.loc[
         (df["start_time"] <= current_time)
@@ -81,25 +136,28 @@ def find_scene_name(df: pd.DataFrame, current_time: float) -> str:
 
     # if found, return result
     if not result.empty:
-        log(result)
         assert result.shape[0] == 1
-        return result.iloc[0]["scene_name"]
+        return result.iloc[0]
 
     # otherwise find the closest environment scene to the timestamp
-    environment_scene = df.query("speaker == 'MATT'")
-    distance = abs(environment_scene["mid_point"] - current_time)
-    closest_scene = environment_scene.loc[distance.idxmin()]["scene_name"]
-    return closest_scene
+    return find_closest_scene(df, current_time)
 
 
 @ffi.create_proxy
 def update_image():
-    global df
-    global player
+    global df, player, speaker, character
 
     current_time = float(player.getCurrentTime())
     episode_name = document.getElementById("episode").value
-    scene_name = find_scene_name(df.query(f"episode_name == '{episode_name}'"), current_time)
+
+    scene_name = find_scene(
+        episode_name,
+        df,
+        current_time,
+        speaker=speaker,
+        character=character,
+    )["scene_name"]
+
     image_num = str(random.randint(0, 11)).zfill(2)
     image_url = image_url_template.format(
         episode_name=episode_name, scene_name=scene_name, image_num=image_num
@@ -121,6 +179,26 @@ def update_image():
     js.setTimeout(show_new_image, 100)
 
 
+@ffi.create_proxy
+def update_speaker():
+    global df, player, speaker, character, scene_id
+
+    current_time = float(player.getCurrentTime())
+    episode_name = document.getElementById("episode").value
+    scene = find_scene(episode_name, df, current_time)
+
+    new_speaker = scene["speaker"]
+    new_character = scene["character"]
+    new_scene_id = scene["scene_id"]
+    console.log(f"current speaker: {speaker}, character: {character}, new_scene_id: {new_scene_id}")
+
+    if speaker != new_speaker or character != new_character or scene_id != new_scene_id:
+        console.log(f"update image | speaker: {speaker}, character: {character} new_scene_id: {new_scene_id}")
+        speaker = new_speaker
+        character = new_character
+        scene_id = new_scene_id
+        update_image()
+
 
 @ffi.create_proxy
 def on_youtube_frame_api_ready():
@@ -130,9 +208,13 @@ def on_youtube_frame_api_ready():
     player = window.YT.Player.new(
         "player",
         videoId="byva0hOj8CU",
+        playerVars=ffi.to_js({
+            "cc_load_policy": 1,
+        })
     )
+    # player.loadModule("captions")
     player.addEventListener("onReady", on_ready)
-    player.addEventListener("onStateChange", on_state_change)
+    # player.addEventListener("onStateChange", on_state_change)
 
 
 @ffi.create_proxy
@@ -143,14 +225,18 @@ def close_modal():
 
 @ffi.create_proxy
 def on_ready(event):
-    global image_update_interval_id
+    global image_update_interval_id, speaker_update_interval_id
 
     console.log("[pyscript] youtube iframe ready")
     js.setTimeout(update_image, 1000)
 
+    if speaker_update_interval_id is None: 
+        speaker_update_interval_id = js.setInterval(update_speaker, SPEAKER_INTERVAL)
+        console.log(f"set speaker interval id: {speaker_update_interval_id}")
+
     if image_update_interval_id is None:
-        image_update_interval_id = js.setInterval(update_image, UPDATE_INTERVAL)
-        console.log(f"set interval id: {image_update_interval_id}")
+        # image_update_interval_id = js.setInterval(update_image, UPDATE_INTERVAL)
+        console.log(f"set image interval id: {image_update_interval_id}")
 
     resize_iframe(event)
     js.setTimeout(close_modal, 1500)
@@ -158,9 +244,9 @@ def on_ready(event):
 
 @ffi.create_proxy
 def on_state_change(event):
-    console.log("[pyscript] youtube player state change")
-
-    update_image()
+    console.log(f"[pyscript] youtube player state change {event.data}")
+    if int(event.data) == 1:
+        update_image()
 
 
 @ffi.create_proxy
@@ -188,14 +274,12 @@ def create_youtube_player():
 
 def main():
     console.log("Starting up app...")
-    global df
-    global video_id_map
+    global df, video_id_map
 
     df = load_data()
     video_id_map = df.groupby("episode_name").youtube_id.first()
     log(f"data {df.head()}")
     log(f"video id map {video_id_map}")
-    display(df.head(), target="pandas-output-inner", append="False")
 
     # set dropdown values and set current episode onchange function
     set_episode_dropdown(df)

@@ -8,6 +8,11 @@ h1 {
     font-weight: bold;
 }
 
+table {
+    color: #7f6464;
+    margin: auto;
+}
+
 div#page-message {
     font-size: 2em;
 }
@@ -32,7 +37,7 @@ dialog::backdrop {
     background: #3d1b1b;;
     text-align: center;
     color: #7f6464;
-    font-size: 1em;
+    font-size: 0.75em;
 }
 
 img#current-image {
