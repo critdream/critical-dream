@@ -36,6 +36,7 @@ EPISODE_BREAKS = {
     "c2e003": (7992, 8921),
 }
 
+SCENE_DURATION = 5
 
 
 speaker_update_interval_id = None
@@ -44,6 +45,8 @@ image_update_interval_id = None
 speaker = None
 character = None
 scene_id = None
+last_scene_time = 0
+
 
 
 def load_data():
@@ -175,13 +178,13 @@ def update_image():
     def show_new_image():
         current_image.classList.add("show")
 
-    js.setTimeout(set_new_image, 100)
+    js.setTimeout(set_new_image, 50)
     js.setTimeout(show_new_image, 100)
 
 
 @ffi.create_proxy
 def update_speaker():
-    global df, player, speaker, character, scene_id
+    global df, player, speaker, character, scene_id, last_scene_time
 
     current_time = float(player.getCurrentTime())
     episode_name = document.getElementById("episode").value
@@ -192,7 +195,17 @@ def update_speaker():
     new_scene_id = scene["scene_id"]
     console.log(f"current speaker: {speaker}, character: {character}, new_scene_id: {new_scene_id}")
 
-    if speaker != new_speaker or character != new_character or scene_id != new_scene_id:
+    update_scene = False
+    if (current_time - last_scene_time) > SCENE_DURATION:
+        update_scene = True
+        last_scene_time = current_time
+    elif current_time == 0:
+        update_scene = True
+
+    if update_scene and (
+        character != new_character
+        or scene_id != new_scene_id
+    ):
         console.log(f"update image | speaker: {speaker}, character: {character} new_scene_id: {new_scene_id}")
         speaker = new_speaker
         character = new_character
@@ -212,9 +225,8 @@ def on_youtube_frame_api_ready():
             "cc_load_policy": 1,
         })
     )
-    # player.loadModule("captions")
     player.addEventListener("onReady", on_ready)
-    # player.addEventListener("onStateChange", on_state_change)
+    player.addEventListener("onStateChange", on_state_change)
 
 
 @ffi.create_proxy
@@ -244,9 +256,14 @@ def on_ready(event):
 
 @ffi.create_proxy
 def on_state_change(event):
+    global last_scene_time
+
     console.log(f"[pyscript] youtube player state change {event.data}")
-    if int(event.data) == 1:
-        update_image()
+    if int(event.data) in (-1, 1):
+        # update speaker and image when new episode is selected (-1) or the
+        # user jumps to different part of the video
+        update_speaker()
+        last_scene_time = 0
 
 
 @ffi.create_proxy
