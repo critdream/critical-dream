@@ -253,10 +253,12 @@ def on_state_change(event):
 def resize_iframe(event):
     # log("resizing iframe")
     container = document.getElementById("image")
+    image = document.getElementById("current-image")
     iframe = document.getElementById("player")
     # set to current width
     iframe.height = container.clientWidth
     container.height = container.clientWidth
+    image.height = container.clientWidth
 
 
 def create_youtube_player():
