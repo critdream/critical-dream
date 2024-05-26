@@ -130,8 +130,8 @@ ABOUT_CONTENTS = """
     <p>
     At the same time, other organizations publish their models as open source
     or open weights. While this is great for AI research, this also breaks the
-    creative value chain because it commoditizes the work pain-stakingly produced by
-    artists. The question I ask myself as I develop this project is:
+    creative value chain because it commoditizes the work pain-stakingly produced
+    by people. The question I ask myself as I develop this project is:
     </p>
 
     <blockquote>
