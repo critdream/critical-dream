@@ -291,6 +291,12 @@ def create_youtube_player():
     window.addEventListener("resize", resize_iframe)
 
 
+def show_about(event):
+    console.log("SHOW ABOUT")
+    about_model = document.getElementById("about")
+    about_model.showModal()
+
+
 def main():
     console.log("Starting up app...")
     global df, video_id_map

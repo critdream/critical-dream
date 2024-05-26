@@ -8,13 +8,38 @@ h1 {
     font-weight: bold;
 }
 
+h1, #page-message, #info-buttons {
+    text-align: center;
+    color: #9c7e7e;
+}
+
 table {
     color: #7f6464;
     margin: auto;
 }
 
-div#page-message {
-    font-size: 2em;
+div#page-message, #info-buttons button {
+    font-size: 1.5em;
+}
+
+#info-buttons button {
+    background: #532f2f;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 15px;
+    margin: 0 2px;
+}
+
+a, a:hover, a:focus, a:active {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+#info-buttons button:hover,
+#info-buttons button:active,
+#info-buttons button:focus {
+    outline: none;
+    color: #9c7e7e;
 }
 
 select#episode {
@@ -31,7 +56,7 @@ dialog::backdrop {
     background: #3d1b1b;;
 }
 
-#loading {
+dialog {
     outline: none;
     border: none;
     background: #3d1b1b;;
@@ -67,11 +92,6 @@ iframe#player {
 #video-container div.col-md-6 {
     padding-right: 0;
     padding-left: 0;
-}
-
-h1, #page-message {
-    text-align: center;
-    color: #9c7e7e;
 }
 
 select#episode {

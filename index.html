@@ -22,7 +22,7 @@
 
         <script type="module">
             const loading = document.getElementById('loading');
-            loading.showModal();
+            // loading.showModal();
         </script>
 
         <!-- will be set via PyDom -->
@@ -33,6 +33,12 @@
     <body>
         <dialog id="loading">
             <h1>Loading...</h1>
+        </dialog>
+
+        <dialog id="about">
+            <h1>About</h1>
+
+            <div id="about-contents"></div>
         </dialog>
 
         <div id="youtube-player"></div>
@@ -46,6 +52,20 @@
         <!-- will be set via PyDom -->
         <div id="page-message">
             Watch Critical Role with AI-sampled scenes.
+        </div>
+
+        <br />
+
+        <div id="info-buttons">
+            <button
+                id="show-about"
+                py-click="show_about"
+            >
+                About
+            </button>
+            <button>
+                <a href="https://github.com/cosmicBboy/critical-dream" target="_blank">Code</a>
+            </button>
         </div>
 
         <br />
