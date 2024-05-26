@@ -31,7 +31,7 @@ ABOUT_CONTENTS = """
     <p/>
     
     <p>
-    If you're here, there's a chance that you're probably a fan of Critical Role
+    If you're here, there's a chance that you're a fan of Critical Role
     too.
     <p/>
     
@@ -54,52 +54,60 @@ ABOUT_CONTENTS = """
     </p>
 
     <p>
-    I've rendered the first three episodes of Campaign Two: The Might Nein, with
+    I've rendered the first few episodes of Campaign Two: The Might Nein, with
     more coming soon.
     </p>
 
     <br>
 
-    <h2>What's the message of this medium?</h2>
+    <h2>The message of this medium</h2>
 
     <p>
     This project is possible because of the amazing and talented artists who
-    brought Critical Role's cast of characters to life. I fined-tuned the
-    Critical Dream image generation model on this art, and I do not take this act
-    lightly because
+    brought Critical Role's cast of characters to life. To create the Critical
+    Dream image generation model, I fined-tuned
+    <a href="https://huggingface.co/papers/2307.01952" target="_blank">Stable Diffusion XL</a>
+    on this art, and I do not take this act lightly because
     
     <strong><i>
-    the dataset is the model, and I believe that those creating
-    the data have a right to the monetary gains resulting from the model
+    the data is the foundation of the model, and I believe that those creating
+    the data have a right to the monetary gains resulting from the model.
     </i></strong>
 
     </p>
     
     <p>
-    Here are the design decisions built into this website to reflect
-    this belief:
+    According to this belief, here are the design decisions that I laid out
+    to guide this project:
     </p>
 
     <ul>
         <li>
-        I have not monetized this website, nor do I have any plans on monetizing
-        it without some kind of profit-sharing agreements in place with the
-        original artists.
+        🚫 I have not monetized this website, nor do I have any plans on monetizing
+        it without some kind of profit-sharing agreement in place with the
+        credited artists.
         </li>
 
         <li>
-        The fine-tuning data for Critical Role-specific characters are fully
-        documented and credited.
-        <a href="https://github.com/cosmicBboy/critical-dream" target="_blank">here</a>
-        becaase Tthe model and its products are effectively extensions of their work.
+        🏞️ For full transparency, the fine-tuning data for Critical Role-specific
+        characters are documented and credited
+        <a href="https://github.com/cosmicBboy/critical-dream" target="_blank">here</a>.
         </li>
 
         <li>
-        Images are displayed alongside the original YouTube videos managed by
+        🤖 The model and training code will not be open sourced until the license
+        and usage parameters of the model are agreed upon by myself and the
+        credited artists.
+        </li>
+
+        <li>
+        🎲 Images are displayed alongside the original YouTube videos managed by
         the Critical Role team. I will not upload my own YouTube videos to
         divert views from their channel.
         </li>
     </ul>
+
+    <br>
 
     <h2>
     To the credited artists
@@ -107,21 +115,35 @@ ABOUT_CONTENTS = """
 
     <p>
     Beyond the entertainment value of Critical Dream, I built this project
-    because I also want to spur a different kind of AI discourse by engaging
-    with you and the creative community more broadly.
+    because I also want to spur a different kind of discourse at the intersection
+    of Art and AI by engaging with you and the creative community more broadly.
     </p>
 
     <p>
     For a long time I've thought that many of today's AI companies take valuable data
-    published on the internet and use "AI" to re-package them behind a walled
-    garden where you pay for software services built on top of that data. The
+    published on the internet and use the "AI" label to re-package them behind a
+    walled garden where you pay for software services built on top of that data. The
     creators of that data get nothing in return, and this is exactly where the
-    value chain is broken.
+    creative value chain is broken ⛓️.
     </p>
 
     <p>
-    If you want to discuss or get involved with this project, join the
-    <a href="#">discord channel</a>.
+    At the same time, other organizations publish their models as open source
+    or open weights. While this is great for AI research, this also breaks the
+    creative value chain because it commoditizes the work pain-stakingly produced by
+    artists. The question I ask myself as I develop this project is:
+    </p>
+
+    <blockquote>
+    Is there a healthier way to organize creative and technical ecosystems on the
+    internet so that we can all create cool things while appropriately crediting
+    and compensating all of the stakeholders in the ecosystem, from creators to
+    engineers?
+    </blockquote>
+
+    <p>
+    If you want to discuss topics like this and get involved with this project,
+    please feel free to join the <a href="#">discord channel</a>.
     </p>
 
 </div>

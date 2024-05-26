@@ -30,13 +30,6 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg"
-  # - "https://i.redd.it/yageniubd5r71.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/0/0b/Fjord_and_Melora.jpg"
-  # - https://i.etsystatic.com/24737885/r/il/afa0f4/2722859526/il_fullxfull.2722859526_aw4x.jpg
-  # - "https://static.wikia.nocookie.net/criticalrole/images/8/86/Fjord_underwater_-_Linda_Lith%C3%A9n.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/f/f4/Fjord_-_Linda_Lithen.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/a/ab/Fjord_star_razor_battletailors.jpeg"
-  # - "https://64.media.tumblr.com/672624052ced0817710fcba18532940d/tumblr_p622yyBuov1ucbbfho2_r1_500.png"
 - instance_name: beau
   instance_data_root: data/beau
   instance_prompt: "a picture of [critrole-beau], a female human monk"
@@ -61,7 +54,6 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/1/10/Beau_Level_20_-_Hannah_Friederichs.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/d/db/Beau_-_Jenny_Tan.jpg"
 - instance_name: caduceus
   instance_data_root: data/caduceus
   instance_prompt: "a picture of [critrole-caduceus], a male firbolg cleric"
@@ -80,8 +72,6 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/0/03/Caduceus_Clay2.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/4/4f/Caduceus_Winter.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Caduceus_Level_20_-_Hannah_Friederichs.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/3/33/Caduceus_-_Nikki_Dawes.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/6/64/Caduceus_by_Ariana_Orner.jpg"
 - instance_name: caleb
   instance_data_root: data/caleb
   instance_prompt: "a picture of [critrole-caleb], a male human wizard"
@@ -114,8 +104,6 @@
   - https://pbs.twimg.com/media/EJ6tEgoXUAAKldh.jpg
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/0/0f/M9jesterfinal2.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/7/79/Jester_Winter.jpg"
 - instance_name: nott
   instance_data_root: data/nott
   instance_prompt: "a picture of [critrole-nott], a female goblin rogue"
@@ -147,8 +135,6 @@
   - "https://static.wikia.nocookie.net/criticalrole/images/f/fc/Veth_full_body_portrait.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg"
   - "https://static.wikia.nocookie.net/criticalrole/images/9/9f/Veth_-_Ari.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/9/93/Veth_Winter.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/0/0e/Veth_in_843_PD_by_Zhellers.png"
 - instance_name: yasha
   instance_data_root: data/yasha
   instance_prompt: "a picture of [critrole-yasha], a female aasimar barbarian"
@@ -170,10 +156,6 @@
   - https://66.media.tumblr.com/0c65640d18c9881ef7f65f4f5472c26c/tumblr_pl6xhcqvJ91r4vop9o1_1280.jpg
   - https://pbs.twimg.com/media/FqahqTkWYAYFl-I.jpg
   - https://64.media.tumblr.com/3f8c56b947ab9e012a0f7c7b75c63969/tumblr_p8j58uHlgP1r03qmqo1_1280.png
-  # - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Yasha_by_Ariana_Orner.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/c/c4/Yasha_Level_20_-_Hannah_Friederichs.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/7/7c/Yasha_-_Robson_Michel.jpg"
-  # - "https://static.wikia.nocookie.net/criticalrole/images/4/45/Yasha_-_Ari.jpg"
 - instance_name: mollymauk
   instance_data_root: data/mollymauk
   instance_prompt: "a picture of [critrole-mollymauk], a male tiefling blood hunter"
@@ -190,7 +172,6 @@
   - https://pm1.aminoapps.com/6769/4f602bc49c9b2cd39910720d0a295af5559ae40cv2_hq.jpg
   - https://i.pinimg.com/736x/3f/0a/43/3f0a43083cca76e9060eea7133e7dca1.jpg
   - https://static1.srcdn.com/wordpress/wp-content/uploads/2022/02/Critical-Role-Mighty-Nein-Origins-Tealeaf-Art.jpg
-  # - "https://static.wikia.nocookie.net/criticalrole/images/2/21/Kingsley_Level_17_Portrait_-_Ari.jpg"
 - instance_name: essek
   instance_data_root: data/essek
   instance_prompt: "a picture of [critrole-essek], a male drow wizard"
@@ -207,58 +188,3 @@
   - https://static.wikia.nocookie.net/criticalrole/images/5/50/Essek_-_Sideshow_-_Minttu.png
   - https://static.wikia.nocookie.net/criticalrole/images/5/54/Essek_minibeacon_saturdaysky.jpg
   - https://static.wikia.nocookie.net/criticalrole/images/b/b7/Essek_-_Cristina_Anaya.jpg
-# - instance_name: mighty_nein_8_nott_cadu_molly
-#   instance_data_root: data/mighty_nein_8_nott_cadu_molly
-#   instance_prompt: a picture of [critrole-m9-8-nott-cadu-molly], a group of eight adventurers
-#   validation_prompt: a picture of [critrole-m9-8-nott-cadu-molly], a group of eight adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_eight
-#   class_prompt: a picture of a group of eight adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1547410792884-ZTEDHGF4BLP9WDW1VLP7/caitmayart-All.jpg
-# - instance_name: mighty_nein_9_veth_essek_cadu
-#   instance_data_root: data/mighty_nein_9_veth_essek_cadu
-#   instance_prompt: a picture of [critrole-m9-9-veth-essek-cadu], a group of nine adventurers
-#   validation_prompt: a picture of [critrole-m9-9-veth-essek-cadu], a group of nine adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_nine
-#   class_prompt: a picture of a group of nine adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1623210460805-W96HUZQOPWGK4102ECR0/exmakina.jpg
-#   # - https://thestarfishface.com/cdn/shop/products/MightyNein-FinaleSAMPLE.jpg?v=1623803499
-# - instance_name: mighty_nein_7_king_veth
-#   instance_data_root: data/mighty_nein_7_king_veth
-#   instance_prompt: a picture of [critrole-m9-7-king-veth], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-king-veth], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://i.ytimg.com/vi/XhkjjN7M0hk/maxresdefault.jpg
-# - instance_name: mighty_nein_7_nott_cadu
-#   instance_data_root: data/mighty_nein_7_nott_cadu
-#   instance_prompt: a picture of [critrole-m9-7-nott-cadu], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-nott-cadu], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://www.sideshow.com/cdn-cgi/image/quality=90,f=auto/https://www.sideshow.com/storage/product-images/501077FBLK/the-mighty-nein-this-is-how-we-roll_critical-role_silo.png
-#   - https://cdnb.artstation.com/p/assets/images/images/026/380/575/large/anthony-amorose-08-the-mighty-nein-06.jpg
-#   - https://images.squarespace-cdn.com/content/v1/58814a7abf629aeb03ec15b1/1616653723210-U65F55GL7TBOD71AZQPO/calendork.jpeg
-#   # - https://assetsio.gnwcdn.com/critical-role-mighty-nein-artwork.jpg
-# - instance_name: mighty_nein_7_veth_cadu
-#   instance_data_root: data/mighty_nein_7_veth_cadu
-#   instance_prompt: a picture of [critrole-m9-7-veth-cadu], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-veth-cadu], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://static1.cbrimages.com/wordpress/wp-content/uploads/2022/10/Official-Art-of-Critical-Roles-Mighty-Nein-by-Ariana-Orner.jpg
-# - instance_name: mighty_nein_7_nott_molly
-#   instance_data_root: data/mighty_nein_7_nott_molly
-#   instance_prompt: a picture of [critrole-m9-7-nott-molly], a group of seven adventurers
-#   validation_prompt: a picture of [critrole-m9-7-nott-molly], a group of seven adventurers. background is a rowdy tavern
-#   class_data_root: data/adventurers_seven
-#   class_prompt: a picture of a group of seven adventurers. background is a rowdy tavern
-#   instance_urls:
-#   - https://thecritograph.com/wp-content/uploads/2021/01/Issue-15-Opinon-Photo_kamryn-Schnieder.jpg
-#   - https://i.redd.it/fjbiqwlxd2k11.jpg
-#   - https://static1.cbrimages.com/wordpress/wp-content/uploads/2023/01/the-mighty-nein-critical-role-1.jpg
-#   # - https://ultrapro.com/cdn/shop/products/16114_MAT_CriticalRole_M9_800x.png

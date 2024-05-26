@@ -26,6 +26,10 @@ li {
     font-size: 2em;
 }
 
+blockquote {
+    font-size: 1.75em;
+}
+
 table {
     color: #7f6464;
     margin: auto;
@@ -65,6 +69,7 @@ button a:focus,
 button a:active {
     color: inherit;
     text-decoration: inherit;
+    outline: none;
 }
 
 div#about-contents a {
@@ -107,7 +112,7 @@ dialog {
 }
 
 dialog div {
-    max-width: 700px;
+    max-width: 750px;
 }
 
 img#current-image {
