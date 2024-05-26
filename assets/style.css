@@ -86,7 +86,11 @@ select#episode {
     padding: 5px 10px;
     font-size: 1.75em;
     border-radius: 4px;
-    border: none
+    border: none;
+}
+
+select#episode:focus {
+    outline: none;
 }
 
 dialog::backdrop {
@@ -145,10 +149,14 @@ div#video-container {
     background: #301515;
 }
 
-dialog#about::-webkit-scrollbar {
+div#about-contents strong {
+    font-weight: 900;
+}
+
+html::-webkit-scrollbar {
     display: none;
 }
 
-div#about-contents strong {
-    font-weight: 900;
+dialog#about::-webkit-scrollbar {
+    display: none;
 }
