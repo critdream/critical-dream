@@ -23,6 +23,109 @@ NUM_IMAGE_VARIATIONS = 12
 SPEAKER_INTERVAL = 500
 UPDATE_INTERVAL = 15_000
 
+ABOUT_CONTENTS = """
+<div>
+    <p>
+    👋 Welcome! I'm Niels Bantilan, and I built this project as a big fan of
+    Critical Role who happens to be a machine learning engineer.
+    <p/>
+    
+    <p>
+    If you're here, there's a chance that you're probably a fan of Critical Role
+    too.
+    <p/>
+    
+    <p>
+    The primary goal of Critical Dream is to give you just a little more amusement
+    and immersion as you watch the Critical Role cast spin their epic tales over the
+    table.
+    </p>
+
+    <p>
+    The Critical Dream image generation model does its best to render what's
+    happening in the episodes as they happen, but you'll notice weird
+    things like extra fingers, floating horns, and pointy-earred Caleb and Beau.
+    </p>
+
+    <p>
+    There's a lot to improve, but honestly I kind of like the fact that the model
+    sometimes produces epic looking scenes, but most of the time it's
+    cursed, djanky-looking portraits of the characters 🫠.
+    </p>
+
+    <p>
+    I've rendered the first three episodes of Campaign Two: The Might Nein, with
+    more coming soon.
+    </p>
+
+    <br>
+
+    <h2>What's the message of this medium?</h2>
+
+    <p>
+    This project is possible because of the amazing and talented artists who
+    brought Critical Role's cast of characters to life. I fined-tuned the
+    Critical Dream image generation model on this art, and I do not take this act
+    lightly because
+    
+    <strong><i>
+    the dataset is the model, and I believe that those creating
+    the data have a right to the monetary gains resulting from the model
+    </i></strong>
+
+    </p>
+    
+    <p>
+    Here are the design decisions built into this website to reflect
+    this belief:
+    </p>
+
+    <ul>
+        <li>
+        I have not monetized this website, nor do I have any plans on monetizing
+        it without some kind of profit-sharing agreements in place with the
+        original artists.
+        </li>
+
+        <li>
+        The fine-tuning data for Critical Role-specific characters are fully
+        documented and credited.
+        <a href="https://github.com/cosmicBboy/critical-dream" target="_blank">here</a>
+        becaase Tthe model and its products are effectively extensions of their work.
+        </li>
+
+        <li>
+        Images are displayed alongside the original YouTube videos managed by
+        the Critical Role team. I will not upload my own YouTube videos to
+        divert views from their channel.
+        </li>
+    </ul>
+
+    <h2>
+    To the credited artists
+    </h2>
+
+    <p>
+    Beyond the entertainment value of Critical Dream, I built this project
+    because I also want to spur a different kind of AI discourse by engaging
+    with you and the creative community more broadly.
+    </p>
+
+    <p>
+    For a long time I've thought that many of today's AI companies take valuable data
+    published on the internet and use "AI" to re-package them behind a walled
+    garden where you pay for software services built on top of that data. The
+    creators of that data get nothing in return, and this is exactly where the
+    value chain is broken.
+    </p>
+
+    <p>
+    If you want to discuss or get involved with this project, join the
+    <a href="#">discord channel</a>.
+    </p>
+
+</div>
+"""
 
 EPISODE_STARTS = {
     "c2e001": 854,
@@ -240,7 +343,6 @@ def on_ready(event):
     global image_update_interval_id, speaker_update_interval_id
 
     console.log("[pyscript] youtube iframe ready")
-    js.setTimeout(update_image, 1000)
 
     if speaker_update_interval_id is None: 
         speaker_update_interval_id = js.setInterval(update_speaker, SPEAKER_INTERVAL)
@@ -292,14 +394,21 @@ def create_youtube_player():
 
 
 def show_about(event):
-    console.log("SHOW ABOUT")
     about_model = document.getElementById("about")
     about_model.showModal()
+
+
+def hide_about(event):
+    about_modal = document.getElementById("about")
+    about_modal.close()
 
 
 def main():
     console.log("Starting up app...")
     global df, video_id_map
+
+    about = document.getElementById("about-contents")
+    about.innerHTML = ABOUT_CONTENTS
 
     df = load_data()
     video_id_map = df.groupby("episode_name").youtube_id.first()

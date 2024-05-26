@@ -36,9 +36,12 @@
         </dialog>
 
         <dialog id="about">
-            <h1>About</h1>
-
-            <div id="about-contents"></div>
+            <div id="about-container">
+                <button id="hide-about" py-click="hide_about">&lt; back</button>
+                <h1>About Critical Dream</h1>
+                <br>
+                <div id="about-contents"></div>
+            </div>
         </dialog>
 
         <div id="youtube-player"></div>
@@ -57,10 +60,7 @@
         <br />
 
         <div id="info-buttons">
-            <button
-                id="show-about"
-                py-click="show_about"
-            >
+            <button id="show-about" py-click="show_about">
                 About
             </button>
             <button>

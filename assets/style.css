@@ -8,9 +8,22 @@ h1 {
     font-weight: bold;
 }
 
+h1, h2 {
+    margin-bottom: 25px;
+}
+
 h1, #page-message, #info-buttons {
     text-align: center;
-    color: #9c7e7e;
+    color: #9e8383;
+}
+
+p {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+li {
+    font-size: 2em;
 }
 
 table {
@@ -22,6 +35,22 @@ div#page-message, #info-buttons button {
     font-size: 1.5em;
 }
 
+button#hide-about {
+    font-size: 2em;
+    background: #3d1b1b;
+    border: none;
+}
+
+div#about-contents {
+    text-align: left;
+}
+
+#info-buttons button:hover,
+#info-buttons button:active,
+#info-buttons button:focus {
+    outline: none;
+}
+
 #info-buttons button {
     background: #532f2f;
     border: none;
@@ -30,9 +59,17 @@ div#page-message, #info-buttons button {
     margin: 0 2px;
 }
 
-a, a:hover, a:focus, a:active {
+button a,
+button a:hover,
+button a:focus,
+button a:active {
     color: inherit;
     text-decoration: inherit;
+}
+
+div#about-contents a {
+    color: inherit;
+    text-decoration: underline !important;
 }
 
 #info-buttons button:hover,
@@ -61,8 +98,12 @@ dialog {
     border: none;
     background: #3d1b1b;;
     text-align: center;
-    color: #7f6464;
+    color: #9e8383;
     font-size: 0.75em;
+}
+
+dialog div {
+    max-width: 700px;
 }
 
 img#current-image {
@@ -102,4 +143,12 @@ select#episode {
 div#video-container {
     border: 25px solid #301515;
     background: #301515;
+}
+
+dialog#about::-webkit-scrollbar {
+    display: none;
+}
+
+div#about-contents strong {
+    font-weight: 900;
 }
