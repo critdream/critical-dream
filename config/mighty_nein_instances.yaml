@@ -5,9 +5,24 @@
   class_data_root: data/dungeon_master
   class_prompt: a picture of a dungeon master.
   instance_urls:
+  # creator: Brandy York
+  # creator_website: https://brandiyorkart.com
+  # source: https://brandiyorkart.com/products/critical-role-master-of-the-game-print?_pos=1&_sid=bd5b85080&_ss=r
   - https://brandiyorkart.com/cdn/shop/products/cr-master-of-the-game_sm_1024x1024.jpg
+
+  # creator: Joré Escalera
+  # creator_website: https://www.deviantart.com/eljore/gallery
+  # source: https://www.deviantart.com/eljore/art/The-Dungeon-Master-536719339
   - https://i.pinimg.com/originals/be/6b/94/be6b94ee5424d19a6c32a11f72686ea0.jpg
+
+  # creator: Pablo Agurcia
+  # creator_website: https://pabloagurcia.artstation.com/
+  # source: https://pabloagurcia.artstation.com/projects/v20QnY
   - https://cdnb.artstation.com/p/assets/images/images/032/000/491/large/pablo-agurcia-criticalrole-dm.jpg
+
+  # creator: Kerri Aitken
+  # creator_website: https://www.etsy.com/shop/AstralTigerArt?ref=shop-header-name&listing_id=458535694&from_page=listing
+  # source : https://www.etsy.com/listing/458535694/dungeon-master-mercer-11x17-critical
   - https://i.etsystatic.com/8939817/r/il/f2a7cd/1024896184/il_fullxfull.1024896184_m4pv.jpg
 - instance_name: fjord
   instance_data_root: data/fjord
@@ -16,20 +31,76 @@
   class_data_root: data/male_half_orc_warlock
   class_prompt: "a picture of a male half-orc warlock"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/8/80/Fjord_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/2/24/Fjord.jpg"
-  - "https://64.media.tumblr.com/bb040d6a77c8949de517840b4654a37e/tumblr_p3ftf9qoNM1shdbpyo1_1280.jpg"
-  - "https://pbs.twimg.com/media/E0K19vPXIAEKVo1.jpg"
-  - "https://i.pinimg.com/736x/cc/32/9e/cc329e9017249ca8fe3e2e9f4edfd121.jpg"
-  - "https://cdnb.artstation.com/p/assets/images/images/029/627/255/large/aaron-simon-109518466-137866528006679-5670728502885644294-o.jpg"
-  - "https://64.media.tumblr.com/39f7e6a67ae9a19a082c457e640e7ae1/fa197467cb617df0-d4/s1280x1920/67b91d985702840d19aea96e39b20f30381c0a6e.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/2/2b/Fjord_Level_20_-_Hannah_Friederichs.jpg"
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/8/80/Fjord_Level_20_portrait_-_Hannah_Friederichs.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/2/24/Fjord.jpg
+
+  # creator: Stacey Reilander
+  # creator_website: https://ko-fi.com/morgalahan
+  # source: https://morgalahan.tumblr.com/post/170353660561/fan-art-of-fjord-travis-willinghams-character
+  - https://64.media.tumblr.com/bb040d6a77c8949de517840b4654a37e/tumblr_p3ftf9qoNM1shdbpyo1_1280.jpg
+
+  # creator: Charis Draws
+  # creator_website: https://x.com/42paintbrushes
+  # source : https://x.com/42paintbrushes/status/1387871709743788032
+  - https://pbs.twimg.com/media/E0K19vPXIAEKVo1.jpg
+
+  # creator: Hailiiz
+  # creator_website: https://hailiiz.carrd.co/
+  # source: https://x.com/hailiiz/status/1593322244998324224
+  - https://i.pinimg.com/736x/cc/32/9e/cc329e9017249ca8fe3e2e9f4edfd121.jpg
+
+  # creator: Aaron Simon
+  # creator_website: https://aaronsimon.artstation.com/
+  # source: https://aaronsimon.artstation.com/projects/NxrkWd
+  - https://cdnb.artstation.com/p/assets/images/images/029/627/255/large/aaron-simon-109518466-137866528006679-5670728502885644294-o.jpg
+
+
+  # creator: Eitan
+  # creator_website: https://0eitan0.tumblr.com/post/677822425596133376
+  # source: https://64.media.tumblr.com/39f7e6a67ae9a19a082c457e640e7ae1/fa197467cb617df0-d4/s1280x1920/67b91d985702840d19aea96e39b20f30381c0a6e.jpg
+  - https://64.media.tumblr.com/39f7e6a67ae9a19a082c457e640e7ae1/fa197467cb617df0-d4/s1280x1920/67b91d985702840d19aea96e39b20f30381c0a6e.jpg
+
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/2/2b/Fjord_Level_20_-_Hannah_Friederichs.jpg
+
+  # creator: Cameron McCafferty
+  # creator_website: https://cameronmccafferty.tumblr.com/post/181439587095
+  # source: https://icouldbeherpocketbacon.tumblr.com/post/625932828509683712/fjord-from-critical-role
   - https://64.media.tumblr.com/6446b0b80ece596a9dc5575fa189da45/tumblr_pkd87nZRy71x6c76ro1_1280.jpg
+
+  # creator: Red Biasca
+  # creator_website: https://redbiasca3d.artstation.com/
+  # source: https://redbiasca3d.artstation.com/projects/28dA2K
   - https://cdna.artstation.com/p/assets/images/images/031/465/706/large/red-biasca-fjord-medium.jpg
+
+  # creator: Ulvar
+  # creator_website: https://www.instagram.com/littleulvar/
+  # source: https://criticalrole.miraheze.org/wiki/Fjord
   - https://pbs.twimg.com/media/FyjJWv_XsAA2AKD.jpg
-  - "https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg"
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/6/61/Fjord_by_Ariana_Orner.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/f/ff/Fjord_Winter.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/1/1d/Fjord_-_Ari.jpg
 - instance_name: beau
   instance_data_root: data/beau
   instance_prompt: "a picture of [critrole-beau], a female human monk"
@@ -37,23 +108,90 @@
   class_data_root: data/female_human_monk
   class_prompt: "a picture of a female human monk"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/a/a8/Beau_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/c/c8/Beauportrait2019.png"
-  - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Beauregard.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Beau_-_Scout_Villegas.jpg"
-  - "https://cdnb.artstation.com/p/assets/images/images/028/914/751/large/laura-ambrosiano-criticalrole-beauportrait.jpg?1595904000"
-  - "https://pbs.twimg.com/media/EHqy091X4AMQjXJ.jpg"
-  - "https://i.redd.it/j62orybeyn491.jpg"
-  - "https://pbs.twimg.com/media/E0gVWVAUUAE6Scj.jpg"
-  - "https://magecraftminiatures.com/cdn/shop/products/Beau_bust_color_1024x1024.jpg"
-  - "https://64.media.tumblr.com/b19ccaf1041d478287924dac86ce00ae/a2c2c122c3bdd6cf-b9/s1280x1920/cf9a28aa3fe79459710971497edb4b7ed8bde257.png"
-  - "https://i.pinimg.com/736x/4b/82/ba/4b82ba2f5b136d12839e7470219618cb.jpg"
-  - "https://cdnb.artstation.com/p/assets/covers/images/023/397/043/large/jace-daily-beau-final-details-2.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/f/fe/Beauregard_by_Ariana_Orner.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/4/43/Beauregard_Winter.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/1/10/Beau_Level_20_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg"
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Beau
+  - https://static.wikia.nocookie.net/criticalrole/images/a/a8/Beau_Level_20_portrait_-_Hannah_Friederichs.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/c/c8/Beauportrait2019.png
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Fjord
+  - https://static.wikia.nocookie.net/criticalrole/images/3/3e/Beauregard.jpg
+
+  # creator: Scout Villegas
+  # creator_website: https://scoutvart.myportfolio.com/
+  # source: https://criticalrole.fandom.com/wiki/Beauregard_Lionett
+  - https://static.wikia.nocookie.net/criticalrole/images/9/9c/Beau_-_Scout_Villegas.jpg
+
+  # creator: Laura Ambrosiano
+  # creator_website: https://vamtaro.artstation.com/
+  # source: https://vamtaro.artstation.com/projects/lxDl3V
+  - https://cdnb.artstation.com/p/assets/images/images/028/914/751/large/laura-ambrosiano-criticalrole-beauportrait.jpg?1595904000
+
+  # creator: Porzio
+  # creator_website: https://porzio-art.carrd.co/
+  # source: https://criticalrole.fandom.com/wiki/Headband_of_Intellect
+  - https://pbs.twimg.com/media/EHqy091X4AMQjXJ.jpg
+
+  # creator: MartinGillArt
+  # creator_website: -
+  # source: https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fj62orybeyn491.jpg
+  - https://i.redd.it/j62orybeyn491.jpg
+
+  # creator: Hailiiz
+  # creator_website: https://hailiiz.carrd.co/
+  # source: https://x.com/hailiiz/status/1593322244998324224
+  - https://pbs.twimg.com/media/E0gVWVAUUAE6Scj.jpg
+
+  # creator: Travis Earls
+  # creator_website: https://linktr.ee/travisearls
+  # source: https://magecraftminiatures.com/products/character-bust-portrait
+  - https://magecraftminiatures.com/cdn/shop/products/Beau_bust_color_1024x1024.jpg
+
+  # creator: jaydrlove
+  # creator_website: https://jaydrlove.tumblr.com/
+  # source: https://jaydrlove.tumblr.com/post/701274473933979648/i-feel-bad-ive-treated-people-like-shit-my
+  - https://64.media.tumblr.com/b19ccaf1041d478287924dac86ce00ae/a2c2c122c3bdd6cf-b9/s1280x1920/cf9a28aa3fe79459710971497edb4b7ed8bde257.png
+
+  # creator: Katie Shanahan
+  # creator_website: https://www.deviantart.com/ktshy/gallery
+  # source: https://www.deviantart.com/ktshy/art/Beau-752525263
+  - https://i.pinimg.com/736x/4b/82/ba/4b82ba2f5b136d12839e7470219618cb.jpg
+
+  # creator: Jace Daily
+  # creator_website: https://jace_d.artstation.com/
+  # source: https://jace_d.artstation.com/projects/lVWW6z
+  - https://cdnb.artstation.com/p/assets/covers/images/023/397/043/large/jace-daily-beau-final-details-2.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Beau
+  - https://static.wikia.nocookie.net/criticalrole/images/f/fe/Beauregard_by_Ariana_Orner.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Beau
+  - https://static.wikia.nocookie.net/criticalrole/images/4/43/Beauregard_Winter.jpg
+
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Beau
+  - https://static.wikia.nocookie.net/criticalrole/images/1/10/Beau_Level_20_-_Hannah_Friederichs.jpg
+
+  # creator: HeartofPack
+  # creator_website: https://linktr.ee/heartofpack
+  # source: https://criticalrole.fandom.com/wiki/Beauregard_Lionett
+  - https://static.wikia.nocookie.net/criticalrole/images/5/59/Beau_heartofpack.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Beau
+  - https://static.wikia.nocookie.net/criticalrole/images/7/7e/Beau_-_Ari.jpg
 - instance_name: caduceus
   instance_data_root: data/caduceus
   instance_prompt: "a picture of [critrole-caduceus], a male firbolg cleric"
@@ -61,17 +199,60 @@
   class_data_root: data/male_firbolg_cleric
   class_prompt: "a picture of a male firbolg cleric"
   instance_urls:
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
   - "https://static.wikia.nocookie.net/criticalrole/images/5/51/Caduceus_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/7/78/Caduceus_portrait.jpg"
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
+  - https://static.wikia.nocookie.net/criticalrole/images/7/78/Caduceus_portrait.jpg
+
+  # creator: Stephanie Brown
+  # creator_website: https://www.patreon.com/offbeatworlds
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay?file=Cad_offbeatworlds.jpg
   - "https://static.wikia.nocookie.net/criticalrole/images/a/a0/Cad_offbeatworlds.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/98/IMG_20180728_114227.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/a/a8/Caduceus_-_Elimnebe.jpg"
-  - "https://64.media.tumblr.com/9a7013420cebbadd347d0faab5ccf764/982c560d42b64da0-6a/s1280x1920/21af3843c3f0f10ae0c4463342824eb5c966670a.jpg"
+
+  # creator: Chris Nelson
+  # creator_website: https://www.artstation.com/nelmdraws
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
+  - https://static.wikia.nocookie.net/criticalrole/images/9/98/IMG_20180728_114227.jpg
+
+  # creator: Ellie
+  # creator_website: -
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
+  - https://static.wikia.nocookie.net/criticalrole/images/a/a8/Caduceus_-_Elimnebe.jpg
+
+  # creator: Laya Rose
+  # creator_website: https://layaart.tumblr.com/
+  # source: https://layaart.tumblr.com/image/624743332527144960
+  - https://64.media.tumblr.com/9a7013420cebbadd347d0faab5ccf764/982c560d42b64da0-6a/s1280x1920/21af3843c3f0f10ae0c4463342824eb5c966670a.jpg
+
+  # creator: Vi Viro
+  # creator_website: https://ninzja.artstation.com/
+  # source: https://ninzja.artstation.com/projects/KaBK4x
   - https://cdnb.artstation.com/p/assets/images/images/019/285/135/large/vi-viro-cadface.jpg
+
+  # creator: Matt Molen (Sculpt), Rachel Roubicek (Design), Chie Izuma (Paint), The Sideshow Design and Development Team
+  # creator_website: https://www.sideshow.com/
+  # source: https://www.sideshow.com/collectibles/critical-role-caduceus-clay-mighty-nein-statue-sideshow-collectibles-200623
   - https://www.sideshow.com/cdn-cgi/image/height=850,quality=90,f=auto/https://www.sideshow.com/storage/product-images/200623/caduceus-clay-mighty-nein_critical-role_gallery_64f762746c952.jpg
-  - "https://static.wikia.nocookie.net/criticalrole/images/0/03/Caduceus_Clay2.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/4/4f/Caduceus_Winter.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Caduceus_Level_20_-_Hannah_Friederichs.jpg"
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
+  - https://static.wikia.nocookie.net/criticalrole/images/0/03/Caduceus_Clay2.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
+  - https://static.wikia.nocookie.net/criticalrole/images/4/4f/Caduceus_Winter.jpg
+
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Caduceus_Clay
+  - https://static.wikia.nocookie.net/criticalrole/images/a/a3/Caduceus_Level_20_-_Hannah_Friederichs.jpg
 - instance_name: caleb
   instance_data_root: data/caleb
   instance_prompt: "a picture of [critrole-caleb], a male human wizard"
@@ -79,16 +260,55 @@
   class_data_root: data/male_human_wizard
   class_prompt: "a picture of a male human wizard"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/d/d3/Caleb_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/92/Caleb_Widogast.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/c/cd/Widogast%27s_Web_of_Fire_battletailors.jpeg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/a/ac/Caleb_and_Frumpkin_-_Minttu_Hynninen.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/52/Caleb_heartofpack.jpg"
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/d/d3/Caleb_Level_20_portrait_-_Hannah_Friederichs.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/9/92/Caleb_Widogast.jpg
+
+  # creator: Ayzek V Kass
+  # creator_website: https://www.tumblr.com/battletailors
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/c/cd/Widogast%27s_Web_of_Fire_battletailors.jpeg
+
+  # creator: Minttu Hynninen
+  # creator_website: https://theminttu.tumblr.com/
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/a/ac/Caleb_and_Frumpkin_-_Minttu_Hynninen.jpg
+
+  # creator: HeartofPack
+  # creator_website: https://linktr.ee/heartofpack
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/5/52/Caleb_heartofpack.jpg
+
+  # creator: Milakangelo
+  # creator_website: https://www.reddit.com/user/Milakangelo/
+  # source: https://www.reddit.com/r/DnD/comments/pmqcdy/art_caleb_from_critical_role_by_milakangelo/
   - https://i.redd.it/1cy1vjfru1n71.jpg
+
+  # creator: -
+  # creator_website: -
+  # source: https://secretcompassonline.com/products/critical-role-mighty-nein-caleb-widogast
   - https://secretcompassonline.com/cdn/shop/files/caleb-widogast-mighty-nein_critical-role_gallery_64e6a03b0d0fe_1200x800.jpg
-  - "https://static.wikia.nocookie.net/criticalrole/images/2/2f/Caleb_by_Ariana_Orner.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/4/49/WinterM92Caleb-ArianaOrner.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg"
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/2/2f/Caleb_by_Ariana_Orner.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/4/49/WinterM92Caleb-ArianaOrner.jpg
+
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Caleb_Widogast
+  - https://static.wikia.nocookie.net/criticalrole/images/9/9c/Caleb_Level_20_-_Hannah_Friederichs.jpg
 - instance_name: jester
   instance_data_root: data/jester
   instance_prompt: "a picture of [critrole-jester], a female tiefling cleric"
@@ -96,14 +316,40 @@
   class_data_root: data/female_tiefling_cleric
   class_prompt: "a picture of a female tiefling cleric"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/0/09/Jester_level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/1/1b/Jester.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/0/08/Jester_as_High_Priestess_-_Porzio_Art.jpg"
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Jester_Lavorre
+  - https://static.wikia.nocookie.net/criticalrole/images/0/09/Jester_level_20_portrait_-_Hannah_Friederichs.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Jester_Lavorre
+  - https://static.wikia.nocookie.net/criticalrole/images/1/1b/Jester.jpg
+
+  # creator: Porzio
+  # creator_website: https://porzio-art.carrd.co/
+  # source: https://criticalrole.fandom.com/wiki/Jester_Lavorre
+  - https://static.wikia.nocookie.net/criticalrole/images/0/08/Jester_as_High_Priestess_-_Porzio_Art.jpg
+
+  # creator: Sina Rupp
+  # creator_website: https://www.artstation.com/sinadraws
+  # source: https://www.artstation.com/artwork/B12AaA
   - https://cdnb.artstation.com/p/assets/images/images/031/815/823/large/sina-rupp-jester.jpg
-  - https://64.media.tumblr.com/ae93da1f8667d5eb1808687f146a7870/tumblr_p2k58l1znT1sk51m7o1_r1_500.png
+
+  # creator: Tori Bennett
+  # creator_website: https://www.toribennett.com/
+  # source: https://x.com/victori_jane/status/1197584850846408706
   - https://pbs.twimg.com/media/EJ6tEgoXUAAKldh.jpg
-  - "https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg"
+
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Jester_Lavorre
+  - https://static.wikia.nocookie.net/criticalrole/images/a/a3/Jester_level_20_-_Hannah_Friederichs.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Jester_Lavorre
+  - https://static.wikia.nocookie.net/criticalrole/images/7/70/Jester_-_Ari.jpg
 - instance_name: nott
   instance_data_root: data/nott
   instance_prompt: "a picture of [critrole-nott], a female goblin rogue"
@@ -111,15 +357,45 @@
   class_data_root: data/female_goblin_rogue
   class_prompt: "a picture of a female goblin rogue"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/b/b2/M9nottfinal2Headshot.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/d/dc/Nott.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/5e/Nott_by_Mintscribbleart.jpg"
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/b/b2/M9nottfinal2Headshot.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/d/dc/Nott.jpg
+
+  # creator: Natalia Thomson
+  # creator_website: https://x.com/MintScribble
+  # source: https://twitter.com/MintScribble/status/1106028937623277568
+  - https://static.wikia.nocookie.net/criticalrole/images/5/5e/Nott_by_Mintscribbleart.jpg
+
+  # creator: casu
+  # creator_website: https://casukaga.tumblr.com/
+  # source: https://casukaga.tumblr.com/post/642896548371562496/did-some-redraws-of-these-jester-nott-portraits
   - https://64.media.tumblr.com/7792ac4fcc04163260213fbc03b0f737/d86149e5803de27a-8c/s1280x1920/59369b896dada88c8551484a0ad637cf1f7bccd9.png
-  - https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/0c6a8739-2ef1-469e-ba0d-1f854acc0a9d/width=450/00066-1120030128.jpeg
+
+  # creator: Kerri Aitken
+  # creator_website: https://www.etsy.com/shop/AstralTigerArt
+  # source: https://i.etsystatic.com/8939817/r/il/8d473b/1911187820/il_fullxfull.1911187820_n63k.jpg
   - https://i.etsystatic.com/8939817/r/il/8d473b/1911187820/il_fullxfull.1911187820_n63k.jpg
+
+  # creator: Mr. Weiss
+  # creator_website: https://www.pinterest.com/pin/nott-the-brave--629167010428717201/
+  # source: https://www.fanart.us/critical+role+nott+and+bo+fanart
   - https://i.pinimg.com/originals/73/1f/64/731f64d6425e4f75ccb238ff73a1a364.jpg
+
+  # creator: Matt Molen (Sculpt), Rachel Roubicek (Design), Chie Izuma (Paint), The Sideshow Design and Development Team
+  # creator_website: https://www.sideshow.com/
+  # source: https://www.sideshow.com/collectibles/critical-role-nott-the-brave-mighty-nein-statue-sideshow-collectibles-200631
   - https://www.sideshow.com/cdn-cgi/image/quality=90,f=auto/https://www.sideshow.com/storage/product-images/200631/nott-the-brave-mighty-nein-statue_critical-role_gallery_6578c245888a5.jpg
-  - "https://static.wikia.nocookie.net/criticalrole/images/b/b8/Nott_the_Brave_by_Ariana_Orner.jpg"
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/b/b8/Nott_the_Brave_by_Ariana_Orner.jpg
 - instance_name: veth
   instance_data_root: data/veth
   instance_prompt: "a picture of [critrole-veth], a female halfling rogue/wizard"
@@ -127,14 +403,45 @@
   class_data_root: data/female_halfling_rogue_wizard
   class_prompt: "a picture of a female halfling rogue/wizard"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/f/f1/Veth_head_portrait_official_2020.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/9c/Veth_-_Retrobot3d.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/0/0d/Veth_-_Ameera.jpg"
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/f/f1/Veth_head_portrait_official_2020.jpg
+
+  # creator: Red Biasca
+  # creator_website: https://www.artstation.com/redbiasca3d
+  # source: https://www.artstation.com/artwork/3daAkA
+  - https://static.wikia.nocookie.net/criticalrole/images/9/9c/Veth_-_Retrobot3d.jpg
+
+  # creator: Ameera
+  # creator_website: https://linktr.ee/mikandii
+  # source: https://twitter.com/Mikandii/status/1286015561441443842
+  - https://static.wikia.nocookie.net/criticalrole/images/0/0d/Veth_-_Ameera.jpg
+
+  # creator: Kynareth9
+  # creator_website: -
+  # source: https://www.reddit.com/r/criticalrole/comments/iayxgv/no_spoilers_veth_portrait_i_just_finished/
   - https://i.redd.it/ymjksfbc4fh51.png
+
+  # creator: Lauren Rowland
+  # creator_website: https://larndraws.tumblr.com
+  # source: https://larndraws.tumblr.com/post/637323448575737856/veth-brenatto
   - https://64.media.tumblr.com/9d2fd31db45cc8f77fe7de366fab9bb7/9e1b1f2f40e62b1a-a6/s1280x1920/81bcea0c4b5bfb46cca6bb475ac8176bf9c69ed6.jpg
-  - "https://static.wikia.nocookie.net/criticalrole/images/f/fc/Veth_full_body_portrait.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/9f/Veth_-_Ari.jpg"
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/f/fc/Veth_full_body_portrait.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/3/3e/Veth-2020.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Veth_Brenatto
+  - https://static.wikia.nocookie.net/criticalrole/images/9/9f/Veth_-_Ari.jpg
 - instance_name: yasha
   instance_data_root: data/yasha
   instance_prompt: "a picture of [critrole-yasha], a female aasimar barbarian"
@@ -142,19 +449,74 @@
   class_data_root: data/female_aasimar_barbarian
   class_prompt: "a picture of a female aasimar barbarian"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/d/dd/Yasha_Level_20_portrait_-_Hannah_Friederichs.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/9/92/Yasha.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/f/f5/IMG_20180729_133401.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/54/IMG_20180729_161237.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/0/0a/Yasha_portrait_-_Ameera.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/8/8f/Yasha_-_Disarmonia.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/2/2c/Critical_role_yasha_by_atutcha-dc0iuov-1.jpg"
+  # creator: Hannah Friederichs
+  # creator_website: https://www.hannahfriederichs.com/
+  # source: https://criticalrole.fandom.com/wiki/Yasha_Nydoorin
+  - https://static.wikia.nocookie.net/criticalrole/images/d/dd/Yasha_Level_20_portrait_-_Hannah_Friederichs.jpg
+
+  # creator: Ari Orner
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Yasha_Nydoorin
+  - https://static.wikia.nocookie.net/criticalrole/images/9/92/Yasha.jpg
+
+  # creator: Carolina Abrantes
+  # creator_website: https://ko-fi.com/fires
+  # source: https://twitter.com/fires_00/status/972941978072698880?s=19
+  - https://static.wikia.nocookie.net/criticalrole/images/f/f5/IMG_20180729_133401.jpg
+
+  # creator: Anna Janiszewska (Rammaru)
+  # creator_website: https://t.co/NKmh0v83DN
+  # source: https://twitter.com/dearHadrian/status/954464604788285441?s=19
+  - https://static.wikia.nocookie.net/criticalrole/images/5/54/IMG_20180729_161237.jpg
+
+  # creator: Ameera Shiekh
+  # creator_website: https://linktr.ee/mikandii
+  # source: https://criticalrole.fandom.com/wiki/Yasha_Nydoorin?file=Yasha_portrait_-_Ameera.jpg
+  - https://static.wikia.nocookie.net/criticalrole/images/0/0a/Yasha_portrait_-_Ameera.jpg
+
+  # creator: Veronica Anrathi (Disarmonia)
+  # creator_website: https://ko-fi.com/disarmonia
+  # source: https://twitter.com/disarmoniart/status/1649445169740095489
+  - https://static.wikia.nocookie.net/criticalrole/images/8/8f/Yasha_-_Disarmonia.jpg
+
+  # creator: Atutcha
+  # creator_website: https://x.com/atutcha
+  # source: https://criticalrole.fandom.com/wiki/Yasha_Nydoorin?file=Critical_role_yasha_by_atutcha-dc0iuov-1.jpg
+  - https://static.wikia.nocookie.net/criticalrole/images/2/2c/Critical_role_yasha_by_atutcha-dc0iuov-1.jpg
+
+  # creator: @krianath
+  # creator_website: https://x.com/krianath
+  # source: https://x.com/krianath/status/1134273882083381248
   - https://pbs.twimg.com/media/D72_-eiV4AANCoc.jpg
+
+  # creator: Leti M. Vila
+  # creator_website: https://www.artstation.com/letimvila
+  # source: https://www.artstation.com/artwork/YaWlvY
   - https://cdnb.artstation.com/p/assets/images/images/022/709/171/large/leti-m-vila-yasha-close-1.jpg
+
+  # creator: Jace Daily
+  # creator_website: https://jace_d.artstation.com/
+  # source: https://jace_d.artstation.com/projects/gJmmyP
   - https://i.pinimg.com/474x/40/db/6f/40db6fc92cfc086435452b52a3004839.jpg
+
+  # creator: petyritonel
+  # creator_website: https://petyritonel.tumblr.com/
+  # source: https://64.media.tumblr.com/d8bfad2ddebaf118d480f32f955b5d86/542d17e0ab43808e-fc/s1280x1920/da22a464b0a2a0594eda06b6093d8cc5b4369542.png
   - https://64.media.tumblr.com/d8bfad2ddebaf118d480f32f955b5d86/542d17e0ab43808e-fc/s1280x1920/da22a464b0a2a0594eda06b6093d8cc5b4369542.png
+
+  # creator: Laya Rose
+  # creator_website: https://layaart.tumblr.com/
+  # source: https://layaart.tumblr.com/post/181935413611/oh-boy-that-yasha-playlist-is-giving-me-some
   - https://66.media.tumblr.com/0c65640d18c9881ef7f65f4f5472c26c/tumblr_pl6xhcqvJ91r4vop9o1_1280.jpg
+
+  # creator: casu
+  # creator_website: https://casukaga.tumblr.com/
+  # source: https://x.com/casukaga/status/1632169666641637385
   - https://pbs.twimg.com/media/FqahqTkWYAYFl-I.jpg
+
+  # creator: Lauren Rowlands
+  # creator_website: https://larndraws.tumblr.com/
+  # source: https://larndraws.tumblr.com/post/173775869188/yasha-with-calla-lilies
   - https://64.media.tumblr.com/3f8c56b947ab9e012a0f7c7b75c63969/tumblr_p8j58uHlgP1r03qmqo1_1280.png
 - instance_name: mollymauk
   instance_data_root: data/mollymauk
@@ -163,14 +525,49 @@
   class_data_root: data/male_tiefling_blood_hunter
   class_prompt: "a picture of a male tiefling blood hunter"
   instance_urls:
-  - "https://static.wikia.nocookie.net/criticalrole/images/c/ce/Mollymauk.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/3/35/Lucien_by_Yettinim.jpg"
-  - "https://static.wikia.nocookie.net/criticalrole/images/6/6d/Kingsley_by_ElesirArt.png"
-  - "https://static.wikia.nocookie.net/criticalrole/images/5/58/Kingsley_Tealeaf_by_%40rosygloomart.jpg"
+  # creator: Ari
+  # creator_website: https://ko-fi.com/ornerine
+  # source: https://criticalrole.fandom.com/wiki/Mollymauk_Tealeaf
+  - https://static.wikia.nocookie.net/criticalrole/images/c/ce/Mollymauk.jpg
+
+  # creator: Yettinim
+  # creator_website: https://yettinim.tumblr.com/
+  # source: https://criticalrole.fandom.com/wiki/Mollymauk_Tealeaf?file=Lucien_by_Yettinim.jpg
+  - https://static.wikia.nocookie.net/criticalrole/images/3/35/Lucien_by_Yettinim.jpg
+
+  # creator: elesir
+  # creator_website: https://x.com/ElesirArt
+  # source: https://x.com/ElesirArt/status/1605273244717686815
+  - https://static.wikia.nocookie.net/criticalrole/images/6/6d/Kingsley_by_ElesirArt.png
+
+  # creator: Rosy Gloom
+  # creator_website: https://www.patreon.com/rosygloomart
+  # source: https://x.com/rosygloomart/status/1401327404845613056
+  - https://static.wikia.nocookie.net/criticalrole/images/5/58/Kingsley_Tealeaf_by_%40rosygloomart.jpg
+
+  # creator: jamilabeth
+  # creator_website: https://www.reddit.com/user/jamilabeth/
+  # source: https://www.reddit.com/r/criticalrole/comments/geleii/no_spoilers_mollymauk_tealeaf_original_art/
   - https://i.redd.it/n7xm2avvq5x41.jpg
+
+  # creator: hailiiz
+  # creator_website: https://hailiiz.carrd.co/
+  # source: https://x.com/hailiiz/status/1507766992207446018
   - https://pbs.twimg.com/media/FOyqFeXVUAIsYh0.jpg
+
+  # creator: fires-00
+  # creator_website: https://aminoapps.com/c/art/page/user/fires-00/33hM_fGz5rzD6vKQl2x1j3jngpd7BB
+  # source: https://aminoapps.com/c/art/page/blog/mollymauk-critical-role/x1h2_uW50qVMrvk2GGwLklvbLVaQqz
   - https://pm1.aminoapps.com/6769/4f602bc49c9b2cd39910720d0a295af5559ae40cv2_hq.jpg
+
+  # creator: Александр Кувшинов
+  # creator_website: https://www.pinterest.com/rayoagares/
+  # source: https://www.pinterest.com/pin/835065955931765526/
   - https://i.pinimg.com/736x/3f/0a/43/3f0a43083cca76e9060eea7133e7dca1.jpg
+
+  # creator: Hunter Bonyun
+  # creator_website: https://www.patreon.com/deerlordhunter
+  # source: https://screenrant.com/critical-role-comic-mighty-nein-origins-mollymauk-tealeaf/
   - https://static1.srcdn.com/wordpress/wp-content/uploads/2022/02/Critical-Role-Mighty-Nein-Origins-Tealeaf-Art.jpg
 - instance_name: essek
   instance_data_root: data/essek
@@ -179,12 +576,47 @@
   class_data_root: data/male_drow_wizard
   class_prompt: "a picture of a male drow wizard"
   instance_urls:
+  # creator: Minttu Hynninen
+  # creator_website: https://theminttu.tumblr.com/
+  # source: https://art.sideshow.com/art-prints/critical-role-essek-thelyss-sideshow-collectibles-501728U
   - https://static.wikia.nocookie.net/criticalrole/images/6/6d/Essek_-_Sideshow_Close_Up_-_Minttu.png
+
+  # creator: Veronica Anrathi (Disarmonia)
+  # creator_website: https://ko-fi.com/disarmonia
+  # source: https://twitter.com/disarmoniart/status/1644733272339935234
   - https://static.wikia.nocookie.net/criticalrole/images/c/cf/Essek_Thelyss_-_Veronica_Anrathi_%28Disarmonia%29.jpg
+
+  # creator: Porzio
+  # creator_website: https://porzio-art.carrd.co/
+  # source: https://twitter.com/Porzio_Art/status/1174356042282651648
   - https://static.wikia.nocookie.net/criticalrole/images/3/37/Essek_Thelyss_-_Porzio_Art.jpg
+
+  # creator: Vicious Mongrel
+  # creator_website: https://boosty.to/viciousmongrel
+  # source: https://twitter.com/vicious_mongrel/status/1203251414358773760
   - https://static.wikia.nocookie.net/criticalrole/images/4/4a/Essek_-_Viciousmongrel.jpg
+
+  # creator: Elliott
+  # creator_website: https://ko-fi.com/elibear
+  # source: https://twitter.com/planarbindings/status/1333474626395992064
   - https://static.wikia.nocookie.net/criticalrole/images/2/28/Essek_Thelyss_-_planarbindings.jpg
+
+  # creator: Anna Janiszewska (Rammaru)
+  # creator_website: https://t.co/NKmh0v83DN
+  # source: https://twitter.com/dearHadrian/status/1243969241671512064
   - https://static.wikia.nocookie.net/criticalrole/images/1/19/Essik_Theylas_by_Rammaru.jpg
+
+  # creator: Minttu Hynninen
+  # creator_website: https://theminttu.tumblr.com/
+  # source: https://twitter.com/dearHadrian/status/1243969241671512064
   - https://static.wikia.nocookie.net/criticalrole/images/5/50/Essek_-_Sideshow_-_Minttu.png
+
+  # creator: saturdaysky
+  # creator_website: https://saturdaysky.tumblr.com/
+  # source: https://saturdaysky.tumblr.com/post/660758122525327360/when-youre-on-your-aeorian-honeymoon-and-finally
   - https://static.wikia.nocookie.net/criticalrole/images/5/54/Essek_minibeacon_saturdaysky.jpg
+
+  # creator: Cristina Anaya (CristinaAnaya96)
+  # creator_website: https://passingthegravesoftheunknown.tumblr.com/
+  # source: https://twitter.com/CristinaAnaya96/status/1227683953366179841
   - https://static.wikia.nocookie.net/criticalrole/images/b/b7/Essek_-_Cristina_Anaya.jpg
