@@ -117,6 +117,9 @@ def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
 
         captions = read_captions(caption_file)
         scenes = read_scenes(scene_file)
+        if scenes.empty:
+            print("no scenes found for this episode, skipping.")
+            continue
         aligned = align_scenes_with_speakers(scenes, captions)
         aligned_output.append(aligned)
 

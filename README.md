@@ -55,7 +55,16 @@ python critical_dream/compose_scenes.py data/captions data/scenes_v13
 ## Create Huggingface Dataset
 
 ```bash
-python critical_dream/create_scenes_dataset.py data/scenes_v13 cosmicBboy/critical-dream-scenes-mighty-nein-v3
+python critical_dream/create_scenes_dataset.py data/scenes_v13 cosmicBboy/critical-dream-scenes-mighty-nein-v4
+```
+
+## Create Aligned Scenes Huggingface Dataset
+
+```bash
+python critical_dream/create_aligned_scenes_dataset.py \
+  --captions_dir data/captions \
+  --scene_dir data/scenes_v13 \
+  --dataset_id cosmicBboy/critical-dream-aligned-scenes-mighty-nein-v2
 ```
 
 ## Generate Scene Images
@@ -67,15 +76,6 @@ python critical_dream/generate_scene_images.py \
   --lora_model_id "cosmicBboy/stable-diffusion-xl-base-1.0-lora-dreambooth-critdream-v0.5.2" \
   --output_dir "/content/drive/MyDrive/[r&d] ml-research/critical-dream/scenes/v4" \
   --debug
-```
-
-## Create Aligned Scenes Huggingface Dataset
-
-```bash
-python critical_dream/create_aligned_scenes_dataset.py \
-  --captions_dir data/captions \
-  --scene_dir data/scenes_v13 \
-  --dataset_id cosmicBboy/critical-dream-aligned-scenes-mighty-nein-v1
 ```
 
 ## Dreambooth fine-tuning
