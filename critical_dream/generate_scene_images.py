@@ -169,7 +169,7 @@ def add_prompts(
 
     character = scene["character"]
     speaker = scene["speaker"].lower().strip()
-    description = scene["scene_description"]
+    description = scene["scene_description"].lower().strip()
     episode_name = scene["episode_name"]
 
     char = character.lower().strip()
@@ -197,7 +197,7 @@ def add_prompts(
         # if the character name is in the description, use the first character
         # that is mentioned
         for player_char in PLAYER_CHARACTERS:
-            if player_char in description:
+            if player_char in description.lower():
                 correct_char = player_char
                 break
 
