@@ -3,6 +3,8 @@
 This dataset is used when rendering the final product, where composed scenes
 are matched up with the speaker based on the raw captions. This allows the
 images to better-match who is speaking in the scene.
+
+TODO: save aligned scenes as separate CSV files, one per episode.
 """
 
 import json
@@ -107,9 +109,10 @@ def align_scenes_with_speakers(
 
 def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
 
-    aligned_output = []
+    aligned_output = {}
     for caption_file in sorted(caption_dir.glob("*.json")):
         print(f"processing {caption_file}")
+        episode_name = caption_file.stem.split("_")[0]
 
         scene_file = scene_dir /f"{caption_file.stem}_scenes.json"
         if not scene_file.exists():
@@ -121,22 +124,26 @@ def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
             print("no scenes found for this episode, skipping.")
             continue
         aligned = align_scenes_with_speakers(scenes, captions)
-        aligned_output.append(aligned)
+        aligned_output[episode_name] = aligned
 
-    df = pd.concat(aligned_output)
-    dataset = Dataset.from_pandas(df)
+    all_episodes_df = pd.concat(aligned_output.values())
+    aligned_output["all"] = all_episodes_df
+
     print(f"pushing to huggingface hub: {dataset_id}")
-    dataset.push_to_hub(dataset_id)
-    # upload a csv version as well
-    df_io = BytesIO()
-    df.to_csv(df_io, index=False)
-    df_io.seek(0)
-    upload_file(
-        path_or_fileobj=df_io,
-        path_in_repo="aligned_scenes.csv",
-        repo_id=dataset_id,
-        repo_type="dataset",
-    )
+    all_episodes_dataset = Dataset.from_pandas(all_episodes_df)
+    all_episodes_dataset.push_to_hub(dataset_id)
+
+    for episode_name, df in aligned_output.items():
+        # upload a csv versions per episode as well
+        df_io = BytesIO()
+        df.to_csv(df_io, index=False)
+        df_io.seek(0)
+        upload_file(
+            path_or_fileobj=df_io,
+            path_in_repo=f"aligned_scenes_{episode_name}.csv",
+            repo_id=dataset_id,
+            repo_type="dataset",
+        )
 
 
 if __name__ == "__main__":

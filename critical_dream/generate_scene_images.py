@@ -45,7 +45,7 @@ SINGLE_CHARACTER_MAP = {
 
 PLAYER_CHARACTERS = frozenset(
     [
-        *SINGLE_CHARACTER_MAP.values(),
+        *SINGLE_CHARACTER_MAP.keys(),
         "nott",
         "veth",
         "mollymauk",
@@ -191,21 +191,13 @@ def add_prompts(
     correct_char = char
     if len(split_char) > 1 and split_char[0] in PLAYER_CHARACTERS:
         correct_char = split_char[0]
-    # elif len(split_char) > 1 and split_char[0] in SINGLE_CHARACTER_MAP:
-    #     correct_char = SINGLE_CHARACTER_MAP[split_char[0]]
-    # else:
-    #     correct_char = SINGLE_CHARACTER_MAP.get(char, char)
 
     # fix character names for specific episodes/multiple possible names
     episode_num = int(episode_name.split("e")[-1])
-    # if correct_char == "sam":
-    #     correct_char = "veth" if episode_num > VETH_EPISODE else "nott"
     if correct_char == "veth" and episode_num < VETH_EPISODE:
         correct_char = "nott"
     elif correct_char == "caduceus" and episode_num < MOLLYMAUK_EPISODE:
         correct_char = "mollymauk"
-    # elif correct_char == "taliesin":
-    #     correct_char = "caduceus" if episode_num > MOLLYMAUK_EPISODE else "mollymauk"
     
     character_tokens = CHARACTER_TOKENS.get(correct_char, correct_char)
     addtl_prompts = ADDITIONAL_PROMPTS.get(correct_char, "")
