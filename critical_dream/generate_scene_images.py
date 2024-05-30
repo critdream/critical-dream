@@ -45,7 +45,7 @@ SINGLE_CHARACTER_MAP = {
 
 PLAYER_CHARACTERS = frozenset(
     [
-        *SINGLE_CHARACTER_MAP.keys(),
+        *SINGLE_CHARACTER_MAP.values(),
         "nott",
         "veth",
         "mollymauk",
@@ -128,6 +128,8 @@ def get_dtype():
 
 
 def load_pipeline(lora_model_id: str) -> DiffusionPipeline:
+    # TODO: add optimizations described here:
+    # https://huggingface.co/docs/diffusers/en/using-diffusers/sdxl#optimizations
     card = RepoCard.load(lora_model_id)
     base_model_id = card.data.to_dict()["base_model"]
 
@@ -191,6 +193,13 @@ def add_prompts(
     correct_char = char
     if len(split_char) > 1 and split_char[0] in PLAYER_CHARACTERS:
         correct_char = split_char[0]
+    elif any([char in description in PLAYER_CHARACTERS]):
+        # if the character name is in the description, use the first character
+        # that is mentioned
+        for player_char in PLAYER_CHARACTERS:
+            if player_char in description:
+                correct_char = player_char
+                break
 
     # fix character names for specific episodes/multiple possible names
     episode_num = int(episode_name.split("e")[-1])

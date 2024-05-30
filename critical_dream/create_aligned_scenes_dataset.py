@@ -10,6 +10,7 @@ TODO: save aligned scenes as separate CSV files, one per episode.
 import json
 import pandas as pd
 from io import BytesIO
+from tempfile import TemporaryDirectory
 
 from argparse import ArgumentParser
 from pathlib import Path
@@ -17,7 +18,7 @@ from pathlib import Path
 from datasets import Dataset
 
 from critical_dream.compose_scenes import Caption, parse_captions
-from huggingface_hub import upload_file
+from huggingface_hub import upload_file, upload_folder
 
 
 SPEAKER_MAP = {
@@ -133,16 +134,20 @@ def main(caption_dir: Path, scene_dir: Path, dataset_id: str):
     all_episodes_dataset = Dataset.from_pandas(all_episodes_df)
     all_episodes_dataset.push_to_hub(dataset_id)
 
-    for episode_name, df in aligned_output.items():
-        # upload a csv versions per episode as well
-        df_io = BytesIO()
-        df.to_csv(df_io, index=False)
-        df_io.seek(0)
-        upload_file(
-            path_or_fileobj=df_io,
-            path_in_repo=f"aligned_scenes_{episode_name}.csv",
+    with TemporaryDirectory() as tmp_dir:
+        out_path = Path(tmp_dir)
+        for episode_name, df in aligned_output.items():
+            df.to_csv(out_path / f"aligned_scenes_{episode_name}.csv", index=False)
+
+        # maps episode names to video id
+        video_id_map = all_episodes_df.groupby("episode_name").youtube_id.first()
+        video_id_map.to_csv(out_path / "video_id_map.csv", header=True)
+
+        upload_folder(
             repo_id=dataset_id,
             repo_type="dataset",
+            folder_path=out_path,
+            path_in_repo=".",
         )
 
 
