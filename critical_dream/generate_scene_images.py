@@ -121,7 +121,7 @@ def get_device():
 
 def get_dtype():
     return (
-        torch.float16
+        torch.bfloat16
         if torch.cuda.is_available() or torch.backends.mps.is_available()
         else torch.float32
     )
@@ -225,7 +225,7 @@ def add_prompts(
             f"{PROMPT_AUGMENTATION}"
         )
     else:
-        prompt = f"{description}, {PROMPT_AUGMENTATION}"
+        prompt = f"In a D&D fantasy world, {description}, {PROMPT_AUGMENTATION}"
 
     # format the negative prompt
     if addtl_neg_prompts:
@@ -356,6 +356,7 @@ def main(
     num_inference_steps: int,
     negative_prompt: str,
     enable_xformers_memory_efficient_attention: bool = False,
+    enable_model_cpu_offload: bool = False,
     debug: bool = False,
 ):
     dataset = load_scene_dataset(dataset_id)
@@ -380,6 +381,8 @@ def main(
             pipe.unet.enable_xformers_memory_efficient_attention()
         else:
             raise ValueError("xformers is not available. Make sure it is installed correctly")
+    if enable_model_cpu_offload:
+        pipe.enable_model_cpu_offload()
 
     if debug:
         for scene in dataset:
@@ -451,6 +454,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_inference_steps", type=int, default=30)
     parser.add_argument("--negative_prompt", type=str, default=DEFAULT_NEGATIVE_PROMPT)
     parser.add_argument("--enable_xformers_memory_efficient_attention", action="store_true")
+    parser.add_argument("--enable_model_cpu_offload", action="store_true")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
     main(
@@ -464,5 +468,6 @@ if __name__ == "__main__":
         args.num_inference_steps,
         args.negative_prompt,
         args.enable_xformers_memory_efficient_attention,
+        args.enable_model_cpu_offload,
         args.debug,
     )
