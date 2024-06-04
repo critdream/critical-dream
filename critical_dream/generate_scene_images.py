@@ -121,7 +121,7 @@ def get_device():
 
 def get_dtype():
     return (
-        torch.bfloat16
+        torch.float16
         if torch.cuda.is_available() or torch.backends.mps.is_available()
         else torch.float32
     )
@@ -345,6 +345,17 @@ def generate_scene_images(
         yield scene, scene_dir
 
 
+def upload_episode(repo_id: str, _dir: Path):
+    print(f"uploading episode {_dir}")
+    upload_folder(
+        repo_id=repo_id,
+        folder_path=_dir,
+        path_in_repo=f"./{_dir.name}",
+        commit_message=f"Uploading scenes {_dir.name}",
+        repo_type="dataset",
+    )
+
+
 def main(
     lora_model_id: str,
     refiner_model_id: str | None,
@@ -389,6 +400,15 @@ def main(
             print(f"prompt: {scene}")
         return
 
+    prev_scene_dir = None
+    login(token=os.environ.get("HF_HUB_TOKEN"))
+    print(f"creating dataset {output_dataset_id} from {output_dir}")
+    repo_id = create_repo(
+        repo_id=output_dataset_id,
+        repo_type="dataset",
+        exist_ok=True,
+    ).repo_id
+
     for i, (scene, scene_dir) in enumerate(
         generate_scene_images(
             pipe,
@@ -411,20 +431,14 @@ def main(
         for image_num, image in enumerate(images):
             image.save(scene_dir / f"scene_{scene_id:03}_image_{image_num:02}.png")
 
-    # pass in data_files explicitly, consolidate metadata into metadata.jsonl file
-    login(token=os.environ.get("HF_HUB_TOKEN"))
-    repo_id = create_repo(
-        repo_id=output_dataset_id,
-        repo_type="dataset",
-        exist_ok=True,
-    ).repo_id
-    print(f"creating dataset {output_dataset_id} from {output_dir}")
-    upload_folder(
-        repo_id=repo_id,
-        folder_path=output_dir,
-        commit_message="Done creating scenes",
-        repo_type="dataset",
-    )
+        if prev_scene_dir is None:
+            prev_scene_dir = scene_dir
+        elif scene_dir != prev_scene_dir:
+            # upload to huggingface when the episode changes
+            upload_episode(repo_id, prev_scene_dir)
+
+    # upload last episode
+    upload_episode(repo_id, scene_dir)
 
 
 if __name__ == "__main__":
