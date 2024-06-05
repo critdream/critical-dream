@@ -119,15 +119,16 @@ def get_device():
     return None
 
 
-def get_dtype():
+def get_dtype(use_bfloat64: bool = False):
+    f64 = torch.bfloat16 if use_bfloat64 else torch.float16
     return (
-        torch.float16
+        f64
         if torch.cuda.is_available() or torch.backends.mps.is_available()
         else torch.float32
     )
 
 
-def load_pipeline(lora_model_id: str) -> DiffusionPipeline:
+def load_pipeline(lora_model_id: str, use_bfloat64: bool = False) -> DiffusionPipeline:
     # TODO: add optimizations described here:
     # https://huggingface.co/docs/diffusers/en/using-diffusers/sdxl#optimizations
     card = RepoCard.load(lora_model_id)
@@ -135,7 +136,7 @@ def load_pipeline(lora_model_id: str) -> DiffusionPipeline:
 
     pipe = DiffusionPipeline.from_pretrained(
         base_model_id,
-        torch_dtype=get_dtype(),
+        torch_dtype=get_dtype(use_bfloat64),
     )
     pipe.load_lora_weights(lora_model_id)
 
@@ -147,11 +148,11 @@ def load_pipeline(lora_model_id: str) -> DiffusionPipeline:
     return pipe
 
 
-def load_refiner(refiner_model_id: str) -> StableDiffusionXLImg2ImgPipeline:
+def load_refiner(refiner_model_id: str, use_bfloat64: bool = False) -> StableDiffusionXLImg2ImgPipeline:
     # dtype = torch.float16 if torch.cuda.is_available() else torch.float32
     refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(
         refiner_model_id,
-        torch_dtype=get_dtype(),
+        torch_dtype=get_dtype(use_bfloat64),
         use_safetensors=True,
         variant="fp16",
     )
@@ -368,6 +369,7 @@ def main(
     negative_prompt: str,
     enable_xformers_memory_efficient_attention: bool = False,
     enable_model_cpu_offload: bool = False,
+    use_bfloat64: bool = False,
     debug: bool = False,
 ):
     dataset = load_scene_dataset(dataset_id)
@@ -469,6 +471,7 @@ if __name__ == "__main__":
     parser.add_argument("--negative_prompt", type=str, default=DEFAULT_NEGATIVE_PROMPT)
     parser.add_argument("--enable_xformers_memory_efficient_attention", action="store_true")
     parser.add_argument("--enable_model_cpu_offload", action="store_true")
+    parser.add_argument("--use_bfloat64", action="store_true")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
     main(
@@ -483,5 +486,6 @@ if __name__ == "__main__":
         args.negative_prompt,
         args.enable_xformers_memory_efficient_attention,
         args.enable_model_cpu_offload,
+        args.use_bfloat64,
         args.debug,
     )
