@@ -66,7 +66,7 @@ def read_scenes(scene_file: Path) -> pd.DataFrame:
 def align_scenes_with_speakers(
     scenes: pd.DataFrame,
     captions: pd.DataFrame,
-    tolerance: float = 120.0,
+    tolerance: float = 60.0,
 ) -> pd.DataFrame:
     """Aligns the speaker in the raw transcripts with a generated scene.
 
@@ -90,7 +90,7 @@ def align_scenes_with_speakers(
             # to resolve multiple relevant scenes, pick the closest one that
             # occured before the caption timestamp
             selected_scene = relevant_scenes.loc[
-                (relevant_scenes.start_time - row.start).idxmax()
+                (relevant_scenes.start_time - row.start).abs().idxmin()
             ]
             aligned_scene_ids.append(selected_scene.scene_id)
 
